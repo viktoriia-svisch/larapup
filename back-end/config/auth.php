@@ -1,17 +1,25 @@
 <?php
 return [
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
     'guards' => [
         'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+            'driver' => 'jwt',
+            'provider' => 'Student',
         ],
         'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
+            'driver' => 'jwt',
+            'provider' => 'Student',
+        ],
+        'api.coordinator' => [
+            'driver' => 'jwt',
+            'provider' => 'Coordinator',
+        ],
+        'api.coordinatorMaster' => [
+            'driver' => 'jwt',
+            'provider' => 'CoordinatorMaster',
         ],
     ],
     'providers' => [
@@ -19,6 +27,18 @@ return [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
+        'Student' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Student::class,
+        ],
+        'Coordinator' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Coordinator::class,
+        ],
+        'CoordinatorMaster' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\CoordinatorMaster::class,
+        ]
     ],
     'passwords' => [
         'users' => [
