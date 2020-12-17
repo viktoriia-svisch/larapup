@@ -1,3 +1,50 @@
 
 back-end/.idea/workspace.xml
 back-end/.idea/workspace.xml
+
+front-end/node_modules
+# compiled output
+front-end/dist
+front-end/tmp
+front-end/out-tsc
+
+# dependencies
+front-end/node_modules
+
+# profiling files
+front-end/chrome-profiler-events.json
+front-end/speed-measure-plugin.json
+
+# IDEs and editors
+front-end/.idea
+front-end/.project
+front-end/.classpath
+front-end/.c9/
+front-end/*.launch
+front-end/.settings/
+front-end/*.sublime-workspace
+
+# IDE - VSCode
+front-end/.vscode/*
+front-end/!.vscode/settings.json
+front-end/!.vscode/tasks.json
+front-end/!.vscode/launch.json
+front-end/!.vscode/extensions.json
+front-end/.history/*
+
+# misc
+front-end/.sass-cache
+front-end/connect.lock
+front-end/coverage
+front-end/libpeerconnection.log
+front-end/npm-debug.log
+front-end/yarn-error.log
+front-end/testem.log
+front-end/typings
+front-end/__MACOSX
+front-end/documentation
+
+# System Files
+front-end/.DS_Store
+front-end/Thumbs.db
+back-end/.idea/workspace.xml
