@@ -11,8 +11,8 @@ import {ProfileComponent} from './prebuild/profile/profile.component';
 import {NavbarComponent} from './layout/guest/navbar/navbar.component';
 import {FooterComponent} from './layout/guest/footer/footer.component';
 import {HomeModule} from './prebuild/home/home.module';
-import {DashboardComponent} from './shared/dashboard/dashboard.component';
-import {LoginComponent} from './shared/login/login.component';
+import {DashboardComponent} from './modules/shared/dashboard/dashboard.component';
+import {LoginComponent} from './modules/shared/login/login.component';
 import {GuestComponent} from './layout/guest/guest.component';
 import {HttpClientModule} from '@angular/common/http';
 @NgModule({

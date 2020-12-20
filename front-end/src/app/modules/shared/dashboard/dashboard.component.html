@@ -1,0 +1,32 @@
+<div class="container-fluid m-auto d-flex flex-column" style="max-width: 1280px">
+    <div class="card mb-5">
+        <div class="row no-gutters">
+            <a href="#" class="col-md-8 col-sm-12">
+                <img src="https://www.tapeciarnia.pl/tapety/normalne/255710_dziewczyna_wstazki_bukiet_manga_anime.jpg"
+                     class="card-img img-fluid"
+                     style="max-height: 500px; width: 100%; object-fit: cover; object-position: center" alt="...">
+            </a>
+            <div class="col-md-4 col-sm-12">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the card's content.
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="m-auto col-md-6 col-sm-12 text-center">
+        <ngb-pagination [collectionSize]="60" [pageSize]="8" [(page)]="page1" [maxSize]="5" [rotate]="true"
+                        (pageChange)="changePaginatePage($event)">
+        </ngb-pagination>
+    </div>
+</div>

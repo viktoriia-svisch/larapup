@@ -38,12 +38,8 @@ export class NavbarComponent implements OnInit {
         }
     };
     isHome() {
-        var titlee = this.location.prepareExternalUrl(this.location.path());
-        if (titlee === '/home') {
-            return true;
-        } else {
-            return false;
-        }
+        let title = this.location.prepareExternalUrl(this.location.path());
+        return title === '/home';
     }
     isDocumentation() {
         var titlee = this.location.prepareExternalUrl(this.location.path());
