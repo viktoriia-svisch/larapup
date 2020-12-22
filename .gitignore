@@ -48,3 +48,5 @@ front-end/documentation
 front-end/.DS_Store
 front-end/Thumbs.db
 back-end/.idea/workspace.xml
+back-end/composer.lock
+back-end/.idea/workspace.xml
