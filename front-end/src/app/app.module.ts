@@ -28,8 +28,7 @@ import {LoginStudentComponent} from './modules/student/login-student/login-stude
         DashboardComponent,
         LoginComponent,
         GuestComponent,
-        UploadArticleComponent,
-        LoginStudentComponent
+        UploadArticleComponent
     ],
     imports: [
         BrowserModule,

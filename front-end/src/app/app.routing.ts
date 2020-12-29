@@ -6,8 +6,6 @@ import {DashboardComponent} from './modules/shared/dashboard/dashboard.component
 import {LoginComponent} from './modules/shared/login/login.component';
 import {GuestComponent} from './layout/guest/guest.component';
 import {NucleoiconsComponent} from './components/nucleoicons/nucleoicons.component';
-import {UploadArticleComponent} from './modules/student/upload-article/upload-article.component';
-import {LoginStudentComponent} from './modules/student/login-student/login-student.component';
 const routes: Routes = [
     {
         path: '', component: AppComponent, children: [
@@ -15,15 +13,10 @@ const routes: Routes = [
                 path: '', component: GuestComponent, children: [
                     {path: '', pathMatch: 'full', redirectTo: 'news'},
                     {path: 'news', component: DashboardComponent},
-                    {path: 'login', component: LoginComponent}
+                    {path: 'login', component: LoginComponent},
+                    {path: 'student', loadChildren: './modules/student/student.module#StudentModule'},
                 ]
             },
-            {
-                path: '', component: GuestComponent, children: [
-                    {path: 'upload', component: UploadArticleComponent},
-                    {path: 'login-student', component: LoginStudentComponent}
-                ]
-            }
         ]
     },
     {path: 'home', component: HomeComponent},
