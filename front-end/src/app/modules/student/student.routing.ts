@@ -5,7 +5,7 @@ import {RouterModule, Routes} from '@angular/router';
 const routes: Routes = [
     {
         path: '', children: [
-            {path: 'login-student', component: LoginStudentComponent}
+            {path: 'login', component: LoginStudentComponent}
         ]
     },
     {

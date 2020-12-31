@@ -17,6 +17,7 @@ import {GuestComponent} from './layout/guest/guest.component';
 import {HttpClientModule} from '@angular/common/http';
 import {UploadArticleComponent} from './modules/student/upload-article/upload-article.component';
 import {LoginStudentComponent} from './modules/student/login-student/login-student.component';
+import {StudentRoutingModule} from './modules/student/student.routing';
 @NgModule({
     declarations: [
         AppComponent,
@@ -27,17 +28,16 @@ import {LoginStudentComponent} from './modules/student/login-student/login-stude
         FooterComponent,
         DashboardComponent,
         LoginComponent,
-        GuestComponent,
-        UploadArticleComponent
+        GuestComponent
     ],
     imports: [
         BrowserModule,
-        NgbModule.forRoot(),
         FormsModule,
+        NgbModule,
         RouterModule,
         HttpClientModule,
+        HomeModule,
         AppRoutingModule,
-        HomeModule
     ],
     providers: [],
     bootstrap: [AppComponent]
