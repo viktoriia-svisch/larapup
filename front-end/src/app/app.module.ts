@@ -15,9 +15,6 @@ import {DashboardComponent} from './modules/shared/dashboard/dashboard.component
 import {LoginComponent} from './modules/shared/login/login.component';
 import {GuestComponent} from './layout/guest/guest.component';
 import {HttpClientModule} from '@angular/common/http';
-import {UploadArticleComponent} from './modules/student/upload-article/upload-article.component';
-import {LoginStudentComponent} from './modules/student/login-student/login-student.component';
-import {StudentRoutingModule} from './modules/student/student.routing';
 @NgModule({
     declarations: [
         AppComponent,
