@@ -20,6 +20,10 @@ const routes: Routes = [
                         path: 'admin',
                         loadChildren: './modules/admin/admin.module#AdminModule'
                     },
+                    {
+                        path: 'coordinator',
+                        loadChildren: './modules/coordinator/coordinator.module#CoordinatorModule'
+                    },
                 ]
             },
         ]
