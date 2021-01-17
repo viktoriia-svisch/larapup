@@ -11,7 +11,7 @@ define('STUDENT_STATUS', [
     'LEFT' => 3,
     'REMOVED' => 0
 ]);
-define('PER_PAGE', 50);
+define('PER_PAGE', 1);
 define('MESSAGE', 'message');
 define('SEARCH', 'search');
 define('EMAIL', 'email');
