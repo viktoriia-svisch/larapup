@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Coordinator as CoordinatorResource;
-use App\Coordinator;
+use App\Models\Coordinator;
 use Illuminate\Http\Request;
 class CoordinatorController extends Controller
 {
