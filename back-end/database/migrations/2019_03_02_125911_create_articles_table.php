@@ -10,10 +10,10 @@ class CreateArticlesTable extends Migration
             $table->increments('id');
             $table->integer('student_id');
             $table->integer('faculty_id');
-            $table->string('avatar');
-            $table->string('cover');
             $table->string('title');
             $table->string('description');
+            $table->string('avatar');
+            $table->string('cover')->nullable();
             $table->tinyInteger('status')->default(0)->comment('refer to constant.php');
             $table->timestamps();
             $table->softDeletes();

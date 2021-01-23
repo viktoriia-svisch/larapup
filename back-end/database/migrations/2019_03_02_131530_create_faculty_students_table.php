@@ -9,6 +9,7 @@ class CreateFacultyStudentsTable extends Migration
         Schema::create('faculty_students', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('student_id');
+            $table->integer('faculty_id');
             $table->timestamps();
             $table->softDeletes();
         });

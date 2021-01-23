@@ -8,6 +8,7 @@ class CreateFacultiesTable extends Migration
     {
         Schema::create('faculties', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('semester_id');
             $table->string('name');
             $table->timestamp('first_deadline');
             $table->timestamp('second_deadline');

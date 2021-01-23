@@ -9,6 +9,7 @@ class CreateFacultyCoordinatorsTable extends Migration
         Schema::create('faculty_coordinators', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('coordinator_id');
+            $table->integer('faculty_id');
             $table->timestamps();
             $table->softDeletes();
         });
