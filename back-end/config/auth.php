@@ -17,19 +17,15 @@ return [
             'driver' => 'jwt',
             'provider' => 'Coordinator',
         ],
-        'api.guest' => [
+        'api.coordinatorMaster' => [
             'driver' => 'jwt',
-            'provider' => 'Guest',
-        ],
-        'api.admin' => [
-            'driver' => 'jwt',
-            'provider' => 'Admin',
+            'provider' => 'CoordinatorMaster',
         ],
     ],
     'providers' => [
-        'Guest' => [
+        'users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Guest::class,
+            'model' => App\User::class,
         ],
         'Student' => [
             'driver' => 'eloquent',
@@ -39,9 +35,9 @@ return [
             'driver' => 'eloquent',
             'model' => \App\Models\Coordinator::class,
         ],
-        'Admin' => [
+        'CoordinatorMaster' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Admin::class,
+            'model' => \App\Models\CoordinatorMaster::class,
         ]
     ],
     'passwords' => [

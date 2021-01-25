@@ -1,12 +1,9 @@
 <?php
 namespace App\Rules;
-use App\Models\Student;
+use App\Student;
 use Illuminate\Contracts\Validation\Rule;
 class CheckStudentEmail implements Rule
 {
-    public function __construct()
-    {
-    }
     public function passes($attribute, $value)
     {
         $std = Student::where('email', $value)->first();
