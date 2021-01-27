@@ -8,11 +8,11 @@ class CreateStudentsTable extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('firstname');
-            $table->string('lastname');
-            $table->string('status');
+            $table->string('email', 90)->unique();
+            $table->string('password', 60);
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->integer('status')->default(0)->default('refer to constant.php');
             $table->timestamps();
             $table->softDeletes();
         });

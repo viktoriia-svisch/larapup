@@ -25,16 +25,16 @@ import {HttpClientModule} from '@angular/common/http';
         FooterComponent,
         DashboardComponent,
         LoginComponent,
-        GuestComponent,
+        GuestComponent
     ],
     imports: [
         BrowserModule,
-        NgbModule.forRoot(),
         FormsModule,
+        NgbModule,
         RouterModule,
         HttpClientModule,
+        HomeModule,
         AppRoutingModule,
-        HomeModule
     ],
     providers: [],
     bootstrap: [AppComponent]

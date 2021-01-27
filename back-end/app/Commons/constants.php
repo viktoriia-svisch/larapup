@@ -1,7 +1,14 @@
 <?php
 define('STUDENT_GUARD', 'Student');
 define('COORDINATOR_GUARD', 'Coordinator');
-define('COORDINATOR_STATUS', [
+define('ADMIN_GUARD', 'Admin');
+define('ARTICLE_STATUS', [
+    'PENDING' => 0,
+    'PUBLISHED' => 1,
+    'DECLINED' => 2,
+    'FINISHED' => 3
+]);
+define('COORDINATOR_LEVEL', [
     'NORMAL' => 0,
     'MASTER' => 1
 ]);
@@ -10,6 +17,10 @@ define('STUDENT_STATUS', [
     'FINISHED' => 2,
     'LEFT' => 3,
     'REMOVED' => 0
+]);
+define('COORDINATOR_STATUS', [
+    'ACTIVE' => 1,
+    'DEACTIVATE' => 0,
 ]);
 define('PER_PAGE', 1);
 define('MESSAGE', 'message');
