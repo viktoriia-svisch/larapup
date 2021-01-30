@@ -2,22 +2,22 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-class CreateSemestersTable extends Migration
+class CreateUsersTable extends Migration
 {
     public function up()
     {
-        Schema::create('semesters', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
     public function down()
     {
-        Schema::dropIfExists('semesters');
+        Schema::dropIfExists('users');
     }
 }

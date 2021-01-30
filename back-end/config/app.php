@@ -1,6 +1,6 @@
 <?php
 return [
-    'name' => env('APP_NAME', 'Greenwich Magazine'),
+    'name' => env('APP_NAME', 'Laravel'),
     'env' => env('APP_ENV', 'production'),
     'debug' => env('APP_DEBUG', false),
     'url' => env('APP_URL', 'http:
@@ -34,7 +34,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
