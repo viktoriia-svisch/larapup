@@ -1,7 +1,6 @@
 <?php
 define('STUDENT_GUARD', 'Student');
 define('COORDINATOR_GUARD', 'Coordinator');
-define('COORDINATOR_GUARD', 'Coordinator');
 define('ADMIN_GUARD', 'Admin');
 define('ARTICLE_STATUS', [
     'PENDING' => 0,

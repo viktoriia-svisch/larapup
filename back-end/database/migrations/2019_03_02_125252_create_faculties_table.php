@@ -10,8 +10,8 @@ class CreateFacultiesTable extends Migration
             $table->increments('id');
             $table->integer('semester_id');
             $table->string('name');
-            $table->timestamp('first_deadline');
-            $table->timestamp('second_deadline');
+            $table->dateTime('first_deadline');
+            $table->dateTime('second_deadline');
             $table->timestamps();
             $table->softDeletes();
         });

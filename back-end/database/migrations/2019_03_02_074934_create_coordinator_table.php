@@ -13,7 +13,7 @@ class CreateCoordinatorTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->integer('type');
-            $table->integer('status')->default(0)->default('refer to constant.php');
+            $table->integer('status')->default(0)->comment('refer to constant.php');
             $table->timestamps();
             $table->softDeletes();
         });

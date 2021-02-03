@@ -12,7 +12,7 @@ class CreateStudentsTable extends Migration
             $table->string('password', 60);
             $table->string('first_name');
             $table->string('last_name');
-            $table->integer('status')->default(0)->default('refer to constant.php');
+            $table->integer('status')->default(0)->comment('refer to constant.php');
             $table->timestamps();
             $table->softDeletes();
         });
