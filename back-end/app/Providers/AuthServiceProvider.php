@@ -11,10 +11,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        Auth::extend('jwt-auth', function ($app, $name, array $config) {
-            $userProvider = app(TokenToUserProvider::class);
-            $request = app('request');
-            return new AccessTokenGuard($userProvider, $request, $config);
-        });
     }
 }
