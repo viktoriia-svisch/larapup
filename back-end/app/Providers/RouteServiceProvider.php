@@ -38,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
     }
     protected function mapApiCoordinatorRoutes()
     {
-        Route::middleware('api.coordinator')
+        Route::middleware('auth.coordinator')
             ->prefix('api/coordinator')
             ->namespace($this->namespace . '\Coordinator')
             ->group(base_path('routes/coordinator.api.php'));
