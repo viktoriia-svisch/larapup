@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateCoordinator;
 use App\Http\Resources\Coordinator as CoordinatorResource;
 use App\Models\Coordinator;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class CoordinatorController extends Controller
     public function create()
     {
     }
-    public function store(Request $request)
+    public function store(CreateCoordinator $request)
     {
     }
     public function show($id)
