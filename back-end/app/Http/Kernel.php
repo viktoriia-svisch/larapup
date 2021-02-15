@@ -1,5 +1,11 @@
 <?php
 namespace App\Http;
+use App\Http\Middleware\Admin;
+use App\Http\Middleware\Coordinator;
+use App\Http\Middleware\CoordinatorMaster;
+use App\Http\Middleware\Guest;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\Student;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel
 {
@@ -25,12 +31,18 @@ class Kernel extends HttpKernel
         ],
     ];
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+        'auth.refresh' => \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
+        'auth.admin' => Admin::class,
+        'auth.student' => Student::class,
+        'auth.coordinator' => Coordinator::class,
+        'auth.coordinator.master' => CoordinatorMaster::class,
+        'auth.guest' => Guest::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'guest' => RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
