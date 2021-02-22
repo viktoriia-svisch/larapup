@@ -5,7 +5,6 @@ class Admin
 {
     public function handle($request, Closure $next)
     {
-dd($request);
         return $next($request);
     }
 }
