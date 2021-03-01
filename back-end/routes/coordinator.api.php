@@ -4,5 +4,5 @@ Route::group([
 ], function ($router) {
     Route::get('cor','CoordinatorController@index');
     Route::get('get/{id}','CoordinatorController@show');
-    Route::post('new','CoordinatorController@store');
+    Route::post('new-coordinator','CoordinatorController@store');
 });
