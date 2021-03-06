@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cb66e2f3-d827-40c8-aea9-e1ea018775f0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front-end/src/app/modules/coordinator/login-coordinator/login-coordinator.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end/src/app/modules/coordinator/login-coordinator/login-coordinator.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../front-end/src/app/modules/shared/login/login.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end/src/app/modules/shared/login/login.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front-end/src/app/modules/student/login-student/login-student.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../front-end/src/app/modules/student/login-student/login-student.component.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
