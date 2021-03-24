@@ -15,6 +15,7 @@ import {DashboardComponent} from './modules/shared/dashboard/dashboard.component
 import {LoginComponent} from './modules/shared/login/login.component';
 import {GuestComponent} from './layout/guest/guest.component';
 import {HttpClientModule} from '@angular/common/http';
+import { ViewArticleComponent } from './modules/shared/view-article/view-article.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -25,7 +26,8 @@ import {HttpClientModule} from '@angular/common/http';
         FooterComponent,
         DashboardComponent,
         LoginComponent,
-        GuestComponent
+        GuestComponent,
+        ViewArticleComponent
     ],
     imports: [
         BrowserModule,
