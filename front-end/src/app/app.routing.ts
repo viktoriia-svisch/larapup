@@ -4,7 +4,6 @@ import {AppComponent} from './app.component';
 import {DashboardComponent} from './modules/shared/dashboard/dashboard.component';
 import {LoginComponent} from './modules/shared/login/login.component';
 import {GuestComponent} from './layout/guest/guest.component';
-import {ViewArticleComponent} from './modules/shared/view-article/view-article.component';
 const routes: Routes = [
     {
         path: '', component: AppComponent, children: [
@@ -13,7 +12,6 @@ const routes: Routes = [
                     {path: '', pathMatch: 'full', redirectTo: 'news'},
                     {path: 'news', component: DashboardComponent},
                     {path: 'login', component: LoginComponent},
-                    {path: 'view-article', component: ViewArticleComponent},
                     {
                         path: 'student',
                         loadChildren: './modules/student/student.module#StudentModule'
