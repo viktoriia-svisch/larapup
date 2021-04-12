@@ -12,9 +12,10 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapWebRoutes();
-        $this->mapApiStudentRoutes();
+        $this->mapStudentRoutes();
         $this->mapApiAdminRoutes();
         $this->mapApiCoordinatorRoutes();
+        $this->mapApiAdminRoutes();
     }
     protected function mapWebRoutes()
     {
@@ -22,12 +23,12 @@ class RouteServiceProvider extends ServiceProvider
             ->namespace($this->namespace)
             ->group(base_path('routes/web.php'));
     }
-    protected function mapApiStudentRoutes()
+    protected function mapStudentRoutes()
     {
-        Route::prefix('api/student')
-            ->middleware('auth.student')
+        Route::prefix('/student')
+            ->middleware(['web'])
             ->namespace($this->namespace . '\Student')
-            ->group(base_path('routes/student.api.php'));
+            ->group(base_path('routes/student.php'));
     }
     protected function mapApiAdminRoutes()
     {

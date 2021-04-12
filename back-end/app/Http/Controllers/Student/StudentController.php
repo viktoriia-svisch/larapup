@@ -12,16 +12,16 @@ class StudentController extends Controller
         $students = Student::paginate(PER_PAGE);
         return StudentResource::collection($students);
     }
-    public function create()
-    {
+    public function dashboard(){
+        return view('student.dashboard');
     }
     public function store(CreateStudent $request)
     {
         $std = new Student();
         $std->email = $request->get('email');
         $std->password = $request->get('password');
-        $std->firstname = $request->get('first_name');
-        $std->lastname = $request->get('last_name');
+        $std->first_name = $request->get('first_name');
+        $std->last_name = $request->get('last_name');
         $std->status = 1;
         if ($std->save())
             return $this->responseMessage(
@@ -36,14 +36,5 @@ class StudentController extends Controller
     {
         $student = Student::find($id);
         return new StudentResource($student);
-    }
-    public function edit($id)
-    {
-    }
-    public function update(Request $request, $id)
-    {
-    }
-    public function destroy($id)
-    {
     }
 }
