@@ -4,7 +4,7 @@
 @endpush
 @section("content")
     <div class="height-fluid d-flex justify-content-center align-items-center">
-        <form class="col-md-3 col-xs-12" method="post" action="">
+        <form class="col-md-3 col-xs-12" method="post" action="{{route('student.loginPost')}}">
             {{ csrf_field() }}
             <div class="col-12">
                 <h1>Student portal</h1>
@@ -31,9 +31,9 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    @if($errors->has('code'))
+                    @if($errors->has('email'))
                         <p class="col-12 text-danger">
-                            {{$errors->first('code')}}
+                            {{$errors->first('email')}}
                         </p>
                     @elseif($errors->has('password'))
                         <p class="col-12 text-danger">
@@ -41,11 +41,16 @@
                         </p>
                     @endif
                     <div class="col-sm-4">
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="submit" class="btn btn-block btn-primary">Login</button>
                     </div>
                     <div class="col-sm">
                         <a href="" class="float-right text-underline">Forgot your password?</a>
                     </div>
+                </div>
+                <hr>
+                <div class="col-12 row p-0 m-0">
+                    <a href="" class="btn btn-block btn-neutral mr-0">Login as guest</a>
+                    <a href="" class="btn btn-block btn-neutral">Login as teacher</a>
                 </div>
             </div>
         </form>

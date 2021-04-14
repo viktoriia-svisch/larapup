@@ -12,7 +12,7 @@
                 <div class="navbar-collapse-header">
                     <div class="row">
                         <div class="col-6 collapse-brand">
-                            <a href="../../">
+                            <a href="{{route('student.dashboard')}}">
                                 <img src="{{asset('favicon.ico')}}">
                             </a>
                         </div>
@@ -42,7 +42,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" >
+                        <a class="nav-link" href="{{route('student.logout')}}">
                             <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
