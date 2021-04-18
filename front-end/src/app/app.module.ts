@@ -17,6 +17,7 @@ import {GuestComponent} from './layout/guest/guest.component';
 import {HttpClientModule} from '@angular/common/http';
 import {StorageService} from './servies/shared/storage.service';
 import {AuthService} from './servies/modules/auth.service';
+import { ViewArticleComponent } from './modules/shared/view-article/view-article.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -27,7 +28,8 @@ import {AuthService} from './servies/modules/auth.service';
         FooterComponent,
         DashboardComponent,
         LoginComponent,
-        GuestComponent
+        GuestComponent,
+        ViewArticleComponent
     ],
     imports: [
         BrowserModule,
