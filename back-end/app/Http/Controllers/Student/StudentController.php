@@ -12,6 +12,9 @@ class StudentController extends Controller
         $students = Student::paginate(PER_PAGE);
         return StudentResource::collection($students);
     }
+    public function article(){
+        return view('shared.article');
+    }
     public function dashboard(){
         return view('student.dashboard');
     }
