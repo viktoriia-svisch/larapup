@@ -124,7 +124,7 @@
                 <small class="text-black-50">Issued at: 22/02/2015 22:22:22</small>
             </div>
             <hr>
-            <div class="col-12">
+            <form method="post" action="" class="col-12">
                 <div class="form-group">
                     <label for="discussion">Comment on discussion</label>
                     <textarea class="form-control form-control-alternative" style="color: #161616; height: 8rem; resize: none;" placeholder="Write comment here" name="discussion"
@@ -132,7 +132,7 @@
                     <br>
                     <button class="btn btn-block btn-primary">Send</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 @endsection
