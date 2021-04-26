@@ -23,8 +23,8 @@ class StudentController extends Controller
         $std = new Student();
         $std->email = $request->get('email');
         $std->password = $request->get('password');
-        $std->first_name = $request->get('first_name');
-        $std->last_name = $request->get('last_name');
+        $std->firstname = $request->get('first_name');
+        $std->lastname = $request->get('last_name');
         $std->status = 1;
         if ($std->save())
             return $this->responseMessage(
@@ -39,5 +39,14 @@ class StudentController extends Controller
     {
         $student = Student::find($id);
         return new StudentResource($student);
+    }
+    public function edit($id)
+    {
+    }
+    public function update(Request $request, $id)
+    {
+    }
+    public function destroy($id)
+    {
     }
 }

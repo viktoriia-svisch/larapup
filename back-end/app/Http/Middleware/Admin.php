@@ -5,7 +5,9 @@ class Admin
 {
     public function handle($request, Closure $next)
     {
-dd($request);
+        if(Auth::guard(ADMIN_GUARD)->check()){
+            return redirect('/home');
+        }
         return $next($request);
     }
 }
