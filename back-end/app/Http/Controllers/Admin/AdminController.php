@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSemester;
-use App\Models\Semester;
+use App\Semester;
 use Illuminate\Http\Request;
 use App\Http\Resources\Semester as SemesterResource;
 class AdminController extends Controller

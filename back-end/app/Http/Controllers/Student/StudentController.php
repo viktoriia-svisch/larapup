@@ -12,11 +12,8 @@ class StudentController extends Controller
         $students = Student::paginate(PER_PAGE);
         return StudentResource::collection($students);
     }
-    public function article(){
-        return view('shared.article');
-    }
-    public function dashboard(){
-        return view('student.dashboard');
+    public function create()
+    {
     }
     public function store(CreateStudent $request)
     {
@@ -35,9 +32,27 @@ class StudentController extends Controller
             );
         return $this->responseMessage('Create unsuccessfully', true);
     }
+    public function search(Request $request){
+        $data = $request->get('data');
+        $search = Student::where('first_name', 'like', "%{$data}%")
+            ->orWhere('last_name', 'like', "%{$data}%")
+            ->get();
+        return Response::json([
+            'data' => $search
+        ]);
+    }
     public function show($id)
     {
         $student = Student::find($id);
         return new StudentResource($student);
+    }
+    public function edit($id)
+    {
+    }
+    public function update(Request $request, $id)
+    {
+    }
+    public function destroy($id)
+    {
     }
 }

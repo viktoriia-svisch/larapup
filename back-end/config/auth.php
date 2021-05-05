@@ -1,28 +1,28 @@
 <?php
 return [
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'Student',
         ],
-        'student' => [
-            'driver' => 'session',
+        'api' => [
+            'driver' => 'jwt',
             'provider' => 'Student',
         ],
-        'coordinator' => [
-            'driver' => 'session',
+        'api.coordinator' => [
+            'driver' => 'jwt',
             'provider' => 'Coordinator',
         ],
-        'guest' => [
-            'driver' => 'session',
+        'api.guest' => [
+            'driver' => 'jwt',
             'provider' => 'Guest',
         ],
-        'admin' => [
-            'driver' => 'session',
+        'api.admin' => [
+            'driver' => 'jwt',
             'provider' => 'Admin',
         ],
     ],
