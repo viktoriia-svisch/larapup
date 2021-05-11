@@ -5,5 +5,5 @@ Route::group([
     Route::get('','StudentController@index');
     Route::get('get/{id}','StudentController@show');
     Route::post('new-student','StudentController@store');
-    Route::get('search', 'StudentController@search');
+    Route::get('search/{request}', 'StudentController@search');
 });
