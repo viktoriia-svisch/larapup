@@ -12,10 +12,9 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapWebRoutes();
-        $this->mapApiStudentRoutes();
-        $this->mapApiAdminRoutes();
-        $this->mapApiCoordinatorRoutes();
-        $this->mapApiAdminRoutes();
+        $this->mapStudentRoutes();
+        $this->mapAdminRoutes();
+        $this->mapCoordinatorRoutes();
     }
     protected function mapWebRoutes()
     {
@@ -23,24 +22,24 @@ class RouteServiceProvider extends ServiceProvider
             ->namespace($this->namespace)
             ->group(base_path('routes/web.php'));
     }
-    protected function mapApiStudentRoutes()
+    protected function mapStudentRoutes()
     {
-        Route::prefix('api/student')
-            ->middleware('auth.student')
+        Route::middleware(['auth:'.STUDENT_GUARD, 'web'])
+            ->prefix('/student')
             ->namespace($this->namespace . '\Student')
-            ->group(base_path('routes/student.api.php'));
+            ->group(base_path('routes/student.php'));
     }
-    protected function mapApiAdminRoutes()
+    protected function mapAdminRoutes()
     {
-        Route::middleware('auth.admin')
-            ->prefix('api/admin')
+        Route::middleware(['auth:'.ADMIN_GUARD, 'web'])
+            ->prefix('admin')
             ->namespace($this->namespace . '\Admin')
             ->group(base_path('routes/admin.api.php'));
     }
-    protected function mapApiCoordinatorRoutes()
+    protected function mapCoordinatorRoutes()
     {
-        Route::middleware('auth.coordinator')
-            ->prefix('api/coordinator')
+        Route::middleware(['auth:'.COORDINATOR_GUARD, 'web'])
+            ->prefix('coordinator')
             ->namespace($this->namespace . '\Coordinator')
             ->group(base_path('routes/coordinator.api.php'));
     }
