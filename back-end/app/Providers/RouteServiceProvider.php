@@ -34,14 +34,14 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware(['auth:'.ADMIN_GUARD, 'web'])
             ->prefix('admin')
             ->namespace($this->namespace . '\Admin')
-            ->group(base_path('routes/admin.api.php'));
+            ->group(base_path('routes/admin.php'));
     }
     protected function mapCoordinatorRoutes()
     {
         Route::middleware(['auth:'.COORDINATOR_GUARD, 'web'])
             ->prefix('coordinator')
             ->namespace($this->namespace . '\Coordinator')
-            ->group(base_path('routes/coordinator.api.php'));
+            ->group(base_path('routes/coordinator.php'));
     }
     protected function mapApiRoutes()
     {
