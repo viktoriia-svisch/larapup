@@ -1,9 +1,7 @@
 @extends("layout.Student.student-layout")
 @section('title', 'Article')
 @push("custom-css")
-
 @endpush
-
 @section("student-content")
     <div class="container-fluid row col-12">
         <div class="col-md-8 col-sm-12 height-fluid">
@@ -74,7 +72,6 @@
             </div>
             <hr>
         </div>
-
         <div class="col-md-4 col-sm-12 pb-5" style="border-left: 1px solid #b8b8b8;">
             <br>
             <div class="col-12">
@@ -139,7 +136,5 @@
         </div>
     </div>
 @endsection
-
 @push("custom-js")
-
 @endpush

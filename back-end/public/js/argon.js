@@ -1,82 +1,28 @@
-/*!
-
-=========================================================
-* Argon Dashboard - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard
-* Copyright 2018 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md)
-
-* Coded by www.creative-tim.com
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-//
-// Bootstrap Datepicker
-//
-
 'use strict';
-
 var Datepicker = (function() {
-
-	// Variables
-
 	var $datepicker = $('.datepicker');
-
-
-	// Methods
-
 	function init($this) {
 		var options = {
 			disableTouchKeyboard: true,
 			autoclose: false
 		};
-
 		$this.datepicker(options);
 	}
-
-
-	// Events
-
 	if ($datepicker.length) {
 		$datepicker.each(function() {
 			init($(this));
 		});
 	}
-
 })();
-
-//
-// Icon code copy/paste
-//
-
 'use strict';
-
 var CopyIcon = (function() {
-
-	// Variables
-
 	var $element = '.btn-icon-clipboard',
 		$btn = $($element);
-
-
-	// Methods
-
 	function init($this) {
 		$this.tooltip().on('mouseleave', function() {
-			// Explicitly hide tooltip, since after clicking it remains
-			// focused (as it's a button), so tooltip would otherwise
-			// remain visible until focus is moved away
 			$this.tooltip('hide');
 		});
-
 		var clipboard = new ClipboardJS($element);
-
 		clipboard.on('success', function(e) {
 			$(e.trigger)
 				.attr('title', 'Copied!')
@@ -84,65 +30,34 @@ var CopyIcon = (function() {
 				.tooltip('show')
 				.attr('title', 'Copy to clipboard')
 				.tooltip('_fixTitle')
-
 			e.clearSelection()
 		});
 	}
-
-
-	// Events
 	if ($btn.length) {
 		init($btn);
 	}
-
 })();
-
-//
-// Form control
-//
-
 'use strict';
-
 var FormControl = (function() {
-
-	// Variables
-
 	var $input = $('.form-control');
-
-
-	// Methods
-
 	function init($this) {
 		$this.on('focus blur', function(e) {
         $(this).parents('.form-group').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
     }).trigger('blur');
 	}
-
-
-	// Events
-
 	if ($input.length) {
 		init($input);
 	}
-
 })();
-
-//
-// Google maps
-//
-
 var $map = $('#map-canvas'),
     map,
     lat,
     lng,
     color = "#5e72e4";
-
 function initMap() {
-
     map = document.getElementById('map-canvas');
     lat = map.getAttribute('data-lat');
     lng = map.getAttribute('data-lng');
-
     var myLatlng = new google.maps.LatLng(lat, lng);
     var mapOptions = {
         zoom: 12,
@@ -151,228 +66,104 @@ function initMap() {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":color},{"visibility":"on"}]}]
     }
-
     map = new google.maps.Map(map, mapOptions);
-
     var marker = new google.maps.Marker({
         position: myLatlng,
         map: map,
         animation: google.maps.Animation.DROP,
         title: 'Hello World!'
     });
-
     var contentString = '<div class="info-window-content"><h2>Argon Dashboard</h2>' +
         '<p>A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</p></div>';
-
     var infowindow = new google.maps.InfoWindow({
         content: contentString
     });
-
     google.maps.event.addListener(marker, 'click', function() {
         infowindow.open(map, marker);
     });
 }
-
 if($map.length) {
     google.maps.event.addDomListener(window, 'load', initMap);
 }
-
-// //
-// // Headroom - show/hide navbar on scroll
-// //
-//
-// 'use strict';
-//
-// var Headroom = (function() {
-//
-// 	// Variables
-//
-// 	var $headroom = $('#navbar-main');
-//
-//
-// 	// Methods
-//
-// 	function init($this) {
-//
-//     var headroom = new Headroom(document.querySelector("#navbar-main"), {
-//         offset: 300,
-//         tolerance: {
-//             up: 30,
-//             down: 30
-//         },
-//     });
-//
-//
-//
-// 	// Events
-//
-// 	if ($headroom.length) {
-// 		headroom.init();
-// 	}
-//
-// })();
-
-//
-// Navbar
-//
-
 'use strict';
-
 var Navbar = (function() {
-
-	// Variables
-
 	var $nav = $('.navbar-nav, .navbar-nav .nav');
 	var $collapse = $('.navbar .collapse');
 	var $dropdown = $('.navbar .dropdown');
-
-	// Methods
-
 	function accordion($this) {
 		$this.closest($nav).find($collapse).not($this).collapse('hide');
 	}
-
     function closeDropdown($this) {
         var $dropdownMenu = $this.find('.dropdown-menu');
-
         $dropdownMenu.addClass('close');
-
     	setTimeout(function() {
     		$dropdownMenu.removeClass('close');
     	}, 200);
 	}
-
-
-	// Events
-
 	$collapse.on({
 		'show.bs.collapse': function() {
 			accordion($(this));
 		}
 	})
-
 	$dropdown.on({
 		'hide.bs.dropdown': function() {
 			closeDropdown($(this));
 		}
 	})
-
 })();
-
-
-//
-// Navbar collapse
-//
-
-
 var NavbarCollapse = (function() {
-
-	// Variables
-
 	var $nav = $('.navbar-nav'),
 		$collapse = $('.navbar .collapse');
-
-
-	// Methods
-
 	function hideNavbarCollapse($this) {
 		$this.addClass('collapsing-out');
 	}
-
 	function hiddenNavbarCollapse($this) {
 		$this.removeClass('collapsing-out');
 	}
-
-
-	// Events
-
 	if ($collapse.length) {
 		$collapse.on({
 			'hide.bs.collapse': function() {
 				hideNavbarCollapse($collapse);
 			}
 		})
-
 		$collapse.on({
 			'hidden.bs.collapse': function() {
 				hiddenNavbarCollapse($collapse);
 			}
 		})
 	}
-
 })();
-
-//
-// Form control
-//
-
 'use strict';
-
 var noUiSlider = (function() {
-
-	// Variables
-
-	// var $sliderContainer = $('.input-slider-container'),
-	// 		$slider = $('.input-slider'),
-	// 		$sliderId = $slider.attr('id'),
-	// 		$sliderMinValue = $slider.data('range-value-min');
-	// 		$sliderMaxValue = $slider.data('range-value-max');;
-
-
-	// // Methods
-	//
-	// function init($this) {
-	// 	$this.on('focus blur', function(e) {
-  //       $this.parents('.form-group').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
-  //   }).trigger('blur');
-	// }
-	//
-	//
-	// // Events
-	//
-	// if ($input.length) {
-	// 	init($input);
-	// }
-
-
-
 	if ($(".input-slider-container")[0]) {
 			$('.input-slider-container').each(function() {
-
 					var slider = $(this).find('.input-slider');
 					var sliderId = slider.attr('id');
 					var minValue = slider.data('range-value-min');
 					var maxValue = slider.data('range-value-max');
-
 					var sliderValue = $(this).find('.range-slider-value');
 					var sliderValueId = sliderValue.attr('id');
 					var startValue = sliderValue.data('range-value-low');
-
 					var c = document.getElementById(sliderId),
 							d = document.getElementById(sliderValueId);
-
 					noUiSlider.create(c, {
 							start: [parseInt(startValue)],
 							connect: [true, false],
-							//step: 1000,
 							range: {
 									'min': [parseInt(minValue)],
 									'max': [parseInt(maxValue)]
 							}
 					});
-
 					c.noUiSlider.on('update', function(a, b) {
 							d.textContent = a[b];
 					});
 			})
 	}
-
 	if ($("#input-slider-range")[0]) {
 			var c = document.getElementById("input-slider-range"),
 					d = document.getElementById("input-slider-range-value-low"),
 					e = document.getElementById("input-slider-range-value-high"),
 					f = [d, e];
-
 			noUiSlider.create(c, {
 					start: [parseInt(d.getAttribute('data-range-value-low')), parseInt(e.getAttribute('data-range-value-high'))],
 					connect: !0,
@@ -384,139 +175,62 @@ var noUiSlider = (function() {
 					f[b].textContent = a[b]
 			})
 	}
-
 })();
-
-//
-// Popover
-//
-
 'use strict';
-
 var Popover = (function() {
-
-	// Variables
-
 	var $popover = $('[data-toggle="popover"]'),
 		$popoverClass = '';
-
-
-	// Methods
-
 	function init($this) {
 		if ($this.data('color')) {
 			$popoverClass = 'popover-' + $this.data('color');
 		}
-
 		var options = {
 			trigger: 'focus',
 			template: '<div class="popover ' + $popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
 		};
-
 		$this.popover(options);
 	}
-
-
-	// Events
-
 	if ($popover.length) {
 		$popover.each(function() {
 			init($(this));
 		});
 	}
-
 })();
-
-//
-// Scroll to (anchor links)
-//
-
 'use strict';
-
 var ScrollTo = (function() {
-
-	//
-	// Variables
-	//
-
 	var $scrollTo = $('.scroll-me, [data-scroll-to], .toc-entry a');
-
-
-	//
-	// Methods
-	//
-
 	function scrollTo($this) {
 		var $el = $this.attr('href');
         var offset = $this.data('scroll-to-offset') ? $this.data('scroll-to-offset') : 0;
 		var options = {
 			scrollTop: $($el).offset().top - offset
 		};
-
-        // Animate scroll to the selected section
         $('html, body').stop(true, true).animate(options, 600);
-
         event.preventDefault();
 	}
-
-
-	//
-	// Events
-	//
-
 	if ($scrollTo.length) {
 		$scrollTo.on('click', function(event) {
 			scrollTo($(this));
 		});
 	}
-
 })();
-
-//
-// Tooltip
-//
-
 'use strict';
-
 var Tooltip = (function() {
-
-	// Variables
-
 	var $tooltip = $('[data-toggle="tooltip"]');
-
-
-	// Methods
-
 	function init() {
 		$tooltip.tooltip();
 	}
-
-
-	// Events
-
 	if ($tooltip.length) {
 		init();
 	}
-
 })();
-
-//
-// Charts
-//
-
 'use strict';
-
 var Charts = (function() {
-
-	// Variable
-
 	var $toggle = $('[data-toggle="chart"]');
-	var mode = 'light';//(themeMode) ? themeMode : 'light';
+	var mode = 'light';
 	var fonts = {
 		base: 'Open Sans'
 	}
-
-	// Colors
 	var colors = {
 		gray: {
 			100: '#f6f9fc',
@@ -542,14 +256,7 @@ var Charts = (function() {
 		white: '#FFFFFF',
 		transparent: 'transparent',
 	};
-
-
-	// Methods
-
-	// Chart.js global options
 	function chartOptions() {
-
-		// Options
 		var options = {
 			defaults: {
 				global: {
@@ -596,43 +303,26 @@ var Charts = (function() {
 						mode: 'index',
 						intersect: false,
 						custom: function(model) {
-
-							// Get tooltip
 							var $tooltip = $('#chart-tooltip');
-
-							// Create tooltip on first render
 							if (!$tooltip.length) {
 								$tooltip = $('<div id="chart-tooltip" class="popover bs-popover-top" role="tooltip"></div>');
-
-								// Append to body
 								$('body').append($tooltip);
 							}
-
-							// Hide if no tooltip
 							if (model.opacity === 0) {
 								$tooltip.css('display', 'none');
 								return;
 							}
-
 							function getBody(bodyItem) {
 								return bodyItem.lines;
 							}
-
-							// Fill with content
 							if (model.body) {
 								var titleLines = model.title || [];
 								var bodyLines = model.body.map(getBody);
 								var html = '';
-
-								// Add arrow
 								html += '<div class="arrow"></div>';
-
-								// Add header
 								titleLines.forEach(function(title) {
 									html += '<h3 class="popover-header text-center">' + title + '</h3>';
 								});
-
-								// Add body
 								bodyLines.forEach(function(body, i) {
 									var colors = model.labelColors[i];
 									var styles = 'background-color: ' + colors.backgroundColor;
@@ -640,44 +330,32 @@ var Charts = (function() {
 									var align = (bodyLines.length > 1) ? 'justify-content-left' : 'justify-content-center';
 									html += '<div class="popover-body d-flex align-items-center ' + align + '">' + indicator + body + '</div>';
 								});
-
 								$tooltip.html(html);
 							}
-
-							// Get tooltip position
 							var $canvas = $(this._chart.canvas);
-
 							var canvasWidth = $canvas.outerWidth();
 							var canvasHeight = $canvas.outerHeight();
-
 							var canvasTop = $canvas.offset().top;
 							var canvasLeft = $canvas.offset().left;
-
 							var tooltipWidth = $tooltip.outerWidth();
 							var tooltipHeight = $tooltip.outerHeight();
-
 							var top = canvasTop + model.caretY - tooltipHeight - 16;
 							var left = canvasLeft + model.caretX - tooltipWidth / 2;
-
-							// Display tooltip
 							$tooltip.css({
 								'top': top + 'px',
 								'left': left + 'px',
 								'display': 'block',
 								'z-index': '100'
 							});
-
 						},
 						callbacks: {
 							label: function(item, data) {
 								var label = data.datasets[item.datasetIndex].label || '';
 								var yLabel = item.yLabel;
 								var content = '';
-
 								if (data.datasets.length > 1) {
 									content += '<span class="badge badge-primary mr-auto">' + label + '</span>';
 								}
-
 								content += '<span class="popover-body-value">' + yLabel + '</span>' ;
 								return content;
 							}
@@ -695,7 +373,6 @@ var Charts = (function() {
 							label: function(item, data) {
 								var value = data.datasets[0].data[item.index];
 								var content = '';
-
 								content += '<span class="popover-body-value">' + value + '</span>';
 								return content;
 							}
@@ -704,23 +381,18 @@ var Charts = (function() {
 					legendCallback: function(chart) {
 						var data = chart.data;
 						var content = '';
-
 						data.labels.forEach(function(label, index) {
 							var bgColor = data.datasets[0].backgroundColor[index];
-
 							content += '<span class="chart-legend-item">';
 							content += '<i class="chart-legend-indicator" style="background-color: ' + bgColor + '"></i>';
 							content += label;
 							content += '</span>';
 						});
-
 						return content;
 					}
 				}
 			}
 		}
-
-		// yAxes
 		Chart.scaleService.updateScaleDefaults('linear', {
 			gridLines: {
 				borderDash: [2],
@@ -744,8 +416,6 @@ var Charts = (function() {
 				}
 			}
 		});
-
-		// xAxes
 		Chart.scaleService.updateScaleDefaults('category', {
 			gridLines: {
 				drawBorder: false,
@@ -757,12 +427,8 @@ var Charts = (function() {
 			},
 			maxBarThickness: 10
 		});
-
 		return options;
-
 	}
-
-	// Parse global options
 	function parseOptions(parent, options) {
 		for (var item in options) {
 			if (typeof options[item] !== 'object') {
@@ -772,8 +438,6 @@ var Charts = (function() {
 			}
 		}
 	}
-
-	// Push options
 	function pushOptions(parent, options) {
 		for (var item in options) {
 			if (Array.isArray(options[item])) {
@@ -785,8 +449,6 @@ var Charts = (function() {
 			}
 		}
 	}
-
-	// Pop options
 	function popOptions(parent, options) {
 		for (var item in options) {
 			if (Array.isArray(options[item])) {
@@ -798,136 +460,74 @@ var Charts = (function() {
 			}
 		}
 	}
-
-	// Toggle options
 	function toggleOptions(elem) {
 		var options = elem.data('add');
 		var $target = $(elem.data('target'));
 		var $chart = $target.data('chart');
-
 		if (elem.is(':checked')) {
-
-			// Add options
 			pushOptions($chart, options);
-
-			// Update chart
 			$chart.update();
 		} else {
-
-			// Remove options
 			popOptions($chart, options);
-
-			// Update chart
 			$chart.update();
 		}
 	}
-
-	// Update options
 	function updateOptions(elem) {
 		var options = elem.data('update');
 		var $target = $(elem.data('target'));
 		var $chart = $target.data('chart');
-
-		// Parse options
 		parseOptions($chart, options);
-
-		// Toggle ticks
 		toggleTicks(elem, $chart);
-
-		// Update chart
 		$chart.update();
 	}
-
-	// Toggle ticks
 	function toggleTicks(elem, $chart) {
-
 		if (elem.data('prefix') !== undefined || elem.data('prefix') !== undefined) {
 			var prefix = elem.data('prefix') ? elem.data('prefix') : '';
 			var suffix = elem.data('suffix') ? elem.data('suffix') : '';
-
-			// Update ticks
 			$chart.options.scales.yAxes[0].ticks.callback = function(value) {
 				if (!(value % 10)) {
 					return prefix + value + suffix;
 				}
 			}
-
-			// Update tooltips
 			$chart.options.tooltips.callbacks.label = function(item, data) {
 				var label = data.datasets[item.datasetIndex].label || '';
 				var yLabel = item.yLabel;
 				var content = '';
-
 				if (data.datasets.length > 1) {
 					content += '<span class="popover-body-label mr-auto">' + label + '</span>';
 				}
-
 				content += '<span class="popover-body-value">' + prefix + yLabel + suffix + '</span>';
 				return content;
 			}
-
 		}
 	}
-
-
-	// Events
-
-	// Parse global options
 	if (window.Chart) {
 		parseOptions(Chart, chartOptions());
 	}
-
-	// Toggle options
 	$toggle.on({
 		'change': function() {
 			var $this = $(this);
-
 			if ($this.is('[data-add]')) {
 				toggleOptions($this);
 			}
 		},
 		'click': function() {
 			var $this = $(this);
-
 			if ($this.is('[data-update]')) {
 				updateOptions($this);
 			}
 		}
 	});
-
-
-	// Return
-
 	return {
 		colors: colors,
 		fonts: fonts,
 		mode: mode
 	};
-
 })();
-
-//
-// Orders chart
-//
-
 var OrdersChart = (function() {
-
-	//
-	// Variables
-	//
-
 	var $chart = $('#chart-orders');
 	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
 	function initChart($chart) {
-
-		// Create chart
 		var ordersChart = new Chart($chart, {
 			type: 'bar',
 			options: {
@@ -936,7 +536,6 @@ var OrdersChart = (function() {
 						ticks: {
 							callback: function(value) {
 								if (!(value % 10)) {
-									//return '$' + value + 'k'
 									return value
 								}
 							}
@@ -949,13 +548,10 @@ var OrdersChart = (function() {
 							var label = data.datasets[item.datasetIndex].label || '';
 							var yLabel = item.yLabel;
 							var content = '';
-
 							if (data.datasets.length > 1) {
 								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
 							}
-
 							content += '<span class="popover-body-value">' + yLabel + '</span>';
-							
 							return content;
 						}
 					}
@@ -969,40 +565,16 @@ var OrdersChart = (function() {
 				}]
 			}
 		});
-
-		// Save to jQuery object
 		$chart.data('chart', ordersChart);
 	}
-
-
-	// Init chart
 	if ($chart.length) {
 		initChart($chart);
 	}
-
 })();
-
-//
-// Charts
-//
-
 'use strict';
-
-//
-// Sales chart
-//
-
 var SalesChart = (function() {
-
-	// Variables
-
 	var $chart = $('#chart-sales');
-
-
-	// Methods
-
 	function init($chart) {
-
 		var salesChart = new Chart($chart, {
 			type: 'line',
 			options: {
@@ -1027,11 +599,9 @@ var SalesChart = (function() {
 							var label = data.datasets[item.datasetIndex].label || '';
 							var yLabel = item.yLabel;
 							var content = '';
-
 							if (data.datasets.length > 1) {
 								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
 							}
-
 							content += '<span class="popover-body-value">$' + yLabel + 'k</span>';
 							return content;
 						}
@@ -1046,18 +616,9 @@ var SalesChart = (function() {
 				}]
 			}
 		});
-
-		// Save to jQuery object
-
 		$chart.data('chart', salesChart);
-
 	};
-
-
-	// Events
-
 	if ($chart.length) {
 		init($chart);
 	}
-
 })();
