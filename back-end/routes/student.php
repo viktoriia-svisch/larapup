@@ -1,10 +1,10 @@
 <?php
 use Illuminate\Support\Facades\Route;
-$this->get('login', 'Auth\AuthController@showLoginForm')->name('student.login');
+Route::get('login', 'Auth\AuthController@showLoginForm')->name('login');
 $this->post('login', 'Auth\AuthController@login')->name('student.loginPost');
 $this->any('logout', 'Auth\AuthController@loggedOut')->name('student.logout');
 Route::group([
-    'middleware' => ['auth.student'],             
+    'middleware' => ['auth:'.STUDENT_GUARD],             
 ], function ($router) {
     Route::get('dashboard', 'StudentController@dashboard')->name('student.dashboard');
     Route::get('article', 'StudentController@article')->name('student.article');

@@ -5,6 +5,6 @@ class Authenticate extends Middleware
 {
     protected function redirectTo($request)
     {
-        return route('guest.login');
+        return route('login');
     }
 }
