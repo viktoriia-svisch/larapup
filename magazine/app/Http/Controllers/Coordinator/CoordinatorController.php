@@ -17,6 +17,12 @@ class CoordinatorController extends Controller
     public function store(Request $request)
     {
     }
+    public function search($request){
+        $search = Student::where('first_name', 'LIKE', '%' . $request . '%')
+            ->orWhere('last_name', 'like', '%' . $request . '%')
+            ->get();
+        return response()->json($search);
+    }
     public function show($id)
     {
         $coordinator = Coordinator::find($id);
