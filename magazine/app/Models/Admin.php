@@ -3,8 +3,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-class Admin extends Authenticate implements JWTSubject
+class Admin extends Authenticate
 {
     use Notifiable;
     protected $table = 'Admins';
