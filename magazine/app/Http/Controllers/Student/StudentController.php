@@ -41,6 +41,13 @@ class StudentController extends Controller
             ->get();
         return response()->json($search);
     }
+    public function searchAll(Request $request){
+        $data = $request->get('data');
+        $search = Student::where('first_name', 'like', "%{$data}%")
+            ->orWhere('last_name', 'like', "%{$data}%")
+            ->get();
+        return response()->json($search);
+    }
     public function show($id)
     {
         $student = Student::find($id);
