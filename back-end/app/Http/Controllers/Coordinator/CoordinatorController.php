@@ -1,9 +1,17 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateCoordinator;
+use App\Http\Requests\CreateFaculty;
 use App\Http\Resources\Coordinator as CoordinatorResource;
+use App\Http\Resources\Faculty as FacultyResource;
 use App\Models\Coordinator;
+use App\Models\Faculty;
+use App\Models\Semester;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Carbon\Carbon;
 class CoordinatorController extends Controller
 {
     public function index()
@@ -14,14 +22,60 @@ class CoordinatorController extends Controller
     public function create()
     {
     }
-    public function store(Request $request)
+    public function store(CreateCoordinator $request)
     {
+        $coor = new Coordinator();
+        $coor->email = $request->get('email');
+        $coor->password = $request->get('password');
+        $coor->first_name = $request->get('first_name');
+        $coor->last_name = $request->get('last_name');
+        $coor->type = 1;
+        $coor->status = 1;
+        if ($coor->save())
+            return $this->responseMessage(
+                'New student created successfully',
+                false,
+                'success',
+                $coor
+            );
+        return $this->responseMessage('Create unsuccessfully', true);
     }
-    public function search($request){
-        $search = Coordinator::where('first_name', 'LIKE', '%' . $request . '%')
-            ->orWhere('last_name', 'like', '%' . $request . '%')
-            ->get();
-        response()->json($search);
+    public function storeFaculty(CreateFaculty $request)
+    {
+        $coor = new Faculty();
+        $coor->semester_id= $request->get('semester_id');
+        $coor->name = $request->get('name');
+        $coor->first_deadline = $request->get('first_deadline');
+        $coor->second_deadline = $request->get('second_deadline');
+        $validated = $request->validated();
+        $checksemesterId = \DB::table('semesters') 
+        ->select('semesters.id')
+        ->where('semesters.id',$coor->semester_id)
+        ->first();
+        $getSemesterDate = \DB::table('semesters') 
+        ->where('id','=',$coor->semester_id)
+        ->first();
+        if(!$checksemesterId) 
+        {
+            return $this->responseMessage('There is no semester with id '.$coor->semester_id. " .Please create one first", true);
+        }
+        if($coor->first_deadline < $getSemesterDate->start_date || $coor->first_deadline > $getSemesterDate->end_date) 
+         {
+              return $this->responseMessage('Please enter the date between semester start and end date',true);
+         }
+        if($coor->second_deadline < $getSemesterDate->start_date || $coor->second_deadline > $getSemesterDate->end_date)
+         {
+              return $this->responseMessage('Please enter the date between semester start and end date',true);
+         }
+        else if ($coor->save())
+            {
+                return $this->responseMessage(
+                    'New faculty created successfully',
+                    false,
+                    'success',
+                    $coor,
+                );
+            }
     }
     public function show($id)
     {
