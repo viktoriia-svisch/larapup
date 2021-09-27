@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSemester;
-use App\Semester;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Http\Resources\Semester as SemesterResource;
 use Carbon\Carbon;
@@ -51,5 +51,6 @@ class AdminController extends Controller
     }
     public function destroy($id)
     {
+        return 'some';
     }
 }

@@ -1,8 +1,6 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateCoordinator;
-use App\Http\Requests\CreateFaculty;
 use App\Http\Resources\Coordinator as CoordinatorResource;
 use App\Http\Resources\Faculty as FacultyResource;
 use App\Models\Coordinator;
@@ -22,23 +20,8 @@ class CoordinatorController extends Controller
     public function create()
     {
     }
-    public function store(CreateCoordinator $request)
+    public function store(Request $request)
     {
-        $coor = new Coordinator();
-        $coor->email = $request->get('email');
-        $coor->password = $request->get('password');
-        $coor->first_name = $request->get('first_name');
-        $coor->last_name = $request->get('last_name');
-        $coor->type = 1;
-        $coor->status = 1;
-        if ($coor->save())
-            return $this->responseMessage(
-                'New student created successfully',
-                false,
-                'success',
-                $coor
-            );
-        return $this->responseMessage('Create unsuccessfully', true);
     }
     public function storeFaculty(CreateFaculty $request)
     {
