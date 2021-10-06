@@ -3,6 +3,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 class Student extends Authenticate
 {
     use Notifiable;

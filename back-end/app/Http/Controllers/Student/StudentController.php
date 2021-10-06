@@ -1,24 +1,42 @@
 <?php
+
 namespace App\Http\Controllers\Student;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudent;
 use App\Http\Resources\Student as StudentResource;
 use App\Models\Student;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
+
 class StudentController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index()
     {
+        //
         $students = Student::paginate(PER_PAGE);
         return StudentResource::collection($students);
+
     }
+
     public function article(){
         return view('shared.article');
     }
+
     public function dashboard(){
         return view('student.dashboard');
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param CreateStudent $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(CreateStudent $request)
     {
         $std = new Student();
@@ -36,12 +54,13 @@ class StudentController extends Controller
             );
         return $this->responseMessage('Create unsuccessfully', true);
     }
-    public function search($request){
-        $search = Student::where('first_name', 'LIKE', '%' . $request . '%')
-            ->orWhere('last_name', 'like', '%' . $request . '%')
-            ->get();
-        return response()->json($search);
-    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return StudentResource
+     */
     public function show($id)
     {
         $student = Student::find($id);

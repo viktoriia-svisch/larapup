@@ -31,6 +31,10 @@ class AuthController extends Controller
     {
         return Auth::guard(STUDENT_GUARD);
     }
+    public function username()
+    {
+        return 'email';
+    }
     protected function sendFailedLoginResponse(Request $request)
     {
         throw ValidationException::withMessages([

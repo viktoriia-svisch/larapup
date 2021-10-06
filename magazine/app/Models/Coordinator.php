@@ -1,10 +1,11 @@
 <?php
 namespace App\Models;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Database\Eloquent\Model;
-class Coordinator extends Authenticate
+class Coordinator extends Authenticate implements JWTSubject
 {
     use Notifiable;
     protected $table = 'coordinators';

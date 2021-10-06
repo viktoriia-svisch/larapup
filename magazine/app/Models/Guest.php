@@ -3,7 +3,8 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
-class Guest extends Authenticate
+use Tymon\JWTAuth\Contracts\JWTSubject;
+class Guest extends Authenticate implements JWTSubject
 {
     use Notifiable;
     protected $table = 'guests';
