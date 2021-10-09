@@ -24,7 +24,7 @@ class AuthController extends Controller
     }
     public function flushAuth(Request $request)
     {
-        Auth::logout();
+        Auth::guard(COORDINATOR_GUARD)->logout();
         $request->session()->invalidate();
     }
     protected function guard()

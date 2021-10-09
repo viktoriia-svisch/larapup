@@ -10,7 +10,7 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::paginate(PER_PAGE);
-        return StudentResource::collection($students);
+        dd($students);
     }
     public function article(){
         return view('shared.article');
@@ -38,6 +38,6 @@ class StudentController extends Controller
     public function show($id)
     {
         $student = Student::find($id);
-        return new StudentResource($student);
+        dd($student);
     }
 }

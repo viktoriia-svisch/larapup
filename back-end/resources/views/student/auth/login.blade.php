@@ -1,9 +1,7 @@
 @extends("layout.master")
 @section('title', 'Login')
 @push("custom-css")
-
 @endpush
-
 @section("content")
     <div class="height-fluid d-flex justify-content-center align-items-center">
         <form class="col-md-3 col-xs-12" method="post" action="{{route('student.loginPost')}}">
@@ -42,7 +40,6 @@
                             {{$errors->first('password')}}
                         </p>
                     @endif
-
                     <div class="col-sm-4">
                         <button type="submit" class="btn btn-block btn-primary">Login</button>
                     </div>
@@ -59,7 +56,5 @@
         </form>
     </div>
 @endsection
-
 @push("custom-js")
-
 @endpush
