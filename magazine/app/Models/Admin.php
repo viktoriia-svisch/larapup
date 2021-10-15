@@ -6,18 +6,10 @@ use Illuminate\Support\Facades\Hash;
 class Admin extends Authenticate
 {
     use Notifiable;
-    protected $table = 'Admins';
+    protected $table = 'admins';
     protected $hidden = [
         'password', 'deleted_at'
     ];
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
     public function setPasswordAttribute($value){
         return $this->attributes['password'] = Hash::make($value);
     }
