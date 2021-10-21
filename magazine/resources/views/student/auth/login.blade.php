@@ -3,11 +3,11 @@
 @push("custom-css")
 @endpush
 @section("content")
-    <div class="height-fluid d-flex justify-content-center align-items-center bg-primary">
+    <div class="height-fluid d-flex justify-content-center align-items-center">
         <form class="col-md-3 col-xs-12" method="post" action="{{route('student.loginPost')}}">
             {{ csrf_field() }}
             <div class="col-12">
-                <h1 class="text-white">Student portal</h1>
+                <h1>Student portal</h1>
                 <div class="form-group">
                     <div class="input-group input-group-alternative mb-4">
                         <div class="input-group-prepend">
@@ -16,7 +16,7 @@
                         </span>
                         </div>
                         <input class="form-control form-control-alternative" placeholder="Enter your email here" name="email"
-                               id="studentEmail" type="email">
+                               id="school_id" type="email">
                     </div>
                 </div>
                 <div class="form-group">
@@ -41,16 +41,16 @@
                         </p>
                     @endif
                     <div class="col-sm-4">
-                        <button type="submit" class="btn btn-block btn-default">Login</button>
+                        <button type="submit" class="btn btn-block btn-primary">Login</button>
                     </div>
                     <div class="col-sm">
-                        <a href="" class="float-right text-white">Forgot your password?</a>
+                        <a href="" class="float-right text-underline">Forgot your password?</a>
                     </div>
                 </div>
                 <hr>
                 <div class="col-12 row p-0 m-0">
-                    <a href="{{route('guest.login')}}" class="btn btn-block btn-neutral mr-0">Login as guest</a>
-                    <a href="{{route('coordinator.login')}}" class="btn btn-block btn-neutral">Login as coordinator</a>
+                    <a href="" class="btn btn-block btn-neutral mr-0">Login as guest</a>
+                    <a href="" class="btn btn-block btn-neutral">Login as teacher</a>
                 </div>
             </div>
         </form>

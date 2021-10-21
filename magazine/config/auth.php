@@ -16,35 +16,35 @@ return [
         ],
         'student' => [
             'driver' => 'session',
-            'provider' => 'student',
+            'provider' => 'Student',
         ],
         'coordinator' => [
             'driver' => 'session',
-            'provider' => 'coordinator',
+            'provider' => 'Coordinator',
         ],
         'guest' => [
             'driver' => 'session',
-            'provider' => 'guest',
+            'provider' => 'Guest',
         ],
         'admin' => [
             'driver' => 'session',
-            'provider' => 'admin',
+            'provider' => 'Admin',
         ],
     ],
     'providers' => [
-        'guest' => [
+        'Guest' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Guest::class,
         ],
-        'student' => [
+        'Student' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Student::class,
         ],
-        'coordinator' => [
+        'Coordinator' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Coordinator::class,
         ],
-        'admin' => [
+        'Admin' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Admin::class,
         ]

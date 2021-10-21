@@ -4,12 +4,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSemester;
 use App\Models\Semester;
 use Illuminate\Http\Request;
+use App\Http\Resources\Semester as SemesterResource;
 class AdminController extends Controller
 {
     public function index()
     {
         $sem = Semester::paginate((PER_PAGE));
         return SemesterResource::collection($sem);
+    }
+    public function create()
+    {
     }
     public function store(CreateSemester $request)
     {
@@ -27,16 +31,17 @@ class AdminController extends Controller
             );
         return $this->responseMessage('Create unsuccessfully', true);
     }
-    public function dashboard(){
-        return view('admin.dashboard');
+    public function show($id)
+    {
     }
-    public function semester(){
-        $semesters = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator']);
-        return view('admin.Semester.semester', [
-            'listSemester' => $semesters
-        ]);
+    public function edit($id)
+    {
     }
-    public function createSemester(){
-        return view('admin.Semester.create-semester');
+    public function update(Request $request, $id)
+    {
+    }
+    public function destroy($id)
+    {
+        return 'some';
     }
 }

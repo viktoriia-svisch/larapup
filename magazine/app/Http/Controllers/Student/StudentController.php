@@ -10,7 +10,7 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::paginate(PER_PAGE);
-        dd($students);
+        return StudentResource::collection($students);
     }
     public function article(){
         return view('shared.article');
@@ -35,9 +35,22 @@ class StudentController extends Controller
             );
         return $this->responseMessage('Create unsuccessfully', true);
     }
+    public function search($request){
+        $search = Student::where('first_name', 'LIKE', '%' . $request . '%')
+            ->orWhere('last_name', 'like', '%' . $request . '%')
+            ->get();
+        return response()->json($search);
+    }
+    public function searchAll(Request $request){
+        $data = $request->get('data');
+        $search = Student::where('first_name', 'like', "%{$data}%")
+            ->orWhere('last_name', 'like', "%{$data}%")
+            ->get();
+        return response()->json($search);
+    }
     public function show($id)
     {
         $student = Student::find($id);
-        dd($student);
+        return new StudentResource($student);
     }
 }
