@@ -14,9 +14,21 @@
                 New Semester
             </a>
             <br>
-            <hr>
+            <hr class="mb-0">
         </div>
         <div class="col-12">
+            <div class="card mb-4">
+                <div class="row no-gutters p-2">
+                    <div class=" d-flex justify-content-center flex-column">
+                        <h3>Start:<span>12/03/2019</span></h3>
+                        <h3>End:<span>12/05/2019</span></h3>
+                    </div>
+                    <div class="col-auto">
+                        <div class="card-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
