@@ -5,7 +5,6 @@ import 'rxjs/add/operator/filter';
 import {DOCUMENT} from '@angular/platform-browser';
 import {Location} from '@angular/common';
 import {NavbarComponent} from './layout/guest/navbar/navbar.component';
-import {HttpClient} from '@angular/common/http';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -13,7 +12,7 @@ import {HttpClient} from '@angular/common/http';
 })
 export class AppComponent implements OnInit {
     private _router: Subscription;
-    constructor(private renderer: Renderer, private router: Router, @Inject(DOCUMENT,) private document: any, private element: ElementRef, public location: Location, private http: HttpClient) {
+    constructor(private renderer: Renderer, private router: Router, @Inject(DOCUMENT,) private document: any, private element: ElementRef, public location: Location) {
     }
     ngOnInit() {
         let navbar: HTMLElement = this.element.nativeElement.children[0].children[0];
@@ -42,7 +41,6 @@ export class AppComponent implements OnInit {
                 body.classList.add('ie-background');
             }
         }
-        this.ditmeBao();
     }
     removeFooter() {
         let titlee = this.location.prepareExternalUrl(this.location.path());
@@ -52,12 +50,5 @@ export class AppComponent implements OnInit {
         } else {
             return true;
         }
-    }
-    ditmeBao(){
-        let data = {
-            username: 'longtqgch16095',
-            password: '123'
-        };
-        this.http.post('http:
     }
 }

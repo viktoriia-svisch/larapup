@@ -20,7 +20,7 @@ class AuthController extends Controller
     protected function loggedOut(Request $request)
     {
         self::flushAuth($request);
-        return redirect(route('student.login'));
+        return redirect(route('login'));
     }
     public function flushAuth(Request $request)
     {

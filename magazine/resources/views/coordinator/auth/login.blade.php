@@ -3,11 +3,11 @@
 @push("custom-css")
 @endpush
 @section("content")
-    <div class="height-fluid d-flex justify-content-center align-items-center bg-orange">
+    <div class="height-fluid d-flex justify-content-center align-items-center">
         <form class="col-md-3 col-xs-12" method="post" action="{{route('coordinator.loginPost')}}">
             {{ csrf_field() }}
             <div class="col-12">
-                <h1 class="text-white">Coordinator portal</h1>
+                <h1>Coordinator portal</h1>
                 <div class="form-group">
                     <div class="input-group input-group-alternative mb-4">
                         <div class="input-group-prepend">
@@ -44,7 +44,7 @@
                         <button type="submit" class="btn btn-block btn-primary">Login</button>
                     </div>
                     <div class="col-sm">
-                        <a href="" class="float-right text-white">Forgot your password?</a>
+                        <a href="" class="float-right text-underline">Forgot your password?</a>
                     </div>
                 </div>
                 <hr>
