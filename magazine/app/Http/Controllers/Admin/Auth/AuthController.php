@@ -11,7 +11,7 @@ class AuthController extends Controller
     protected $redirectTo = '/admin/dashboard';
     public function showLoginForm()
     {
-        return view('student.auth.admin');
+        return view('admin.auth.login');
     }
     public function redirectTo()
     {
@@ -20,16 +20,16 @@ class AuthController extends Controller
     protected function loggedOut(Request $request)
     {
         self::flushAuth($request);
-        return redirect('/login');
+        return redirect(route('student.login'));
     }
     public function flushAuth(Request $request)
     {
-        Auth::guard(COORDINATOR_GUARD)->logout();
+        Auth::guard(ADMIN_GUARD)->logout();
         $request->session()->invalidate();
     }
     protected function guard()
     {
-        return Auth::guard(STUDENT_GUARD);
+        return Auth::guard(ADMIN_GUARD);
     }
     public function username()
     {
