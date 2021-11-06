@@ -11,15 +11,11 @@ class AdminController extends Controller
     public function index()
     {
         $sem = Semester::paginate((PER_PAGE));
-        return SemesterResource::collection($sem);
-    }
-    public function create()
-    {
+        dd($sem);
     }
     public function store(CreateSemester $request)
     {
         $ad = new Semester();
-        $ad->id = $request->get('id');
         $ad->name = $request->get('name');
         $ad->description = $request->get('description');
         $ad->start_date = $request->get('start_date');
@@ -39,18 +35,5 @@ class AdminController extends Controller
             );
         }
         return $this->responseMessage('Create unsuccessfully', true);
-    }
-    public function show($id)
-    {
-    }
-    public function edit($id)
-    {
-    }
-    public function update(Request $request, $id)
-    {
-    }
-    public function destroy($id)
-    {
-        return 'some';
     }
 }
