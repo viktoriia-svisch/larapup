@@ -1,14 +1,12 @@
 <?php
 namespace App\Models;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 class Student extends Authenticate
 {
-    use SoftDeletes, Notifiable;
+    use Notifiable;
     protected $table = 'students';
-    protected $primaryKey = 'id';
     protected $fillable = [
         'name', 'email', 'password',
     ];
@@ -17,7 +15,7 @@ class Student extends Authenticate
     ];
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = bcrypt($value);
+        return $this->attributes['password'] = Hash::make($value);
     }
     public function article()
     {

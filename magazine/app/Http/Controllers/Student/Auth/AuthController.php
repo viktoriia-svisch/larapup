@@ -1,7 +1,5 @@
 <?php
 namespace App\Http\Controllers\Student\Auth;
-use App\Models\Admin;
-use App\Models\Student;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -22,11 +20,11 @@ class AuthController extends Controller
     protected function loggedOut(Request $request)
     {
         self::flushAuth($request);
-        return redirect(route('student.login'));
+        return redirect(route('login'));
     }
     public function flushAuth(Request $request)
     {
-        Auth::guard(STUDENT_GUARD)->logout();
+        Auth::logout();
         $request->session()->invalidate();
     }
     protected function guard()
@@ -52,9 +50,5 @@ class AuthController extends Controller
             'email.required' => __('auth.failed'),
             'password.required' => __('auth.failed'),
         ]);
-    }
-    public function username()
-    {
-        return 'email';
     }
 }

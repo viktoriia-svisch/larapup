@@ -16,7 +16,7 @@
                         </span>
                         </div>
                         <input class="form-control form-control-alternative" placeholder="Enter your email here" name="email"
-                               id="studentEmail" type="email">
+                               id="school_id" type="email">
                     </div>
                 </div>
                 <div class="form-group">
@@ -49,8 +49,8 @@
                 </div>
                 <hr>
                 <div class="col-12 row p-0 m-0">
-                    <a href="{{route('guest.login')}}" class="btn btn-block btn-neutral mr-0">Login as guest</a>
-                    <a href="{{route('coordinator.login')}}" class="btn btn-block btn-neutral">Login as coordinator</a>
+                    <a href="" class="btn btn-block btn-neutral mr-0">Login as guest</a>
+                    <a href="" class="btn btn-block btn-neutral">Login as teacher</a>
                 </div>
             </div>
         </form>
