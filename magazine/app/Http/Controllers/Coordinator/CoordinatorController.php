@@ -11,24 +11,12 @@ class CoordinatorController extends Controller
         $coordinators = Coordinator::paginate(PER_PAGE);
         return CoordinatorResource::collection($coordinators);
     }
-    public function create()
-    {
-    }
-    public function store(Request $request)
-    {
+    public function dashboard(){
+        return view('coordinator.dashboard');
     }
     public function show($id)
     {
         $coordinator = Coordinator::find($id);
         return new CoordinatorResource($coordinator);
-    }
-    public function edit($id)
-    {
-    }
-    public function update(Request $request, $id)
-    {
-    }
-    public function destroy($id)
-    {
     }
 }

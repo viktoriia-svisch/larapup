@@ -4,7 +4,7 @@
 @endpush
 @section("content")
     <div class="height-fluid d-flex justify-content-center align-items-center">
-        <form class="col-md-3 col-xs-12" method="post" action="{{route('student.loginPost')}}">
+        <form class="col-md-3 col-xs-12" method="post" action="{{route('admin.login')}}">
             {{ csrf_field() }}
             <div class="col-12">
                 <h1>Admin portal</h1>
