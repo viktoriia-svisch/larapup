@@ -38,7 +38,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">
+                        <a href="{{route('admin.student')}}" class="nav-link">
                             <i class="fas fa-user-graduate"></i>
                             Student
                         </a>
