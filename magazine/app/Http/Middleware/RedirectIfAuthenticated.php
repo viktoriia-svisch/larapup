@@ -16,9 +16,6 @@ class RedirectIfAuthenticated
                 case COORDINATOR_GUARD:
                     $redirect = route('coordinator.dashboard');
                     break;
-                case ADMIN_GUARD:
-                    $redirect = route('admin.dashboard');
-                    break;
             }
             return redirect($redirect);
         }

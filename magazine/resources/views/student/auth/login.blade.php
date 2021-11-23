@@ -3,11 +3,11 @@
 @push("custom-css")
 @endpush
 @section("content")
-    <div class="height-fluid d-flex justify-content-center align-items-center bg-primary">
+    <div class="height-fluid d-flex justify-content-center align-items-center">
         <form class="col-md-3 col-xs-12" method="post" action="{{route('student.loginPost')}}">
             {{ csrf_field() }}
             <div class="col-12">
-                <h1 class="text-white">Student portal</h1>
+                <h1>Student portal</h1>
                 <div class="form-group">
                     <div class="input-group input-group-alternative mb-4">
                         <div class="input-group-prepend">
@@ -32,19 +32,19 @@
                 </div>
                 <div class="form-group row">
                     @if($errors->has('email'))
-                        <p class="col-12 text-red">
+                        <p class="col-12 text-danger">
                             {{$errors->first('email')}}
                         </p>
                     @elseif($errors->has('password'))
-                        <p class="col-12 text-red">
+                        <p class="col-12 text-danger">
                             {{$errors->first('password')}}
                         </p>
                     @endif
                     <div class="col-sm-4">
-                        <button type="submit" class="btn btn-block btn-default">Login</button>
+                        <button type="submit" class="btn btn-block btn-primary">Login</button>
                     </div>
                     <div class="col-sm">
-                        <a href="" class="float-right text-white">Forgot your password?</a>
+                        <a href="" class="float-right text-underline">Forgot your password?</a>
                     </div>
                 </div>
                 <hr>

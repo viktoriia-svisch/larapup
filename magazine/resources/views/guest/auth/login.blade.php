@@ -7,7 +7,7 @@
         <form class="col-md-3 col-xs-12" method="post" action="{{route('guest.loginPost')}}">
             {{ csrf_field() }}
             <div class="col-12">
-                <h1>Guest portal</h1>
+                <h1>Student portal</h1>
                 <div class="form-group">
                     <div class="input-group input-group-alternative mb-4">
                         <div class="input-group-prepend">
@@ -44,7 +44,7 @@
                         <button type="submit" class="btn btn-block btn-primary">Login</button>
                     </div>
                     <div class="col-sm">
-                        <a href="" class="float-right">Forgot your password?</a>
+                        <a href="" class="float-right text-underline">Forgot your password?</a>
                     </div>
                 </div>
                 <hr>

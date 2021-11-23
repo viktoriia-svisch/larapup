@@ -20,7 +20,6 @@
 <script src="{{asset("js/jquery-3.2.1.min.js")}}"></script>
 <script src="{{asset("js/bootstrap.min.js")}}"></script>
 <script src="{{asset("js/argon.js")}}"></script>
-<script src="{{asset('vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 @stack('custom-js')
 </body>
 </html>

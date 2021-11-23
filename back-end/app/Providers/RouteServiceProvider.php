@@ -24,21 +24,21 @@ class RouteServiceProvider extends ServiceProvider
     }
     protected function mapStudentRoutes()
     {
-        Route::middleware(['web'])
+        Route::middleware(['auth:'.STUDENT_GUARD, 'web'])
             ->prefix('/student')
             ->namespace($this->namespace . '\Student')
             ->group(base_path('routes/student.php'));
     }
     protected function mapAdminRoutes()
     {
-        Route::middleware(['web'])
+        Route::middleware(['auth:'.ADMIN_GUARD, 'web'])
             ->prefix('admin')
             ->namespace($this->namespace . '\Admin')
             ->group(base_path('routes/admin.php'));
     }
     protected function mapCoordinatorRoutes()
     {
-        Route::middleware(['web'])
+        Route::middleware(['auth:'.COORDINATOR_GUARD, 'web'])
             ->prefix('coordinator')
             ->namespace($this->namespace . '\Coordinator')
             ->group(base_path('routes/coordinator.php'));
