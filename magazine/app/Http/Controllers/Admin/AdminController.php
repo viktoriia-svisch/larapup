@@ -15,7 +15,7 @@ class AdminController extends Controller
     public function index()
     {
         $sem = Semester::paginate((PER_PAGE));
-        dd($sem);
+        return SemesterResource::collection($sem);
     }
     public function createSemester(CreateSemester $request)
     {
@@ -39,6 +39,7 @@ class AdminController extends Controller
             );
         }
         return $this->responseMessage('Create unsuccessfully', true);
+        return view('admin.Semester.create-semester');
     }
     public function createFaculty(CreateFaculty $request)
     {
@@ -76,5 +77,30 @@ class AdminController extends Controller
                     $coor
                 );
             }
+        }
+    public function dashboard()
+    {
+        return view('admin.dashboard');
+    }
+    public function semester()
+    {
+        $semesters = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator']);
+        return view('admin.Semester.semester', [
+            'listSemester' => $semesters
+        ]);
+    }
+    public function student(Request $request)
+    {
+        $studentList = Student::with('faculty_student.faculty')
+            ->whereDoesntHave('faculty_student.faculty', function ($q) {
+                $q->whereHas('semester', function ($q) {
+                    $q->where('end_date', '>=', Carbon::now()->toDateString(DATE_FORMAT));
+                });
+            })
+            ->where('status', STUDENT_STATUS['ONGOING'])
+            ->get();
+        return view('admin.student.student', [
+            'availableStudent' => $studentList
+        ]);
     }
 }
