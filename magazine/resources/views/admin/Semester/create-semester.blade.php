@@ -2,6 +2,11 @@
 @section('title', 'Manage Semester')
 @push("custom-css")
 @endpush
+@section('breadcrumb')
+    <div class="container">
+        {{ Breadcrumbs::render('semester_create', route('admin.dashboard'), route('admin.semester'), route('admin.createSemester')) }}
+    </div>
+@endsection
 @section('admin-content')
     <div class="container">
         <br>

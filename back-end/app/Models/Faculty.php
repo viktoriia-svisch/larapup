@@ -18,7 +18,6 @@ class Faculty extends Model
 
     public function semester()
     {
-        return $this->belongsTo('App\Models\Semester','semester_id','id');
+        return $this->belongsTo(Semester::class);
     }
-    //return $this->belongsTo(Semester::class);
 }

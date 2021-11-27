@@ -7,6 +7,11 @@
         }
     </style>
 @endpush
+@section('breadcrumb')
+    <div class="container">
+        {{ Breadcrumbs::render('semester', route('admin.dashboard'), route('admin.semester')) }}
+    </div>
+@endsection
 @section('admin-content')
     <div class="container">
         <div class="col-12 row m-0">

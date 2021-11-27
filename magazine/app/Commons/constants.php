@@ -17,7 +17,7 @@ define('STUDENT_STATUS', [
     'ONGOING' => 1,
     'FINISHED' => 2,
     'LEFT' => 3,
-    'REMOVED' => 0
+    'STANDBY' => 0
 ]);
 define('COORDINATOR_STATUS', [
     'ACTIVE' => 1,

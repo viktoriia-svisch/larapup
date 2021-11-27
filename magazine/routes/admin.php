@@ -9,6 +9,7 @@ Route::group([
     Route::redirect('','dashboard');
     Route::get('dashboard', 'AdminController@dashboard')->name('admin.dashboard');
     Route::get('student', 'AdminController@student')->name('admin.student');
+    Route::get('student/create', 'AdminController@createStudent')->name('admin.createStudent');
     Route::get('semester', 'AdminController@semester')->name('admin.semester');
     Route::get('semester/create', 'AdminController@createSemester')->name('admin.createSemester');
     Route::get('get/{id}','AdminController@show');
