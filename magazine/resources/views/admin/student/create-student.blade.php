@@ -21,7 +21,24 @@
     <div class="container">
         <h2>Create new Student</h2>
         <hr>
-        <form method="post" class="col-md-6 col-12 m-auto">
+        @if (\Session::has('success'))
+            @if (\Session::get('success'))
+                <div class="col-md-6 col-12 m-auto">
+                    <div class="card bg-success text-white">
+                        <div class="card-body" style="padding: 1rem;">{{__('message.create_student_success')}}</div>
+                    </div>
+                </div>
+            @else
+                <div class="col-md-6 col-12 m-auto">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body" style="padding: 1rem;">{{__('message.create_student_failed')}}</div>
+                    </div>
+                </div>
+            @endif
+            <br>
+        @endif
+        <form action="{{route('admin.createStudent_post')}}" method="post" class="col-md-6 col-12 m-auto">
+            {{csrf_field()}}
             <h3>Login credentials</h3>
             <div class="input-group input-group-alternative mb-3">
                 <input type="text" class="form-control form-control-alternative" placeholder="Student login email"
@@ -55,11 +72,13 @@
             <p class="text-muted mt-3 pb-0 mb-1">Gender</p>
             <div class="row m-0 mb-3">
                 <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                    <input name="custom-radio-2" class="custom-control-input" id="genderMale" type="radio">
+                    <input name="gender" value="{{GENDER['MALE']}}" class="custom-control-input" id="genderMale"
+                           type="radio">
                     <label class="custom-control-label" for="genderMale">Male</label>
                 </div>
                 <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                    <input name="custom-radio-2" class="custom-control-input" id="genderFemale" checked="" type="radio">
+                    <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input" id="genderFemale"
+                           checked="" type="radio">
                     <label class="custom-control-label" for="genderFemale">Female</label>
                 </div>
             </div>
@@ -67,7 +86,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control datepicker" id="dateOfBirth" name="dateOfBirth" placeholder="Date of Birth" type="text">
+                <input class="form-control datepicker" id="dateOfBirth" name="dateOfBirth" placeholder="Date of Birth"
+                       type="text">
             </div>
             <hr>
             <button class="btn btn-block m-0 btn-success">Create</button>
@@ -75,4 +95,14 @@
     </div>
 @endsection
 @push("custom-js")
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                endDate: "today",
+                // endDate: "today",
+            });
+        })
+    </script>
 @endpush

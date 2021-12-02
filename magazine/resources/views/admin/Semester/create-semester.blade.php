@@ -16,7 +16,8 @@
             created and is in active, you can only change the name of the semester
         </span>
         <hr>
-        <form method="post" class="row">
+        <form method="post" class="row m-0">
+            {{csrf_field()}}
             <div class="col-12">
                 <div class="card bg-success text-white">
                     <div class="card-body">Create semester successfully. Click

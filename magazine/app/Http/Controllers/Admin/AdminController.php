@@ -60,4 +60,21 @@ class AdminController extends Controller
     public function createStudent(){
         return view('admin.student.create-student');
     }
+    public function createStudent_post(Request $request){
+        $student = new Student($request->all([
+            'email',
+            'password',
+            'first_name',
+            'last_name',
+            'gender',
+            'dateOfBirth'
+        ]));
+        if ($student->save())
+            return redirect()->back()->with([
+                'success' => true
+            ]);
+        return redirect()->back()->with([
+            'success' => false
+        ]);
+    }
 }
