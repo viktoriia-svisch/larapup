@@ -11,8 +11,8 @@ class CreateSemester extends FormRequest
     {
         return [
               'name' => 'required|min:2|bail',
-              'start_date' => 'required|after:now|bail',
-              'end_date'=>'required|after:start_date|bail'
+              'start_date' => 'required|after:now|date|bail',
+              'end_date'=>'required|after:start_date|date|bail'
         ];
     }
     public function messages()

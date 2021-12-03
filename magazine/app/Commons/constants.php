@@ -3,10 +3,6 @@ define('STUDENT_GUARD', 'student');
 define('COORDINATOR_GUARD', 'coordinator');
 define('ADMIN_GUARD', 'admin');
 define('GUEST_GUARD', 'guest');
-define('GENDER', [
-    'MALE' => 1,
-    'FEMALE' => 2
-]);
 define('ARTICLE_STATUS', [
     'PENDING' => 0,
     'PUBLISHED' => 1,
@@ -21,7 +17,7 @@ define('STUDENT_STATUS', [
     'ONGOING' => 1,
     'FINISHED' => 2,
     'LEFT' => 3,
-    'STANDBY' => 0
+    'REMOVED' => 0
 ]);
 define('COORDINATOR_STATUS', [
     'ACTIVE' => 1,
