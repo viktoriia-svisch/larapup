@@ -106,10 +106,29 @@ class AdminController extends Controller
                     $q->where('end_date', '>=', Carbon::now()->toDateString(DATE_FORMAT));
                 });
             })
-            ->where('status', STUDENT_STATUS['ONGOING'])
             ->get();
         return view('admin.student.student', [
             'availableStudent' => $studentList
+        ]);
+    }
+    public function createStudent(){
+        return view('admin.student.create-student');
+    }
+    public function createStudent_post(Request $request){
+        $student = new Student($request->all([
+            'email',
+            'password',
+            'first_name',
+            'last_name',
+            'gender',
+            'dateOfBirth'
+        ]));
+        if ($student->save())
+            return redirect()->back()->with([
+                'success' => true
+            ]);
+        return redirect()->back()->with([
+            'success' => false
         ]);
     }
 }
