@@ -1,5 +1,7 @@
 <?php
 namespace App\Models;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +12,7 @@ class Student extends Authenticate
     protected $table = 'students';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'gender', 'dateOfBirth', 'email', 'password',
     ];
     protected $hidden = [
         'password', 'deleted_at'
@@ -18,6 +20,11 @@ class Student extends Authenticate
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+    public function setDateOfBirthAttribute($value)
+    {
+        $date = DateTime::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+        $this->attributes['dateOfBirth'] = $date;
     }
     public function article()
     {

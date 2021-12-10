@@ -5,8 +5,6 @@ class account extends Seeder
 {
     public function run()
     {
-        $firsnameArr = ['Abbey', 'Aberfa', 'Abilene', 'Bentley', 'Bianca', 'Biserka', 'Calanth', 'Canary', 'Ceridwen', 'Donna', 'Drusilla', 'Edgar'];
-        $firsnameArr = ['Edward', 'Nikola', 'James', 'Bobby', 'Stew'];
         DB::table('admins')->insert([
             'email' => 'admin@admin.gw',
             'password' => bcrypt('123456'),
