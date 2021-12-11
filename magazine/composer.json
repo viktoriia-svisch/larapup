@@ -13,7 +13,8 @@
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "nesbot/carbon": "^2.16"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
@@ -38,6 +39,7 @@
             "App\\": "app/"
         },
         "classmap": [
+            "app/http/controllers/admin",
             "database/seeds",
             "database/factories"
         ],

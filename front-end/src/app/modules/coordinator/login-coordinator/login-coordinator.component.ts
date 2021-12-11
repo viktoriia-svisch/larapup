@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 @Component({
-  selector: 'app-login-coordinator',
+  selector: 'app-login-coordinato',
   templateUrl: './login-coordinator.component.html',
   styleUrls: ['./login-coordinator.component.scss']
 })
