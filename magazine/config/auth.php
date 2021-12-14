@@ -1,17 +1,17 @@
 <?php
 return [
     'defaults' => [
-        'guard' => 'api',
+        'guard' => 'web',
         'passwords' => 'users',
     ],
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'student',
+            'provider' => 'Student',
         ],
         'api' => [
             'driver' => 'token',
-            'provider' => 'guest',
+            'provider' => 'users',
             'hash' => false,
         ],
         'student' => [
