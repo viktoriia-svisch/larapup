@@ -32,7 +32,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">
+                        <a class="nav-link" href="{{route('admin.faculty')}}">
                             <i class="fas fa-archive"></i>
                             Faculty
                         </a>
