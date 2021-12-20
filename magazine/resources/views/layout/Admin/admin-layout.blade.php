@@ -32,13 +32,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('admin.faculty')}}">
+                        <a class="nav-link">
                             <i class="fas fa-archive"></i>
                             Faculty
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{route('admin.student')}}" class="nav-link">
+                        <a class="nav-link">
                             <i class="fas fa-user-graduate"></i>
                             Student
                         </a>
@@ -64,8 +64,6 @@
         </div>
     </nav>
     <div class="wrapper" style="margin-top: 85px">
-        <br>
-        @yield('breadcrumb')
         @yield("admin-content")
     </div>
     <footer class="py-5">

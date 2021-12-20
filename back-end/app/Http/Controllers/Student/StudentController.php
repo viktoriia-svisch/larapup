@@ -4,7 +4,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudent;
 use App\Http\Resources\Student as StudentResource;
 use App\Models\Student;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 class StudentController extends Controller
 {
@@ -35,12 +34,6 @@ class StudentController extends Controller
                 $std
             );
         return $this->responseMessage('Create unsuccessfully', true);
-    }
-    public function search($request){
-        $search = Student::where('first_name', 'LIKE', '%' . $request . '%')
-            ->orWhere('last_name', 'like', '%' . $request . '%')
-            ->get();
-        return response()->json($search);
     }
     public function show($id)
     {

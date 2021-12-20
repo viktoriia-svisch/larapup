@@ -32,11 +32,11 @@
                 </div>
                 <div class="form-group row">
                     @if($errors->has('email'))
-                        <p class="col-12 text-red">
+                        <p class="col-12 text-danger">
                             {{$errors->first('email')}}
                         </p>
                     @elseif($errors->has('password'))
-                        <p class="col-12 text-red">
+                        <p class="col-12 text-danger">
                             {{$errors->first('password')}}
                         </p>
                     @endif
