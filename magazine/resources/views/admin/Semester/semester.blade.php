@@ -7,6 +7,11 @@
         }
     </style>
 @endpush
+@section('breadcrumb')
+    <div class="container">
+        {{ Breadcrumbs::render('semester', route('admin.dashboard'), route('admin.semester')) }}
+    </div>
+@endsection
 @section('admin-content')
     <div class="container">
         <div class="col-12 row m-0">
@@ -41,9 +46,7 @@
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-icon btn-default" disabled type="button">
-                                <span class="btn-inner--icon">
-                                    <i class="fas fa-cog"></i>
-                                </span>
+                            <i class="fas fa-cog"></i>
                         </button>
                     </div>
                 </div>
@@ -63,9 +66,7 @@
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-icon btn-default" type="button">
-                                <span class="btn-inner--icon">
-                                    <i class="fas fa-cog"></i>
-                                </span>
+                            <i class="fas fa-cog top-0"></i>
                         </button>
                     </div>
                 </div>
@@ -85,9 +86,7 @@
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-icon btn-default" disabled type="button">
-                                <span class="btn-inner--icon">
-                                    <i class="fas fa-cog"></i>
-                                </span>
+                            <i class="fas fa-cog top-0"></i>
                         </button>
                     </div>
                 </div>
