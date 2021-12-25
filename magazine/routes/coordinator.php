@@ -11,4 +11,5 @@ Route::group([
     Route::get('get/{id}','CoordinatorController@show');
     Route::post('new-coordinator','CoordinatorController@store');
     Route::post('new-faculty','CoordinatorController@storeFaculty');
+    Route::get('search/{request}','CoordinatorController@search');
 });

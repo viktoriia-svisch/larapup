@@ -6,6 +6,7 @@ use App\Http\Resources\Faculty as FacultyResource;
 use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\Semester;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
@@ -56,6 +57,12 @@ class CoordinatorController extends Controller
                     $coor
                 );
             }
+    }
+    public function search($request){
+        $search = Coordinator::where('first_name', 'LIKE', '%' . $request . '%')
+            ->orWhere('last_name', 'like', '%' . $request . '%')
+            ->get();
+        return response()->json($search);
     }
     public function show($id)
     {

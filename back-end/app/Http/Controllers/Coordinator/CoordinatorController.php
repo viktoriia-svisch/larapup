@@ -59,6 +59,12 @@ class CoordinatorController extends Controller
             $coor
         );
     }
+    public function search($request){
+        $search = Coordinator::where('first_name', 'LIKE', '%' . $request . '%')
+            ->orWhere('last_name', 'like', '%' . $request . '%')
+            ->get();
+        response()->json($search);
+    }
     public function show($id)
     {
         $coordinator = Coordinator::find($id);
