@@ -13,7 +13,9 @@ Route::group([
     Route::get('semester', 'SemesterController@semester')->name('admin.semester');
     Route::get('semester/create', 'SemesterController@createSemester')->name('admin.createSemester');
     Route::get('faculty', 'FacultyController@faculty')->name('admin.faculty');
-    Route::get('faculty/create', 'FacultyController@createFaculty')->name('admin.createFaculty');
+    Route::get('faculty/create', 'FacultyController@createFaculty_semester')->name('admin.createFacultySemester');
+    Route::get('faculty/create/{semester}', 'FacultyController@createFaculty')->name('admin.createFaculty');
+    Route::post('faculty/create/{semester}', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
     Route::get('get/{id}', 'AdminController@show');
     Route::post('new-semester', 'AdminController@store');
     Route::redirect('', 'admin/dashboard');
