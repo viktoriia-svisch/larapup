@@ -9,7 +9,7 @@
 @endpush
 @section('breadcrumb')
     <div class="container">
-        {{ Breadcrumbs::render('semester', route('admin.dashboard'), route('admin.semester')) }}
+        {{ Breadcrumbs::render('dashboard.semester', route('admin.dashboard'), route('admin.semester')) }}
     </div>
 @endsection
 @section('admin-content')

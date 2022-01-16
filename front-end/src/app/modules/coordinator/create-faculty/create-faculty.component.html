@@ -1,9 +1,9 @@
-<div class="container row col-sm-12">
-    <div class="col-sm-8"
-         style="margin-left: 15vw; margin-top: 2vw; margin-bottom: 5vw;
-          padding: 5%; border: 1px solid #517777; border-radius: 20px;
-          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
-      <h3 class="title">Create Faculty</h3>
+<div class="container row col-md-12" style="margin-bottom: 5vw">
+  <div class="col-sm-1">
+  </div>
+    <div class="col-sm-5"
+         style="margin-bottom: 5vw;">
+      <h4 class="title">Create Faculty</h4>
       <hr>
       <form>
         <label style="color: #0b1011">Name</label>
@@ -11,9 +11,15 @@
           <input class="form-control" type="text" placeholder="Name" required>
         </div>
         <div style="margin-top: 2vw">
-          <label style="color: #0b1011">Date for deadline</label>
+          <label style="color: #0b1011">Start Date of Semester (Between the duration)</label>
           <div >
-            <input class="form-control" type="date" placeholder="Date" required>
+            <input class="form-control" type="date" min="2019-01-01" max="2019-04-30" value="2019-01-01" placeholder="Date" required>
+          </div>
+        </div>
+        <div style="margin-top: 2vw">
+          <label style="color: #0b1011">End Date of Semester (Between the duration)</label>
+          <div >
+            <input class="form-control" type="date"  min="2019-01-01" max="2019-04-30" value="2019-04-30"  placeholder="Date" required>
           </div>
         </div>
         <div style="margin-top: 2vw">
@@ -23,7 +29,29 @@
           </div>
         </div>
         <hr>
-        <button class="btn btn-danger col-sm-12" type="submit" style="">Create Faculty</button>
+          <div style="margin-top: 2vw">
+            <button class="btn btn-danger col-sm-12" type="submit" style="">Create Faculty</button>
+          </div>
       </form>
     </div>
+  <div class="col-sm-2">
+  </div>
+  <div class="col-12 col-sm-4" >
+      <h4 style="text-align: center">This Semester</h4>
+    <hr>
+    <div class="" style="background-color: thistle; width: 32vw; height: 5vw; border-radius: 8px; margin-top: 2vw">
+      <img  class="img-thumbnail col-xl-2"
+            src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
+      <label class="col-xl-4">Kỳ Spring</label>
+      <button class="btn btn-primary col-xl-5">Download File</button>
+        <hr>
+        <div class="row">
+            <h6 class="col-xl-12">Duration: </h6>
+                <p class="col">Start Date: 01/01/2019</p>
+                <p class="col">End Date: 30/04/2019</p>
+        </div>
+        <hr>
+        <p>Status: Started</p>
+    </div>
+  </div>
 </div>
