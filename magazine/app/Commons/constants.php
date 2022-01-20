@@ -27,7 +27,7 @@ define('COORDINATOR_STATUS', [
     'ACTIVE' => 1,
     'DEACTIVATE' => 0,
 ]);
-define('PER_PAGE', 1);
+define('PER_PAGE', 20);
 define('MESSAGE', 'message');
 define('SEARCH', 'search');
 define('EMAIL', 'email');
