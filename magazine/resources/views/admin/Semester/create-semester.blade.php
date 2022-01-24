@@ -63,6 +63,13 @@
                 <p class="text-gray">
                     Current semester available date start from:
                 </p>
+                @if($errors->has('start_date'))
+                    <div class="card bg-danger text-white rounded-0">
+                        <div class="card-body p-1 rounded-0">
+                            {{$errors->first('start_date')}}
+                        </div>
+                    </div>
+                @endif
                 <div class="form-group">
                     <div class="input-group input-group-alternative">
                         <div class="input-group-prepend">
@@ -72,13 +79,6 @@
                                class="form-control datepicker" placeholder="Start Date" type="text">
                     </div>
                 </div>
-                @if($errors->has('start_date'))
-                    <div class="card bg-danger text-white rounded-0">
-                        <div class="card-body p-1 rounded-0" >
-                            {{$errors->first('start_date')}}
-                        </div>
-                    </div>
-                @endif
                 <p class="text-gray">
                     Expected to end by setting
                 </p>
@@ -95,7 +95,7 @@
                 </div>
                 @if($errors->has('end_date'))
                     <div class="card bg-danger text-white">
-                        <div class="card-body p-1 rounded-0" >
+                        <div class="card-body p-1 rounded-0">
                             {{$errors->first('end_date')}}
                         </div>
                     </div>
