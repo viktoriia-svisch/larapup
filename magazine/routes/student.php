@@ -7,6 +7,7 @@ Route::group([
     'middleware' => ['auth:'.STUDENT_GUARD],             
 ], function ($router) {
     Route::get('dashboard', 'StudentController@dashboard')->name('student.dashboard');
+    Route::get('faculty/{id}', 'FacultyController@faculty')->name('student.faculty');
     Route::get('article', 'StudentController@article')->name('student.article');
     Route::get('','StudentController@index');
     Route::get('get/{id}','StudentController@show');

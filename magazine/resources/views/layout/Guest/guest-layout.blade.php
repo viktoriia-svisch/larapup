@@ -46,6 +46,8 @@
         </div>
     </nav>
     <div class="wrapper" style="margin-top: 85px">
+        <br>
+        @yield('breadcrumb')
         @yield("guest-content")
     </div>
     <footer class="py-5">
