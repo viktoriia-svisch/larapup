@@ -3,6 +3,8 @@
 @push("custom-css")
 @endpush
 @section('breadcrumb')
+    <div class="container">
+    </div>
 @endsection
 @section("student-content")
     <div class="container-fluid">

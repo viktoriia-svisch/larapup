@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <a href="{{route('student.faculty', [$activeFaculty->id])}}" class="btn btn-info text-white">
+                                    <a href="{{route('student.faculty.detail', [$activeFaculty->id])}}" class="btn btn-info text-white">
                                         <span>Detail</span>
                                         <span class="badge badge-dark text-white">4</span>
                                     </a>
