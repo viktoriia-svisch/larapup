@@ -46,8 +46,11 @@ class FacultyController extends Controller
             ->whereHas('faculty_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })->first();
-        return view('student.faculty.faculty-detail', [
-            'faculty' => $faculty
-        ]);
+        if ($faculty)
+            return view('student.faculty.faculty-detail', [
+                'faculty' => $faculty
+            ]);
+        else
+            redirect()->route('student.faculty');
     }
 }
