@@ -110,7 +110,7 @@
         .cnt-block .follow-us li .fa:hover {
             color: #025a8e;
         }
-        .rounded-circle {
+        .rounded-circle{
             height: 1rem;
             width: 1rem;
             border-radius: 100%;
@@ -184,59 +184,27 @@
                     <div class="col-12 col-md-4 col-lg-3">
                         <div class="cnt-block">
                             <figure>
-                                <img src="{{$student->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}"
-                                     class="img-responsive" alt="">
+                                <img src="{{$student->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}" class="img-responsive" alt="">
                             </figure>
                             <h4 class="col-12">
-                                {{ \Str::limit(($student->first_name . ' ' . $student->last_name), 20, '...')}}
+                                {{ \Str::limit($student->first_name . ' ' . $student->last_name, 20, '...')}}
                             </h4>
-                            <p>{{ \Str::limit($student->email, 22, '...')}}</p>
+                            <p>{{ \Str::limit($student->email, 25, '...')}}</p>
                             <div class="col-12">
                                 <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>
-                @elseif ($student->status == STUDENT_STATUS['FINISHED'])
-                    <div class="col-12 col-md-4 col-lg-3">
-                        <div class="cnt-block bg-gradient-green">
-                            <figure>
-                                <img src="{{$student->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}"
-                                     class="img-responsive" alt="">
-                            </figure>
-                            <h4 class="col-12 text-white">
-                                {{ \Str::limit(($student->first_name . ' ' . $student->last_name), 19, '...')}}
-                            </h4>
-                            <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
-                            <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
-                            </div>
-                        </div>
-                    </div>
-                @elseif ($student->status == STUDENT_STATUS['STANDBY'])
+                    @elseif ($student->status == STUDENT_STATUS['STANDBY'])
                     <div class="col-12 col-md-4 col-lg-3">
                         <div class="cnt-block bg-gradient-gray">
                             <figure>
                                 <img src="http://www.webcoderskull.com/img/team4.png" class="img-responsive" alt="">
                             </figure>
                             <h4 class="col-12 text-white">
-                                {{ \Str::limit($student->first_name . ' ' . $student->last_name, 19, '...')}}
+                                {{ \Str::limit($student->first_name . ' ' . $student->last_name, 20, '...')}}
                             </h4>
-                            <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
-                            <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
-                            </div>
-                        </div>
-                    </div>
-                @elseif ($student->status == STUDENT_STATUS['LEFT'])
-                    <div class="col-12 col-md-4 col-lg-3">
-                        <div class="cnt-block bg-gradient-red">
-                            <figure>
-                                <img src="http://www.webcoderskull.com/img/team4.png" class="img-responsive" alt="">
-                            </figure>
-                            <h4 class="col-12 text-white">
-                                {{ \Str::limit($student->first_name . ' ' . $student->last_name, 19, '...')}}
-                            </h4>
-                            <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
+                            <p class="text-white">{{ \Str::limit($student->email, 25, '...')}}</p>
                             <div class="col-12">
                                 <a class="btn btn-block btn-secondary">Update</a>
                             </div>

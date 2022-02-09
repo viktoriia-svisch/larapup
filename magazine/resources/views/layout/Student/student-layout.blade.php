@@ -26,9 +26,9 @@
                 </div>
                 <ul class="navbar-nav ml-lg-auto">
                     <li class="nav-item">
-                        <a href="{{route('student.faculty')}}" class="nav-link">
-                            <i class="fas fa-archive"></i>
-                            Faculty
+                        <a class="nav-link">
+                            <i class="fas fa-search"></i>
+                            Search
                         </a>
                     </li>
                     <li class="nav-item">
@@ -52,8 +52,6 @@
         </div>
     </nav>
     <div class="wrapper" style="margin-top: 85px">
-        <br>
-        @yield('breadcrumb')
         @yield("student-content")
     </div>
     <footer class="py-5">

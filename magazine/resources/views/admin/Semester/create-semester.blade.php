@@ -16,67 +16,36 @@
             created and is in active, you can only change the name of the semester
         </span>
         <hr>
-        <form action="{{route('admin.createSemester_post')}}" method="post" class="row m-0">
+        <form method="post" class="row m-0">
             {{csrf_field()}}
             <div class="col-12">
-                @if(\Illuminate\Support\Facades\Session::has('success'))
-                    @if(\Illuminate\Support\Facades\Session::get('success') == 1)
-                        <div class="card bg-success text-white">
-                            <div class="card-body">Create semester successfully. Click
-                                <a href="{{route('admin.semester')}}" class="text-underline">here</a>
-                                to go back to list semester.
-                            </div>
-                        </div>
-                    @else
-                        <div class="card bg-danger text-white">
-                            <div class="card-body">Create semester unsuccessfully. Please try again
-                            </div>
-                        </div>
-                    @endif
-                @endif
+                <div class="card bg-success text-white">
+                    <div class="card-body">Create semester successfully. Click
+                        <a href="{{route('admin.semester')}}" class="text-underline">here</a>
+                        to go back to list semester.
+                    </div>
+                </div>
                 <br>
             </div>
             <div class="col-12 col-md-6">
-                @if($errors->has('name'))
-                    <div class="card bg-danger text-white rounded-0">
-                        <div class="card-body p-1 rounded-0">
-                            {{$errors->first('name')}}
-                        </div>
-                    </div>
-                @endif
                 <div class="form-group input-group-alternative">
                     <input type="text" title="Semester name" placeholder="Semester name"
-                           class="form-control form-control-alternative" id="name" name="name" required>
+                           class="form-control form-control-alternative" id="name" name="name">
                 </div>
                 <div class="form-group input-group-alternative">
                     <textarea name="description" id="description" class="form-control form-control-alternative"
                               placeholder="Semester description" rows="5" style="resize: none;"></textarea>
                 </div>
-                @if($errors->has('description'))
-                    <div class="card bg-danger text-white">
-                        <div class="card-body p-1 rounded-0">
-                            {{$errors->first('description')}}
-                        </div>
-                    </div>
-                @endif
                 <hr>
                 <p class="text-gray">
                     Current semester available date start from:
                 </p>
-                @if($errors->has('start_date'))
-                    <div class="card bg-danger text-white rounded-0">
-                        <div class="card-body p-1 rounded-0">
-                            {{$errors->first('start_date')}}
-                        </div>
-                    </div>
-                @endif
                 <div class="form-group">
                     <div class="input-group input-group-alternative">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
-                        <input id="start_date" name="start_date" onchange="listenStartDate(this)"
-                               class="form-control datepicker" placeholder="Start Date" type="text">
+                        <input class="form-control datepicker" placeholder="Start Date" type="text" value="10/22/2018">
                     </div>
                 </div>
                 <p class="text-gray">
@@ -87,21 +56,11 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
-                        <input id="end_date" class="form-control datepicker" disabled placeholder="Start Date"
-                               type="text">
-                        <input type="hidden" id="end_date_hidden" name="end_date" class="form-control datepicker"
-                               placeholder="Start Date">
+                        <input class="form-control datepicker" disabled placeholder="Start Date" type="text" value="10/22/2018">
                     </div>
                 </div>
-                @if($errors->has('end_date'))
-                    <div class="card bg-danger text-white">
-                        <div class="card-body p-1 rounded-0">
-                            {{$errors->first('end_date')}}
-                        </div>
-                    </div>
-                @endif
                 <div class="col-12">
-                    <button class="btn btn-block btn-primary" type="submit">Create</button>
+                    <button class="btn btn-block btn-primary">Create</button>
                 </div>
                 <br>
             </div>
@@ -127,30 +86,14 @@
 @endsection
 @push("custom-js")
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('.datepicker').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
+                format: 'mm / dd / yyyy',
+                autoclose:true,
                 startDate: "today",
                 // endDate: "today",
                 // maxDate: today
             });
-        });
-        function listenStartDate(inputSection) {
-            let end_date_hidden = document.getElementById('end_date_hidden');
-            let end_date = document.getElementById('end_date');
-            let valueDate = inputSection.value;
-            let from = valueDate.split('-');
-            let valueParsed = new Date(from[0], from[1], from[2]);
-            valueParsed.setMonth(valueParsed.getMonth() + 3);
-            let year = valueParsed.getFullYear();
-            let month = valueParsed.getMonth();
-            let date = valueParsed.getDate();
-            if (month < 10) month = '0' + month;
-            if (date < 10) date = '0' + date;
-            let valueAssign = year + "-" + month + "-" + date;
-            end_date_hidden.value = valueAssign;
-            end_date.value = valueAssign;
-        }
+        })
     </script>
 @endpush
