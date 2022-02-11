@@ -1,10 +1,8 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateFaculty;
 use App\Http\Resources\Coordinator as CoordinatorResource;
 use App\Models\Coordinator;
-use App\Models\Faculty;
 use Illuminate\Http\Request;
 class CoordinatorController extends Controller
 {
