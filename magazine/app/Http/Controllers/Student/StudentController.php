@@ -3,12 +3,8 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudent;
 use App\Http\Resources\Student as StudentResource;
-use App\Models\Faculty;
-use App\Models\Semester;
 use App\Models\Student;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 class StudentController extends Controller
 {
     public function index()
@@ -16,32 +12,11 @@ class StudentController extends Controller
         $students = Student::paginate(PER_PAGE);
         dd($students);
     }
-    public function article()
-    {
+    public function article(){
         return view('shared.article');
     }
-    public function dashboard()
-    {
-        $currentSemester = Semester::with('faculty')
-            ->where('start_date', '<=', Carbon::now()->toDateTimeString())
-            ->whereHas('faculty.faculty_student.student', function ($q) {
-                $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
-            })
-            ->where('end_date', '>', Carbon::now()->toDateTimeString())
-            ->first();
-        $currentFaculty = Faculty::with('semester')
-            ->whereHas('faculty_student.student', function ($q) {
-                $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
-            })
-            ->whereHas('semester', function ($q) {
-                $q->where('start_date', '<=', Carbon::now()->toDateTimeString())
-                    ->where('end_date', '>', Carbon::now()->toDateTimeString());
-            })
-            ->first();
-        return view('student.dashboard',[
-            'activeSemester' => $currentSemester,
-            'activeFaculty' => $currentFaculty
-        ]);
+    public function dashboard(){
+        return view('student.dashboard');
     }
     public function store(CreateStudent $request)
     {
@@ -66,8 +41,7 @@ class StudentController extends Controller
             ->get();
         return response()->json($search);
     }
-    public function searchAll(Request $request)
-    {
+    public function searchAll(Request $request){
         $data = $request->get('data');
         $search = Student::where('first_name', 'like', "%{$data}%")
             ->orWhere('last_name', 'like', "%{$data}%")

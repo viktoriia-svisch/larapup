@@ -1,6 +1,9 @@
 @extends("layout.master")
+
 @push("custom-css")
+
 @endpush
+
 @section("content")
     <nav class="fixed-top navbar navbar-horizontal navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
@@ -39,6 +42,7 @@
                     </li>
                     <li class="nav-item">
                         <div class="nav-link disabled">
+
                         </div>
                     </li>
                     <li class="nav-item">
@@ -51,9 +55,11 @@
             </div>
         </div>
     </nav>
+
     <div class="wrapper" style="margin-top: 85px">
         @yield("student-content")
     </div>
+
     <footer class="py-5">
         <div class="container">
             <div class="row align-items-center justify-content-xl-between">
@@ -85,5 +91,7 @@
             </div>    </div>
     </footer>
 @endsection
+
 @push("custom-js")
+
 @endpush
