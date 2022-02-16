@@ -9,10 +9,10 @@ class Faculty extends Model
     }
     public function faculty_student()
     {
-        return $this->hasMany(FacultyStudent::class);
+        return $this->hasMany(FacultyStudent::class, 'id');
     }
     public function semester()
     {
-        return $this->belongsTo('App\Models\Semester','semester_id','id');
+        return $this->belongsTo(Semester::class,'semester_id','id');
     }
 }
