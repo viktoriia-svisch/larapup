@@ -15,9 +15,6 @@ import {DashboardComponent} from './modules/shared/dashboard/dashboard.component
 import {LoginComponent} from './modules/shared/login/login.component';
 import {GuestComponent} from './layout/guest/guest.component';
 import {HttpClientModule} from '@angular/common/http';
-import {StorageService} from './servies/shared/storage.service';
-import {AuthService} from './servies/modules/auth.service';
-import { ViewArticleComponent } from './modules/shared/view-article/view-article.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -28,8 +25,7 @@ import { ViewArticleComponent } from './modules/shared/view-article/view-article
         FooterComponent,
         DashboardComponent,
         LoginComponent,
-        GuestComponent,
-        ViewArticleComponent
+        GuestComponent
     ],
     imports: [
         BrowserModule,
@@ -40,10 +36,7 @@ import { ViewArticleComponent } from './modules/shared/view-article/view-article
         HomeModule,
         AppRoutingModule,
     ],
-    providers: [
-        AuthService,
-        StorageService
-    ],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {
