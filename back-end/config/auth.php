@@ -9,19 +9,19 @@ return [
             'driver' => 'session',
             'provider' => 'Student',
         ],
-        'api' => [
+        'student' => [
             'driver' => 'session',
             'provider' => 'Student',
         ],
-        'api.coordinator' => [
+        'coordinator' => [
             'driver' => 'session',
             'provider' => 'Coordinator',
         ],
-        'api.guest' => [
+        'guest' => [
             'driver' => 'session',
             'provider' => 'Guest',
         ],
-        'api.admin' => [
+        'admin' => [
             'driver' => 'session',
             'provider' => 'Admin',
         ],
