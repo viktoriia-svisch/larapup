@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Admin;
+use App\Http\Requests\CreateFaculty;
 use App\Http\Controllers\Controller;
 use App\Models\Faculty;
 use App\Models\Semester;
@@ -28,9 +29,29 @@ class FacultyController extends Controller
         $retrievedSemester = Semester::find($semester);
         return view('admin.faculty.create-faculty', ['semester' => $retrievedSemester]);
     }
-    public function createFaculty_post($semester, Request $request)
+    public function createFaculty_post($semester, CreateFaculty $request)
     {
-        dd($request);
+        $coor = new Faculty;
+         $coor->semester_id= $semester->id;
+         $coor->name = $request->input('name');
+         $coor->first_deadline = $request->input('first_deadline');
+         $coor->second_deadline = $request->input('second_deadline');
+         if ($coor->save())
+            {
+                return redirect()->back()->with([
+                    'success' => true
+                ]);
+            }
+        return redirect()->back()->with([
+                'success' => false
+            ]);
         return view('admin.faculty.create-faculty');
+    }
+    public function searchFaculty($semester, $request)
+    {
+        $search = Faculty::where('name', 'LIKE', '%' . $request . '%')
+            ->where('semester_id', 'like', '%' . $semester . '%')
+            ->get();
+        return response()->json($search);
     }
 }

@@ -87,16 +87,12 @@ class AdminController extends Controller
                 );
             }
         }
-    public function searchFaculty($id)
+    public function searchFaculty($semester, $request)
     {
-        $results = Faculty::where('id', $id)->get();
-        foreach ($results as $results)
-        {
-            var_dump($results->semester_id);
-            var_dump($results->name);
-            var_dump($results->first_deadline);
-            var_dump($results->second_deadline);
-        }
+        $search = Faculty::where('name', 'LIKE', '%' . $request . '%')
+            ->where('semester_id', 'like', '%' . $semester . '%')
+            ->get();
+        return response()->json($search);
     }
     public function addStudentToFaculty()
     {
