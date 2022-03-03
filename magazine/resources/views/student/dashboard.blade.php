@@ -25,13 +25,7 @@
                         </p>
                         <span class="text-muted">
                             End date:
-                            @if ($activeSemester !== null)
-                                {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->end_date)}}
-                            @else
-                                <span class="text-muted">
-                                    N/A
-                                </span>
-                            @endif
+                            {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->end_date)}}
                         </span>
                     </div>
                 </div>
