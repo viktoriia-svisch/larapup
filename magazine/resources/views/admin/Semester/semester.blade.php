@@ -2,7 +2,7 @@
 @section('title', 'Manage Semester')
 @push("custom-css")
     <style>
-        .border-4 {
+        .border-4{
             border: 2px solid transparent;
         }
     </style>
@@ -30,106 +30,67 @@
         </div>
         <hr class="mb-0">
         <br>
-        <form method="get" action="{{route('admin.semester')}}" class="col-12 row m-0">
-            {{csrf_field()}}
-            <div class="form-group col">
-                <input type="text" class="form-control form-control-alternative" id="search_semester_input"
-                       name="search_semester_input" placeholder="Type Semester Name Here">
-            </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-info">
-                    Search
-                </button>
-            </div>
-        </form>
-        <br>
         <div class="col-12">
-            <h1>Active Semester</h1>
-            @if ($activeSemester)
-                <div class="card mb-4 border-4 border-secondary">
-                    <div class="card-body row m-0">
-                        <div class="col-auto d-flex align-items-center">
-                            <h2 class="mb-0">{{$activeSemester->name}}</h2>
+            <div class="card mb-4 border-4 border-success">
+                <div class="card-body row m-0">
+                    <div class="col-auto d-flex align-items-center">
+                        <h2 class="mb-0">Semester title</h2>
+                    </div>
+                    <div class="col row m-0">
+                        <div class="col-12 col-md-5 d-flex align-items-center">
+                            <h3 class="mb-0">Start: 22/10/2019</h3>
                         </div>
-                        <div class="col row m-0">
-                            <div class="col-12 col-md-5 d-flex align-items-center">
-                                <h3 class="mb-0">
-                                    Start: {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->start_date)}}</h3>
-                            </div>
-                            <div class="col-12 col-md-5 d-flex align-items-center">
-                                <h3 class="mb-0">
-                                    End: {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->end_date)}}</h3>
-                            </div>
+                        <div class="col-12 col-md-5 d-flex align-items-center">
+                            <h3 class="mb-0">End: 22/10/2019</h3>
                         </div>
-                        <div class="col-auto">
-                            <button class="btn btn-icon btn-default" type="button">
-                                <i class="fas fa-cog top-0"></i>
-                            </button>
-                        </div>
-                        <p class="col-12">
-                            {{$activeSemester->description}}
-                        </p>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-icon btn-default" disabled type="button">
+                            <i class="fas fa-cog"></i>
+                        </button>
                     </div>
                 </div>
-            @endif
-            <hr>
-            <h1>Future Semester</h1>
-            @foreach($futureSemester as $semester)
-                <div class="card mb-4 border-4 border-warning">
-                    <div class="card-body row m-0">
-                        <div class="col-auto d-flex align-items-center">
-                            <h2 class="mb-0">{{$semester->name}}</h2>
+            </div>
+            <div class="card mb-4 border-4 border-warning">
+                <div class="card-body row m-0">
+                    <div class="col-auto d-flex align-items-center">
+                        <h2 class="mb-0">Semester title</h2>
+                    </div>
+                    <div class="col row m-0">
+                        <div class="col-12 col-md-5 d-flex align-items-center">
+                            <h3 class="mb-0">Start: 22/10/2019</h3>
                         </div>
-                        <div class="col row m-0">
-                            <div class="col-12 col-md-5 d-flex align-items-center">
-                                <h3 class="mb-0">
-                                    Start: {{\App\Helpers\DateTimeHelper::formatDate($semester->start_date)}}</h3>
-                            </div>
-                            <div class="col-12 col-md-5 d-flex align-items-center">
-                                <h3 class="mb-0">
-                                    End: {{\App\Helpers\DateTimeHelper::formatDate($semester->end_date)}}</h3>
-                            </div>
+                        <div class="col-12 col-md-5 d-flex align-items-center">
+                            <h3 class="mb-0">End: 22/10/2019</h3>
                         </div>
-                        <div class="col-auto">
-                            <button class="btn btn-icon btn-default" type="button">
-                                <i class="fas fa-cog top-0"></i>
-                            </button>
-                        </div>
-                        <p class="col-12">
-                            {{$semester->description}}
-                        </p>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-icon btn-default" type="button">
+                            <i class="fas fa-cog top-0"></i>
+                        </button>
                     </div>
                 </div>
-            @endforeach
-            <hr>
-            <h1>Past Semester</h1>
-            @foreach($pastSemester as $semester)
-                <div class="card mb-4 border-4 border-secondary">
-                    <div class="card-body row m-0">
-                        <div class="col-auto d-flex align-items-center">
-                            <h2 class="mb-0">{{$semester->name}}</h2>
+            </div>
+            <div class="card mb-4 border-4 border-secondary">
+                <div class="card-body row m-0">
+                    <div class="col-auto d-flex align-items-center">
+                        <h2 class="mb-0">Semester title</h2>
+                    </div>
+                    <div class="col row m-0">
+                        <div class="col-12 col-md-5 d-flex align-items-center">
+                            <h3 class="mb-0">Start: 22/10/2019</h3>
                         </div>
-                        <div class="col row m-0">
-                            <div class="col-12 col-md-5 d-flex align-items-center">
-                                <h3 class="mb-0">
-                                    Start: {{\App\Helpers\DateTimeHelper::formatDate($semester->start_date)}}</h3>
-                            </div>
-                            <div class="col-12 col-md-5 d-flex align-items-center">
-                                <h3 class="mb-0">
-                                    End: {{\App\Helpers\DateTimeHelper::formatDate($semester->end_date)}}</h3>
-                            </div>
+                        <div class="col-12 col-md-5 d-flex align-items-center">
+                            <h3 class="mb-0">End: 22/10/2019</h3>
                         </div>
-                        <div class="col-auto">
-                            <button class="btn btn-icon btn-default" disabled type="button">
-                                <i class="fas fa-cog top-0"></i>
-                            </button>
-                        </div>
-                        <p class="col-12">
-                            {{$semester->description}}
-                        </p>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-icon btn-default" disabled type="button">
+                            <i class="fas fa-cog top-0"></i>
+                        </button>
                     </div>
                 </div>
-            @endforeach
+            </div>
         </div>
     </div>
 @endsection
