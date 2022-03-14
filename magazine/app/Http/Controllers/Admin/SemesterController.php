@@ -7,19 +7,57 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 class SemesterController extends Controller
 {
-    public function semester()
+    public function semester(Request $request)
     {
-        $semesters = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator']);
+        $searchTerms = $request->get('search_semester_input');
+        if ($searchTerms) {
+            $semestersActive = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+                ->where('start_date', '<=', Carbon::now())
+                ->where('end_date', '>=', Carbon::now())
+                ->where(function ($query) use ($searchTerms) {
+                    $query->where('name', 'like', '%' . $searchTerms . '%')
+                        ->orWhere('description', 'like', '%' . $searchTerms . '%');
+                })
+                ->first();
+            $semestersFuture = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+                ->where('start_date', '>=', Carbon::now())
+                ->where(function ($query) use ($searchTerms) {
+                    $query->where('name', 'like', '%' . $searchTerms . '%')
+                        ->orWhere('description', 'like', '%' . $searchTerms . '%');
+                })
+                ->orderBy('start_date', 'desc')
+                ->get();
+            $semestersPast = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+                ->where('end_date', '<=', Carbon::now())
+                ->where(function ($query) use ($searchTerms) {
+                    $query->where('name', 'like', '%' . $searchTerms . '%')
+                        ->orWhere('description', 'like', '%' . $searchTerms . '%');
+                })
+                ->orderBy('start_date', 'desc')
+                ->get();
+        } else {
+            $semestersActive = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+                ->where('start_date', '<=', Carbon::now())
+                ->where('end_date', '>=', Carbon::now())
+                ->first();
+            $semestersFuture = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+                ->where('start_date', '>=', Carbon::now())
+                ->orderBy('start_date', 'desc')
+                ->get();
+            $semestersPast = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+                ->where('end_date', '<=', Carbon::now())
+                ->orderBy('start_date', 'desc')
+                ->get();
+        }
         return view('admin.Semester.semester', [
-            'listSemester' => $semesters
+            'activeSemester' => $semestersActive,
+            'futureSemester' => $semestersFuture,
+            'pastSemester' => $semestersPast,
         ]);
     }
     public function createSemester()
     {
-        $lastSem = Semester::orderBy('end_date', 'desc')->first();
-        return view('admin.Semester.create-semester',[
-            'lastSemester' => $lastSem
-        ]);
+        return view('admin.Semester.create-semester');
     }
     public function createSemester_post(CreateSemester $request)
     {
@@ -27,8 +65,7 @@ class SemesterController extends Controller
         $ad->name = $request->get('name');
         $ad->description = $request->get('description');
         $ad->start_date = $request->get('start_date');
-        $enddate = Carbon::parse($ad->start_date)->addMonth(3);
-        $ad->end_date = $enddate;
+        $ad->end_date = $request->get('end_date');
         if ($ad->save())
             return redirect()->back()->with([
                 'success' => 1
