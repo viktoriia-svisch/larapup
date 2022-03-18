@@ -144,7 +144,8 @@
             </div>
         </div>
         <hr>
-        <form method="get" class="col-12 row m-0">
+        <form method="get" action="{{route('admin.student')}}" class="col-12 row m-0">
+            {{csrf_field()}}
             <div class="form-group col">
                 <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
@@ -152,12 +153,14 @@
                         <i class="fas fa-search"></i>
                     </span>
                     </div>
-                    <input class="form-control form-control-alternative " placeholder="Find student" type="text">
+                    <input class="form-control form-control-alternative" id="search_student_input"
+                           name="search_student_input" placeholder="Find student Here" type="text">
                 </div>
             </div>
             <div class="col-auto">
                 <button type="submit" class="btn btn-neutral">Search</button>
             </div>
+            <input type="hidden" name="type" value="{{old('type') ?? -1}}">
         </form>
         <div class="col-12 row m-0 pl-5 pr-5">
             <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">

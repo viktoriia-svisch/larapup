@@ -8,15 +8,25 @@ class StudentController extends Controller
 {
     public function student(Request $request)
     {
-        $studentList = Student::with('faculty_student.faculty')
-            ->whereDoesntHave('faculty_student.faculty', function ($q) {
-                $q->whereHas('semester', function ($q) {
-                    $q->where('end_date', '>=', Carbon::now()->toDateString());
+        $searchTerms = $request->get('search_student_input');
+        $searchType = $request->get('type');
+        $studentList = Student::with('faculty_student.faculty');
+        if ($searchType != -1 && $searchType != null) {
+            $studentList->where('status', $request->get('type'));
+        }
+        if ($searchTerms != null){
+            $studentList->where(function ($query) use ($searchTerms) {
+                    $query->where('first_name', 'like', '%' . $searchTerms . '%')
+                        ->orwhere('last_name', 'like', '%' . $searchTerms . '%');
                 });
-            })
-            ->get();
+        }
+        $studentList->whereDoesntHave('faculty_student.faculty', function ($q) {
+            $q->whereHas('semester', function ($q) {
+                $q->where('end_date', '>=', Carbon::now()->toDateString());
+            });
+        });
         return view('admin.student.student', [
-            'availableStudent' => $studentList
+            'availableStudent' => $studentList->paginate(PER_PAGE),
         ]);
     }
     public function createStudent()
