@@ -31,7 +31,9 @@
                         </p>
                     </div>
                     <div class="col-12 col-sm-12 col-md-auto d-flex align-items-center">
-                        <a href="{{route('student.faculty.detail', [$currentFaculty->id])}}" class="btn btn-secondary">Detail</a>
+                        <a href="{{route('student.faculty.detail', [$currentFaculty->id])}}" class="btn btn-secondary">
+                            Detail
+                        </a>
                     </div>
                 </div>
             </div>
