@@ -55,12 +55,13 @@ class SemesterController extends Controller
             'pastSemester' => $semestersPast,
         ]);
     }
+    public function semesterFind(Request $request)
+    {
+        return redirect()->back();
+    }
     public function createSemester()
     {
-        $lastSem = Semester::orderBy('end_date', 'desc')->first();
-        return view('admin.Semester.create-semester',[
-            'lastSemester' => $lastSem
-        ]);
+        return view('admin.Semester.create-semester');
     }
     public function createSemester_post(CreateSemester $request)
     {
@@ -68,8 +69,7 @@ class SemesterController extends Controller
         $ad->name = $request->get('name');
         $ad->description = $request->get('description');
         $ad->start_date = $request->get('start_date');
-        $enddate = Carbon::parse($ad->start_date)->addMonth(3);
-        $ad->end_date = $enddate;
+        $ad->end_date = $request->get('end_date');
         if ($ad->save())
             return redirect()->back()->with([
                 'success' => 1

@@ -144,7 +144,8 @@
             </div>
         </div>
         <hr>
-        <form method="get" class="col-12 row m-0">
+        <form method="get" action="{{route('admin.student')}}" id="searchForm" class="col-12 row m-0">
+            {{csrf_field()}}
             <div class="form-group col">
                 <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
@@ -152,29 +153,35 @@
                         <i class="fas fa-search"></i>
                     </span>
                     </div>
-                    <input class="form-control form-control-alternative " placeholder="Find student" type="text">
+                    <input class="form-control form-control-alternative" id="search_student_input"
+                           name="search_student_input" value="{{old('search_student_input')}}" placeholder="Find student Here" type="text">
                 </div>
             </div>
             <div class="col-auto">
                 <button type="submit" class="btn btn-neutral">Search</button>
             </div>
+            <input type="hidden" id="hidden" name="type" value="{{ old('type') ?? -1}}">
         </form>
         <div class="col-12 row m-0 pl-5 pr-5">
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
+                 onclick="type({{STUDENT_STATUS['STANDBY']}})">
                 <div class="rounded-circle bg-gradient-gray"></div>
-                <span>Standby Account</span>
+                <span id="Standby">Standby Account</span>
             </div>
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
+                 onclick="type({{STUDENT_STATUS['ONGOING']}})">
                 <div class="rounded-circle bg-white shadow-lg"></div>
-                <span>Activated Account</span>
+                <span id="Activated">Activated Account</span>
             </div>
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
+                 onclick="type({{STUDENT_STATUS['FINISHED']}})">
                 <div class="rounded-circle bg-gradient-green"></div>
-                <span>Graduated Account</span>
+                <span id="Graduated">Graduated Account</span>
             </div>
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
+                 onclick="type({{STUDENT_STATUS['LEFT']}})">
                 <div class="rounded-circle bg-gradient-red"></div>
-                <span>Suspended Account</span>
+                <span id="Suspended">Suspended Account</span>
             </div>
         </div>
         <br>
@@ -192,8 +199,7 @@
                             </h4>
                             <p>{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary"
-                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
+                                <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>
@@ -209,8 +215,7 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary"
-                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
+                                <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>
@@ -225,8 +230,7 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary"
-                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
+                                <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>
@@ -241,8 +245,7 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary"
-                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
+                                <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>
@@ -252,4 +255,24 @@
     </div>
 @endsection
 @push("custom-js")
+    <script>
+        function type(id) {
+            if(id == {{STUDENT_STATUS['STANDBY']}}){
+                document.getElementById("hidden").value = "{{STUDENT_STATUS['STANDBY']}}";
+            }
+            else if(id == {{STUDENT_STATUS['ONGOING']}}){
+                document.getElementById("hidden").value = "{{STUDENT_STATUS['ONGOING']}}";
+            }
+            else if(id == {{STUDENT_STATUS['FINISHED']}}){
+                document.getElementById("hidden").value = "{{STUDENT_STATUS['FINISHED']}}";
+            }
+            else if(id == {{STUDENT_STATUS['LEFT']}}){
+                document.getElementById("hidden").value = "{{STUDENT_STATUS['LEFT']}}";
+            }
+            listenChange();
+        }
+        function listenChange() {
+            $('#searchForm').submit();
+        }
+    </script>
 @endpush

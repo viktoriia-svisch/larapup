@@ -8,11 +8,10 @@ Route::group([
 ], function ($router) {
     Route::get('dashboard', 'AdminController@dashboard')->name('admin.dashboard');
     Route::get('student', 'StudentController@student')->name('admin.student');
-    Route::get('student/{id}', 'StudentController@updateStudent')->name('admin.updateStudent');
-    Route::post('student/{id}', 'StudentController@updateStudentPost')->name('admin.updateStudent_post');
     Route::get('student/create', 'StudentController@createStudent')->name('admin.createStudent');
     Route::post('student/create', 'StudentController@createStudent_post')->name('admin.createStudent_post');
     Route::get('semester', 'SemesterController@semester')->name('admin.semester');
+    Route::get('semester/find', 'SemesterController@semesterFind')->name('admin.semesterFind');
     Route::get('semester/create', 'SemesterController@createSemester')->name('admin.createSemester');
     Route::post('semester/create', 'SemesterController@createSemester_post')->name('admin.createSemester_post');
     Route::get('faculty', 'FacultyController@faculty')->name('admin.faculty');
