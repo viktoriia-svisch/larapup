@@ -109,16 +109,23 @@
                 <div class="card">
                     <div class="card-body">
                         <h1>Latest semester</h1>
-                        <p>Fall Semester</p>
+                        <p>{{$lastSemester->name}}</p>
                         <hr>
                         <div class="row">
                             <h3 class="col-12">Duration:</h3>
-                            <p class="col">From: 22/10/2018</p>
-                            <p class="col">To: 12/12/2018</p>
+                            <p class="col">From: {{\App\Helpers\DateTimeHelper::formatDate($lastSemester->start_date)}}</p>
+                            <p class="col">To: {{\App\Helpers\DateTimeHelper::formatDate($lastSemester->end_date)}}</p>
                         </div>
                         <hr>
                         <h3>Status:</h3>
-                        <h1 class="text-warning font-weight-light">Started</h1>
+                        @if(\App\Helpers\DateTimeHelper::isNowPassedDate($lastSemester->end_date))
+                            <h1 class="text-muted font-weight-light">Ended</h1>
+                        @elseif(\App\Helpers\DateTimeHelper::isNowPassedDate($lastSemester->start_date)
+                        && !\App\Helpers\DateTimeHelper::isNowPassedDate($lastSemester->end_date))
+                            <h1 class="text-success font-weight-light">Ongoing</h1>
+                        @else
+                            <h1 class="text-warning font-weight-light">Incoming</h1>
+                        @endif
                     </div>
                 </div>
             </div>

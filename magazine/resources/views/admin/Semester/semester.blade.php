@@ -101,6 +101,9 @@
                     </div>
                 </div>
             @endforeach
+            @if (count($pastSemester))
+                <h2 class="text-muted m-auto">No data found</h2>
+            @endif
             <hr>
             <h1>Past Semester</h1>
             @foreach($pastSemester as $semester)
@@ -130,6 +133,9 @@
                     </div>
                 </div>
             @endforeach
+            @if (count($pastSemester))
+                <h2 class="text-muted m-auto">No data found</h2>
+            @endif
         </div>
     </div>
 @endsection
