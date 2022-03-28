@@ -46,5 +46,9 @@ class account extends Seeder
             'dateOfBirth' => '1999-03-15',
             'created_at' => \Illuminate\Support\Carbon::now()
         ]);
+        DB::table('faculties')->insert([
+            'name' => 'Math Advance',
+            'first_deadline'
+        ]);
     }
 }

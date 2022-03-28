@@ -108,5 +108,5 @@ return [
         ],
     ],
     'attributes' => [],
-    'semester_startDateError' => 'Start date of this semester must be greater than latest End date'
+    'semester_startDateError' => 'Start date of this semester must be greater than Start date of semester which created before'
 ];
