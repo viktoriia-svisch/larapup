@@ -8,8 +8,6 @@ Route::group([
 ], function ($router) {
     Route::get('dashboard', 'AdminController@dashboard')->name('admin.dashboard');
     Route::get('student', 'StudentController@student')->name('admin.student');
-    Route::get('student/{id}', 'StudentController@updateStudent')->name('admin.updateStudent');
-    Route::post('student/{id}', 'StudentController@updateStudentPost')->name('admin.updateStudent_post');
     Route::get('student/create', 'StudentController@createStudent')->name('admin.createStudent');
     Route::post('student/create', 'StudentController@createStudent_post')->name('admin.createStudent_post');
     Route::get('semester', 'SemesterController@semester')->name('admin.semester');
@@ -19,6 +17,7 @@ Route::group([
     Route::get('faculty/create', 'FacultyController@createFaculty_semester')->name('admin.createFacultySemester');
     Route::get('faculty/create/{semester}', 'FacultyController@createFaculty')->name('admin.createFaculty');
     Route::post('faculty/create/{semester}', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
+    Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');
     Route::get('get/{id}', 'AdminController@show');
     Route::post('new-semester', 'AdminController@store');
     Route::redirect('', 'admin/dashboard');
