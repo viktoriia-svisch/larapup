@@ -3,12 +3,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 class Faculty extends Model
 {
-    public function faculty_semester()
+    public function faculty_coordinator()
     {
-        return $this->hasMany(Semester::class);
+        return $this->hasMany(FacultyCoordinator::class);
     }
-    public function guest()
+    public function faculty_student()
     {
-        return $this->hasMany(Guest::class);
+        return $this->hasMany(FacultyStudent::class, 'id');
+    }
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class,'semester_id','id');
     }
 }

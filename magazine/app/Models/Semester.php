@@ -4,8 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 class Semester extends Model
 {
     public $primaryKey = 'id';
-    public function faculty_semester()
+    public function faculty()
     {
-        return $this->hasMany(FacultySemester::class);
+        return $this->hasMany(Faculty::class,'semester_id','id');
     }
 }
