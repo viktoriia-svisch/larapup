@@ -11,16 +11,12 @@ class Guest extends Authenticate
     protected $hidden = [
         'password', 'deleted_at'
     ];
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
     public function setPasswordAttribute($value)
     {
         return $this->attributes['password'] = Hash::make($value);
+    }
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class);
     }
 }
