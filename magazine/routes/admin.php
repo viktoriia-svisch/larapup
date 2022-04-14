@@ -19,6 +19,7 @@ Route::group([
     Route::get('faculty/create', 'FacultyController@createFaculty_semester')->name('admin.createFacultySemester');
     Route::get('faculty/create/{semester}', 'FacultyController@createFaculty')->name('admin.createFaculty');
     Route::post('faculty/create/{semester}', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
+    Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');
     Route::get('get/{id}', 'AdminController@show');
     Route::post('new-semester', 'AdminController@store');
     Route::redirect('', 'admin/dashboard');

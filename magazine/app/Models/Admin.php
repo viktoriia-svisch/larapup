@@ -10,8 +10,7 @@ class Admin extends Authenticate
     protected $hidden = [
         'password', 'deleted_at'
     ];
-    public function setPasswordAttribute($value)
-    {
+    public function setPasswordAttribute($value){
         return $this->attributes['password'] = Hash::make($value);
     }
 }
