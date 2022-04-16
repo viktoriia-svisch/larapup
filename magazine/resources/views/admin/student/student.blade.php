@@ -192,8 +192,7 @@
                             </h4>
                             <p>{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary"
-                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
+                                <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>
@@ -209,8 +208,7 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary"
-                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
+                                <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>
@@ -225,8 +223,7 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary"
-                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
+                                <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>
@@ -241,8 +238,7 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary"
-                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
+                                <a class="btn btn-block btn-secondary">Update</a>
                             </div>
                         </div>
                     </div>

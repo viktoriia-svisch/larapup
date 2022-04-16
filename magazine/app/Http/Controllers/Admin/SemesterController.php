@@ -11,7 +11,7 @@ class SemesterController extends Controller
     {
         $searchTerms = $request->get('search_semester_input');
         if ($searchTerms) {
-            $semestersActive = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+            $semestersActive = Semester::with(['faculty_semester'])
                 ->where('start_date', '<=', Carbon::now())
                 ->where('end_date', '>=', Carbon::now())
                 ->where(function ($query) use ($searchTerms) {
@@ -19,7 +19,7 @@ class SemesterController extends Controller
                         ->orWhere('description', 'like', '%' . $searchTerms . '%');
                 })
                 ->first();
-            $semestersFuture = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+            $semestersFuture = Semester::with(['faculty_semester'])
                 ->where('start_date', '>=', Carbon::now())
                 ->where(function ($query) use ($searchTerms) {
                     $query->where('name', 'like', '%' . $searchTerms . '%')
@@ -27,7 +27,7 @@ class SemesterController extends Controller
                 })
                 ->orderBy('start_date', 'desc')
                 ->get();
-            $semestersPast = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+            $semestersPast = Semester::with(['faculty_semester'])
                 ->where('end_date', '<=', Carbon::now())
                 ->where(function ($query) use ($searchTerms) {
                     $query->where('name', 'like', '%' . $searchTerms . '%')
@@ -36,15 +36,15 @@ class SemesterController extends Controller
                 ->orderBy('start_date', 'desc')
                 ->get();
         } else {
-            $semestersActive = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+            $semestersActive = Semester::with(['faculty_semester'])
                 ->where('start_date', '<=', Carbon::now())
                 ->where('end_date', '>=', Carbon::now())
                 ->first();
-            $semestersFuture = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+            $semestersFuture = Semester::with(['faculty_semester'])
                 ->where('start_date', '>=', Carbon::now())
                 ->orderBy('start_date', 'desc')
                 ->get();
-            $semestersPast = Semester::with(['faculty.faculty_student', 'faculty.faculty_coordinator'])
+            $semestersPast = Semester::with(['faculty_semester'])
                 ->where('end_date', '<=', Carbon::now())
                 ->orderBy('start_date', 'desc')
                 ->get();

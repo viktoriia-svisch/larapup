@@ -46,7 +46,7 @@
         <div class="col-12">
             <h1>Active Semester</h1>
             @if ($activeSemester)
-                <div class="card mb-4 border-4 border-secondary">
+                <div class="card mb-4 border-4 border-success">
                     <div class="card-body row m-0">
                         <div class="col-auto d-flex align-items-center">
                             <h2 class="mb-0">{{$activeSemester->name}}</h2>
@@ -71,6 +71,8 @@
                         </p>
                     </div>
                 </div>
+            @else
+                <h2 class="text-muted text-center">No active semester currently</h2>
             @endif
             <hr>
             <h1>Future Semester</h1>
@@ -101,7 +103,7 @@
                     </div>
                 </div>
             @endforeach
-            @if (count($pastSemester))
+            @if (count($pastSemester) == 0)
                 <h2 class="text-muted m-auto">No data found</h2>
             @endif
             <hr>
@@ -133,7 +135,7 @@
                     </div>
                 </div>
             @endforeach
-            @if (count($pastSemester))
+            @if (count($pastSemester) == 0)
                 <h2 class="text-muted m-auto">No data found</h2>
             @endif
         </div>
