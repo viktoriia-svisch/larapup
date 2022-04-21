@@ -25,18 +25,18 @@
             <span class="text-muted">Duration: {{$semester->start_date}} - {{$semester->end_date}}</span>
             <br>
             <br>
-            @if (count($semester->faculty_semester) == 0)
+            @if (count($semester->faculty) == 0)
                 <h1 class="m-auto text-muted">No faculty in this semester</h1>
             @else
-                @foreach($semester->faculty_semester as $facultySemester)
+                @foreach($semester->faculty as $faculty)
                     <div class="card mb-3">
                         <div class="card-body">
-                            <h2 class="col-12">{{$facultySemester->faculty->name}}</h2>
+                            <h2 class="col-12">{{$faculty->name}}</h2>
                             <p class="font-weight-bold col-12">
                                 Deadline:
-                                <span class="font-weight-normal">{{$facultySemester->faculty->first_deadline}}</span>
+                                <span class="font-weight-normal">{{$faculty->first_deadline}}</span>
                                 -
-                                <span class="font-weight-normal">{{$facultySemester->faculty->second_deadline}}</span>
+                                <span class="font-weight-normal">{{$faculty->second_deadline}}</span>
                             </p>
                         </div>
                     </div>

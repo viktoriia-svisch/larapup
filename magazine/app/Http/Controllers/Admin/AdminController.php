@@ -6,6 +6,7 @@ use App\Http\Requests\CreateFaculty;
 use App\Models\Semester;
 use App\Models\Faculty;
 use App\Models\Student;
+use App\Models\FacultySemester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -89,7 +90,7 @@ class AdminController extends Controller
         }
     public function searchFaculty($semester, $request)
     {
-        $search = Faculty::where('name', 'LIKE', '%' . $request . '%')
+        $search = FacultySemester::where('name', 'LIKE', '%' . $request . '%')
             ->where('semester_id', 'like', '%' . $semester . '%')
             ->get();
         return response()->json($search);

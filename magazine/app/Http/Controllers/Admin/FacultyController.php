@@ -10,7 +10,7 @@ class FacultyController extends Controller
 {
     public function faculty(Request $request)
     {
-        $listSemester = Semester::with('faculty_semester')
+        $listSemester = Semester::with('faculty')
             ->where('start_date', ">", Carbon::now()->toDateTimeString())
             ->orderBy('start_date', 'asc')
             ->paginate(PER_PAGE);
