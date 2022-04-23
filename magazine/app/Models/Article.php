@@ -10,7 +10,7 @@ class Article extends Model
     public function student(){
         return $this->belongsTo(Student::class);
     }
-    public function faculty(){
-        return $this->belongsTo(Faculty::class);
+    public function faculty_semester(){
+        return $this->belongsTo(FacultySemester::class);
     }
 }

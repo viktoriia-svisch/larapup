@@ -1,11 +1,11 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class FacultyCoordinator extends Model
+class FacultySemesterCoordinator extends Model
 {
-    public function faculty()
+    public function faculty_semester()
     {
-        return $this->belongsTo(Faculty::class);
+        return $this->belongsTo(FacultySemester::class);
     }
     public function coordinator()
     {
