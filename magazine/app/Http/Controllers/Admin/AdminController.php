@@ -6,7 +6,6 @@ use App\Http\Requests\CreateFaculty;
 use App\Models\Semester;
 use App\Models\Faculty;
 use App\Models\Student;
-use App\Models\FacultySemester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -19,30 +18,23 @@ class AdminController extends Controller
         $sem = Semester::paginate((PER_PAGE));
         dd($sem);
     }
-    public function store(Requestest $request)
+    public function store(Request $request)
     {
-        $ad = new Semester();
-        $ad->name = $request->get('name');
-        $ad->description = $request->get('description');
-        $ad->start_date = $request->get('start_date');
-        $ad->end_date = $request->get('end_date');
-        $validated = $request->validated();
-        $OneYearLimit = Carbon::parse($ad->start_date)->addYear(); 
-        if ($ad->end_date > $OneYearLimit)
+        $semester = new Semester();
+        $semester->name = $request->get('name');
+        $semester->description = $request->get('description');
+        $semester->start_date = $request->get('start_date');
+        $semester->end_date = $request->get('end_date');
+        $OneYearLimit = Carbon::parse($semester->start_date)->addYear();
+        if ($semester->end_date > $OneYearLimit)
         {
               return $this->responseMessage("The end date must not be more than 1 year from start date", true);
         }
-         if ($ad->save())
+         if ($semester->save())
         {
-            return $this->responseMessage(
-                'New semester created successfully',
-                false,
-                'success',
-                $ad
-            );
+            return view('admin.Semester.create-semester')->with($this->responseBladeMessage('New semester created successfully'));
         }
-        return $this->responseMessage('Create unsuccessfully', true);
-        return view('admin.Semester.create-semester');
+        return back()->with($this->responseBladeMessage('Create unsuccessfully', false));
     }
     public function createFaculty(CreateFaculty $request)
     {
@@ -90,7 +82,7 @@ class AdminController extends Controller
         }
     public function searchFaculty($semester, $request)
     {
-        $search = FacultySemester::where('name', 'LIKE', '%' . $request . '%')
+        $search = Faculty::where('name', 'LIKE', '%' . $request . '%')
             ->where('semester_id', 'like', '%' . $semester . '%')
             ->get();
         return response()->json($search);

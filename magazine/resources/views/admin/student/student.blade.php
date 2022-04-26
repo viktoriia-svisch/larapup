@@ -17,18 +17,6 @@
             padding: 0;
             list-style: none;
         }
-        .heading.heading-icon {
-            display: block;
-        }
-        .padding-lg {
-            display: block;
-            padding-top: 60px;
-            padding-bottom: 60px;
-        }
-        .practice-area.padding-lg {
-            padding-bottom: 55px;
-            padding-top: 55px;
-        }
         .practice-area .inner {
             border: 1px solid #999999;
             text-align: center;
@@ -192,7 +180,8 @@
                             </h4>
                             <p>{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
+                                <a class="btn btn-block btn-secondary"
+                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
                             </div>
                         </div>
                     </div>
@@ -208,7 +197,8 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
+                                <a class="btn btn-block btn-secondary"
+                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
                             </div>
                         </div>
                     </div>
@@ -223,7 +213,8 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
+                                <a class="btn btn-block btn-secondary"
+                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
                             </div>
                         </div>
                     </div>
@@ -238,7 +229,8 @@
                             </h4>
                             <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
                             <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
+                                <a class="btn btn-block btn-secondary"
+                                   href="{{route('admin.updateStudent', [$student->id] )}}">Update</a>
                             </div>
                         </div>
                     </div>
