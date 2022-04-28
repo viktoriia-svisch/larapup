@@ -20,69 +20,32 @@
             </div>
         </div>
         <hr>
-        <form method="get" id="searchBox" action="{{route('admin.faculty')}}" class="col-12 row m-0">
-            {{csrf_field()}}
-            <div class="form-group col">
-                <input type="text" class="form-control form-control-alternative" id="search_faculty_input"
-                       name="search_faculty_input"
-                       value="@if ($searching) {{$searching}} @endif"
-                       placeholder="Type Faculty Name Here">
-            </div>
-            <div class="col-auto p-0">
-                @if ($searching)
-                    <button type="button" class="btn btn-icon btn-danger" onclick="resetSearch()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                @endif
-            </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-info">
-                    Search
-                </button>
-            </div>
-        </form>
-        <br>
-        @if (count($faculties) == 0)
-            <h2 class="text-center text-muted">No record found</h2>
-        @endif
-        @foreach($faculties as $faculty)
-            <div class="card mb-2">
-                <div class="card-body row">
-                    <div class="col">
-                        <div class="col-auto d-flex align-items-center">
-                            <h1 class="heading-title">{{$faculty->name}}</h1>
-                        </div>
-                        <div class="col-auto d-flex align-items-center">
-                            <p class="m-0 p-3">
-                                Appeared in
-                                <span class="text-primary">
-                                {{count($faculty->faculty_semester)}}
-                                </span>
-                                semester(s)
+        @foreach($availableSemester as $semester)
+            <h1>{{$semester->name}}</h1>
+            <span class="text-muted">Duration: {{$semester->start_date}} - {{$semester->end_date}}</span>
+            <br>
+            <br>
+            @if (count($semester->faculty) == 0)
+                <h1 class="m-auto text-muted">No faculty in this semester</h1>
+            @else
+                @foreach($semester->faculty as $faculty)
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h2 class="col-12">{{$faculty->name}}</h2>
+                            <p class="font-weight-bold col-12">
+                                Deadline:
+                                <span class="font-weight-normal">{{$faculty->first_deadline}}</span>
+                                -
+                                <span class="font-weight-normal">{{$faculty->second_deadline}}</span>
                             </p>
                         </div>
                     </div>
-                    <div class="col-auto d-flex align-items-center">
-                        <button class="btn btn-default">
-                            Setting
-                        </button>
-                    </div>
-                </div>
-            </div>
+                @endforeach
+            @endif
+            <hr>
+            <br>
         @endforeach
-        <br>
-        <hr>
-        <div class="col-12 d-flex justify-content-center">
-            {{ $faculties->links() }}
-        </div>
     </div>
 @endsection
 @push("custom-js")
-    <script>
-        function resetSearch() {
-            let inputField = $('#search_faculty_input');
-            inputField.val('');
-            location.href = '{{route('admin.faculty')}}';
-        }
-    </script>
 @endpush

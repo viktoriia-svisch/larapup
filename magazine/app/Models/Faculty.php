@@ -5,7 +5,7 @@ class Faculty extends Model
 {
     public function faculty_semester()
     {
-        return $this->hasMany(FacultySemester::class);
+        return $this->hasMany(Semester::class);
     }
     public function guest()
     {

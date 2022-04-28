@@ -38,14 +38,6 @@ class Controller extends BaseController
             'meta' => null
         ]);
     }
-    function responseBladeMessage($message, $is_success = true, $custom_key = 'action_response', $custom_status_key = 'status_ok', $custom_message_key = 'status_message'){
-        return [
-            $custom_key => [
-                $custom_status_key => $is_success,
-                $custom_message_key => $message
-            ]
-        ];
-    }
     function responseMessage($message, $error = false, $status = 'success', $callback = null)
     {
         $statusFinal = $status !== 'success' && $status !== 'failed' ? $status :

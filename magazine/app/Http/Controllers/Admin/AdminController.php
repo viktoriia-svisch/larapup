@@ -18,23 +18,30 @@ class AdminController extends Controller
         $sem = Semester::paginate((PER_PAGE));
         dd($sem);
     }
-    public function store(Request $request)
+    public function store(Requestest $request)
     {
-        $semester = new Semester();
-        $semester->name = $request->get('name');
-        $semester->description = $request->get('description');
-        $semester->start_date = $request->get('start_date');
-        $semester->end_date = $request->get('end_date');
-        $OneYearLimit = Carbon::parse($semester->start_date)->addYear();
-        if ($semester->end_date > $OneYearLimit)
+        $ad = new Semester();
+        $ad->name = $request->get('name');
+        $ad->description = $request->get('description');
+        $ad->start_date = $request->get('start_date');
+        $ad->end_date = $request->get('end_date');
+        $validated = $request->validated();
+        $OneYearLimit = Carbon::parse($ad->start_date)->addYear(); 
+        if ($ad->end_date > $OneYearLimit)
         {
               return $this->responseMessage("The end date must not be more than 1 year from start date", true);
         }
-         if ($semester->save())
+         if ($ad->save())
         {
-            return view('admin.Semester.create-semester')->with($this->responseBladeMessage('New semester created successfully'));
+            return $this->responseMessage(
+                'New semester created successfully',
+                false,
+                'success',
+                $ad
+            );
         }
-        return back()->with($this->responseBladeMessage('Create unsuccessfully', false));
+        return $this->responseMessage('Create unsuccessfully', true);
+        return view('admin.Semester.create-semester');
     }
     public function createFaculty(CreateFaculty $request)
     {
