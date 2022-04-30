@@ -28,6 +28,6 @@ class Student extends Authenticate
     }
     public function faculty_semester_student()
     {
-        return $this->belongsTo(FacultySemesterStudent::class);
+        return $this->hasMany(FacultySemesterStudent::class);
     }
 }

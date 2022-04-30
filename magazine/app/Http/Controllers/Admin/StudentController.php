@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateStudent;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -10,7 +11,7 @@ class StudentController extends Controller
     {
         $searchTerms = $request->get('search_student_input');
         $searchType = $request->get('type');
-        $studentList = Student::with('faculty_student.faculty');
+        $studentList = Student::with('faculty_semester_student');
         if ($searchType != -1 && $searchType != null) {
             $studentList->where('status', $request->get('type'));
         }
@@ -33,7 +34,7 @@ class StudentController extends Controller
     {
         return view('admin.student.create-student');
     }
-    public function createStudent_post(Request $request)
+    public function createStudent_post(CreateStudent $request)
     {
         $student = new Student($request->all([
             'email',
@@ -44,19 +45,18 @@ class StudentController extends Controller
             'dateOfBirth'
         ]));
         if ($student->save())
-            return redirect()->back()->with([
-                'success' => true
-            ]);
-        return redirect()->back()->with([
-            'success' => false
+            return back()->with($this->responseBladeMessage(__('message.create_student_success')));
+        return back()->with($this->responseBladeMessage(__('message.create_student_failed'), false));
+    }
+    public function updateStudent($id)
+    {
+        $student = Student::find($id);
+        return view('admin.student.update-student', [
+            'student' => $student
         ]);
     }
-    public function updateStudent($id){
-        $student = Student::find($id);
-        return view('admin.student.update-student',[
-        'student' => $student]);
-    }
-    public function updateStudentPost(Request $request, $id){
+    public function updateStudentPost(Request $request, $id)
+    {
         $student = Student::find($id);
         if (!$student) return redirect()->back();
         $student->first_name = $request->get('first_name') ?? $student->first_name;
@@ -64,16 +64,16 @@ class StudentController extends Controller
         $student->dateOfBirth = $request->get('dateOfBirth') ?? $student->dateOfBirth;
         $student->gender = $request->get('gender') ?? $student->gender;
         dd($request, $student);
-        if ($request->get('new_password')){
-            $student->password =  $request->get('new_password');
+        if ($request->get('new_password')) {
+            $student->password = $request->get('new_password');
         }
-        if ($student->save()){
+        if ($student->save()) {
             return back()->with([
                 'updateStatus' => true
             ]);
         }
         return back()->with([
-            'updateStatus' =>false
+            'updateStatus' => false
         ]);
     }
 }
