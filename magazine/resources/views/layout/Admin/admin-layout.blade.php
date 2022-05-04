@@ -44,7 +44,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">
+                        <a href="{{route('admin.createCoordinator')}}" class="nav-link">
                             <i class="fas fa-chalkboard-teacher"></i>
                             Coordinator
                         </a>
