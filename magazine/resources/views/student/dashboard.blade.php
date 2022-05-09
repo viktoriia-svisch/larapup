@@ -41,9 +41,9 @@
                         <div class="card-text row m-0 p-0">
                             @if ($activeFaculty)
                                 <div class="col pl-0">
-                                <h2 class="col-12 p-0 mb-0 font-weight-bold">
-                                    {{\Illuminate\Support\Str::limit($activeFaculty->name, 24)}}
-                                </h2>
+                                    <h2 class="col-12 p-0 mb-0 font-weight-bold">
+                                        {{\Illuminate\Support\Str::limit($activeFaculty->name, 24)}}
+                                    </h2>
                                     <hr class="m-0 mb-2">
                                     <div class="col-12 pl-0">
                                         <span class="text-muted">Next due date: </span>
@@ -63,11 +63,16 @@
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <a href="{{route('student.faculty.detail', [$activeFaculty->id])}}" class="btn btn-info text-white">
+                                    <a href="{{route('student.faculty.detail', [$activeFaculty->id])}}"
+                                       class="btn btn-info text-white">
                                         <span>Detail</span>
                                         <span class="badge badge-dark text-white">4</span>
                                     </a>
                                 </div>
+                            @else
+                                <p class="col-12 p-0 mb-0 text-muted">
+                                    Currently not in any
+                                </p>
                             @endif
                         </div>
                     </div>

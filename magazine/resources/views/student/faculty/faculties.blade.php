@@ -69,19 +69,27 @@
                 @else
                     <h2 class="text-muted m-auto">No record found</h2>
                 @endif
+                <hr>
+                <div class="col-12 d-flex justify-content-center">
+                    {{$passedFaculties->links()}}
+                </div>
             </div>
             <div class="tab-pane fade" id="pills-future" role="tabpanel" aria-labelledby="pills-profile-tab">
                 @if (count($futureFaculties) > 0)
                     @foreach($futureFaculties as $faculty)
                         <div class="card">
                             <div class="card-body">
-                                <h2>{{$futureFaculties->name}}</h2>
+                                <h2>{{$faculty->name}}</h2>
                             </div>
                         </div>
                     @endforeach
                 @else
                     <h2 class="text-muted m-auto">No record found</h2>
                 @endif
+                <hr>
+                <div class="col-12 d-flex justify-content-center">
+                    {{$futureFaculties->links()}}
+                </div>
             </div>
         </div>
     </div>
