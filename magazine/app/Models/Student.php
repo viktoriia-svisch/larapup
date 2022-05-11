@@ -21,6 +21,8 @@ class Student extends Authenticate
     }
     public function setDateOfBirthAttribute($value)
     {
+        $date = DateTime::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+        $this->attributes['dateOfBirth'] = $date;
     }
     public function article()
     {
@@ -28,6 +30,6 @@ class Student extends Authenticate
     }
     public function faculty_semester_student()
     {
-        return $this->hasMany(FacultySemesterStudent::class);
+        return $this->belongsTo(FacultySemesterStudent::class);
     }
 }

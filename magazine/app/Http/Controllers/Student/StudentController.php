@@ -22,18 +22,18 @@ class StudentController extends Controller
     }
     public function dashboard()
     {
-        $currentSemester = Semester::with('faculty_semester')
+        $currentSemester = Semester::with('faculty')
             ->where('start_date', '<=', Carbon::now()->toDateTimeString())
-            ->whereHas('faculty_semester.faculty_semester_student.student', function ($q) {
+            ->whereHas('faculty.faculty_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })
             ->where('end_date', '>', Carbon::now()->toDateTimeString())
             ->first();
-        $currentFaculty = Faculty::with('faculty_semester.semester')
-            ->whereHas('faculty_semester.faculty_semester_student.student', function ($q) {
+        $currentFaculty = Faculty::with('semester')
+            ->whereHas('faculty_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })
-            ->whereHas('faculty_semester.semester', function ($q) {
+            ->whereHas('semester', function ($q) {
                 $q->where('start_date', '<=', Carbon::now()->toDateTimeString())
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
