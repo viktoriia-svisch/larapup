@@ -10,7 +10,7 @@
 @section('admin-content')
     <div class="container">
         <br>
-        <h1 class="heading-title">Create semester</h1>
+        <h1 class="text-primary">Create semester</h1>
         <span class="text-gray">
             The semester must be in the future and once it
             created and is in active, you can only change the name of the semester
@@ -19,27 +19,20 @@
         <form action="{{route('admin.createSemester_post')}}" method="post" class="row m-0">
             {{csrf_field()}}
             <div class="col-12">
-                @if (\Session::has('action_response'))
-                    @if (\Session::get('action_response')['status_ok'])
-                        <div class="col-md-6 col-12 m-auto">
-                            <div class="card bg-success text-white">
-                                <div class="card-body" style="padding: 1rem;">
-                                    {{\Session::get('action_response')['status_message']}}
-                                    Click <a href="{{route('admin.semester')}}" class="text-underline">here</a>
-                                    to go back to list semester.
-                                </div>
+                @if(\Illuminate\Support\Facades\Session::has('success'))
+                    @if(\Illuminate\Support\Facades\Session::get('success') == 1)
+                        <div class="card bg-success text-white">
+                            <div class="card-body">Create semester successfully. Click
+                                <a href="{{route('admin.semester')}}" class="text-underline">here</a>
+                                to go back to list semester.
                             </div>
                         </div>
                     @else
-                        <div class="col-md-6 col-12 m-auto">
-                            <div class="card bg-danger text-white">
-                                <div class="card-body" style="padding: 1rem;">
-                                    {{\Session::get('action_response')['status_message']}}
-                                </div>
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">Create semester unsuccessfully. Please try again
                             </div>
                         </div>
                     @endif
-                    <br>
                 @endif
                 <br>
             </div>
@@ -94,7 +87,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
-                        <input id="end_date" class="form-control datepicker" disabled placeholder="Expected End Date"
+                        <input id="end_date" class="form-control datepicker" disabled placeholder="Start Date"
                                type="text">
                         <input type="hidden" id="end_date_hidden" name="end_date" class="form-control datepicker"
                                placeholder="Start Date">
@@ -120,8 +113,7 @@
                         <hr>
                         <div class="row">
                             <h3 class="col-12">Duration:</h3>
-                            <p class="col">
-                                From: {{\App\Helpers\DateTimeHelper::formatDate($lastSemester->start_date)}}</p>
+                            <p class="col">From: {{\App\Helpers\DateTimeHelper::formatDate($lastSemester->start_date)}}</p>
                             <p class="col">To: {{\App\Helpers\DateTimeHelper::formatDate($lastSemester->end_date)}}</p>
                         </div>
                         <hr>
@@ -143,23 +135,14 @@
 @push("custom-js")
     <script>
         $(document).ready(function () {
-            let changeDate = Date.createFromMysql('{{$lastSemester->end_date}}');
             $('.datepicker').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
-                startDate: changeDate,
+                startDate: "today",
+                // endDate: "today",
+                // maxDate: today
             });
         });
-        Date.createFromMysql = function (mysql_string) {
-            let t, result = null;
-            if (typeof mysql_string === 'string') {
-                t = mysql_string.split(/[- :]/);
-                //when t[3], t[4] and t[5] are missing they defaults to zero
-                result = new Date(t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0);
-                result.setDate(+t[2] + 1);
-            }
-            return result;
-        };
         function listenStartDate(inputSection) {
             let end_date_hidden = document.getElementById('end_date_hidden');
             let end_date = document.getElementById('end_date');
