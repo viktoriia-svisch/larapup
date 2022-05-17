@@ -8,7 +8,7 @@ class FacultySemester extends Model
         return $this->belongsTo(Semester::class);
     }
     public function faculty(){
-        return $this->belongsTo(Faculty::class);
+        return $this->belongsTo(Student::class);
     }
     public function article(){
         return $this->hasMany(Article::class);
