@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 class CoordinatorController extends Controller
 {
+    public function coordinator(){
+        return view('admin.coordinator.coordinator');
+    }
     public function create()
     {
         return view('admin.coordinator.create-coordinator');
