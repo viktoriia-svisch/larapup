@@ -152,24 +152,14 @@
         </form>
         <div class="col-12 row m-0 pl-5 pr-5">
             <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
-                 onclick="type({{STUDENT_STATUS['STANDBY']}})">
-                <div class="rounded-circle bg-gradient-gray"></div>
-                <span id="Standby">Standby Account</span>
+                 onclick="type({{COORDINATOR_STATUS['ACTIVE']}})">
+                <div class="rounded-circle bg-green"></div>
+                <span id="Standby">Active Account</span>
             </div>
             <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
-                 onclick="type({{STUDENT_STATUS['ONGOING']}})">
-                <div class="rounded-circle bg-white shadow-lg"></div>
-                <span id="Activated">Activated Account</span>
-            </div>
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
-                 onclick="type({{STUDENT_STATUS['FINISHED']}})">
-                <div class="rounded-circle bg-gradient-green"></div>
-                <span id="Graduated">Graduated Account</span>
-            </div>
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
-                 onclick="type({{STUDENT_STATUS['LEFT']}})">
-                <div class="rounded-circle bg-gradient-red"></div>
-                <span id="Suspended">Suspended Account</span>
+                 onclick="type({{COORDINATOR_STATUS['DEACTIVATE']}})">
+                <div class="rounded-circle bg-gradient-gray shadow-lg"></div>
+                <span id="Activated">Deactivate Account</span>
             </div>
         </div>
         <br>
