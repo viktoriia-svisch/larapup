@@ -66,4 +66,9 @@ class DateTimeHelper
 		$dateDiffSecond = Carbon::now()->getTimestamp() -  strtotime($date);
 		return $dateDiffSecond > 0;
 	}
+    public static function checkIfPassedYears($yearsFromNow, $yearsToCheck){
+        $yearsToCheck = str_replace('/', '-', $yearsToCheck);
+        $dateDiffSecond = strtotime($yearsFromNow.' year') - strtotime($yearsToCheck);
+        return $dateDiffSecond > 0;
+    }
 }

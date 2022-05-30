@@ -17,18 +17,6 @@
             padding: 0;
             list-style: none;
         }
-        .heading.heading-icon {
-            display: block;
-        }
-        .padding-lg {
-            display: block;
-            padding-top: 60px;
-            padding-bottom: 60px;
-        }
-        .practice-area.padding-lg {
-            padding-bottom: 55px;
-            padding-top: 55px;
-        }
         .practice-area .inner {
             border: 1px solid #999999;
             text-align: center;

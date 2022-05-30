@@ -31,7 +31,9 @@
                         </p>
                     </div>
                     <div class="col-12 col-sm-12 col-md-auto d-flex align-items-center">
-                        <a href="{{route('student.faculty.detail', [$currentFaculty->id])}}" class="btn btn-secondary">Detail</a>
+                        <a href="{{route('student.faculty.detail', [$currentFaculty->id])}}" class="btn btn-secondary">
+                            Detail
+                        </a>
                     </div>
                 </div>
             </div>
@@ -40,49 +42,95 @@
             <br>
         @endif
         <hr>
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="pills-home-tab" data-toggle="pill"
-                   href="#pills-passed" role="tab" aria-controls="pills-home" aria-selected="true">
-                    Previous semesters's faculty
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="pills-profile-tab" data-toggle="pill"
-                   href="#pills-future" role="tab" aria-controls="pills-profile" aria-selected="false">
-                    Future Semesters's faculty
-                </a>
-            </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-passed" role="tabpanel" aria-labelledby="pills-home-tab">
-                @if (count($passedFaculties) > 0)
-                    @foreach($passedFaculties as $faculty)
-                        <div class="card">
-                            <div class="card-body">
-                                <h2>{{$faculty->name}}</h2>
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <h2 class="text-muted m-auto">No record found</h2>
+        <form method="get" id="searchBox" action="{{route('student.faculty')}}" class="col-12 row m-0">
+            {{csrf_field()}}
+            <div class="form-group col">
+                <input type="text" class="form-control form-control-alternative" id="search_faculty_input"
+                       name="search_faculty_input"
+                       value="@if ($searchTerms) {{$searchTerms}} @endif"
+                       placeholder="Type Faculty Name Here">
+                <input type="hidden" name="viewMode" id="viewMode" value="{{$viewMode}}">
+            </div>
+            <div class="col-auto p-0">
+                @if ($searchTerms)
+                    <button type="button" class="btn btn-icon btn-danger" onclick="resetSearch()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 @endif
             </div>
-            <div class="tab-pane fade" id="pills-future" role="tabpanel" aria-labelledby="pills-profile-tab">
-                @if (count($futureFaculties) > 0)
-                    @foreach($futureFaculties as $faculty)
-                        <div class="card">
-                            <div class="card-body">
-                                <h2>{{$futureFaculties->name}}</h2>
-                            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-info">
+                    Search
+                </button>
+            </div>
+        </form>
+        <br>
+        <div class="col-12 row">
+            <h2 class="col-auto mb-0 d-flex align-items-center">Filter Faculty:</h2>
+            <div class="col">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="viewModeButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @if ($viewMode == 0)
+                            All
+                        @elseif ($viewMode == 1)
+                            Incoming
+                        @else
+                            Ended
+                        @endif
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item cursor @if($viewMode == 0) selected bg-primary text-white @endif"
+                           onclick="selectMode(0)">
+                            All
+                        </a>
+                        <a class="dropdown-item cursor @if($viewMode == 1) selected bg-primary text-white @endif"
+                           onclick="selectMode(1)">
+                            Incoming
+                        </a>
+                        <a class="dropdown-item cursor @if($viewMode == 2) selected bg-primary text-white @endif"
+                           onclick="selectMode(2)">
+                            Ended
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="col-12">
+            @if (count($semester_faculties) > 0)
+                @foreach($semester_faculties as $semester)
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>{{$semester->faculty->name}}</h2>
                         </div>
-                    @endforeach
-                @else
-                    <h2 class="text-muted m-auto">No record found</h2>
-                @endif
+                    </div>
+                @endforeach
+            @else
+                <h2 class="text-muted m-auto">No record found</h2>
+            @endif
+            <hr>
+            <div class="col-12 d-flex justify-content-center">
+                {{$semester_faculties->appends(['viewMode' => $viewMode, 'search_faculty_input'=>$searchTerms])->links()}}
             </div>
         </div>
     </div>
 @endsection
 @push("custom-js")
+    <script>
+        let inputField = $('#search_faculty_input');
+        let facultyMode = $('#viewMode');
+        let formSearch = $("#searchBox");
+        function resetSearch() {
+            inputField.val('');
+            facultyMode.val(0);
+            location.href = '{{route('student.faculty')}}';
+        }
+        function selectMode(mode) {
+            if (mode === 1 || mode === 2 || mode === 0) {
+                facultyMode.val(mode);
+                formSearch.submit();
+            }
+        }
+    </script>
 @endpush
