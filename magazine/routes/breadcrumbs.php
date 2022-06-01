@@ -54,3 +54,7 @@ Breadcrumbs::for('dashboard.faculty.create', function ($trail, $parentRoute, $pa
     $trail->parent('dashboard.faculty', $parentRoute, $parent2Route);
     $trail->push("Create new", $routeActive);
 });
+Breadcrumbs::for('dashboard.profile', function ($trail, $parentRoute, $routeActive) {
+    $trail->parent('dashboard', $parentRoute);
+    $trail->push('Profile', $routeActive);
+});

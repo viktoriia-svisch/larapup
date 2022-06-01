@@ -9,12 +9,45 @@ use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 class StudentController extends Controller
 {
     public function index()
     {
         $students = Student::paginate(PER_PAGE);
         dd($students);
+    }
+    public function updateStudent($id){
+        $student = Student::find($id);
+        return view('student.manage.student-detail',[
+            'student' => $student]);
+    }
+    public function updateStudentPost(Request $request, $id){
+        $student = Student::find($id);
+        if (!$student) return redirect()->back();
+        $student->first_name = $request->get('first_name') ?? $student->first_name;
+        $student->last_name = $request->get('last_name') ?? $student->last_name;
+        $student->dateOfBirth = $request->get('dateOfBirth') ?? $student->dateOfBirth;
+        $student->gender = $request->get('gender') ?? $student->gender;
+        if ($request->get('old_password')){
+            if(Hash::check($request->get('old_password'),$student->password)
+                and (($request->get('new_password')) == ($request->get('confirm_password'))) )
+            {
+                $student->password =  $request->get('new_password');
+            } else {
+                return back()->with([
+                    'updateStatus' => false
+                ]);
+            }
+        }
+        if ($student->save()){
+            return back()->with([
+                'updateStatus' => true
+            ]);
+        }
+        return back()->with([
+            'updateStatus' => false
+        ]);
     }
     public function article()
     {
