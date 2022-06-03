@@ -11,8 +11,6 @@ Route::group([
     Route::get('faculty', 'FacultyController@faculty')->name('student.faculty');
     Route::get('faculty/{id}', 'FacultyController@facultyDetail')->name('student.faculty.detail');
     Route::get('article', 'StudentController@article')->name('student.article');
-    Route::get('manage/{id}', 'StudentController@updateStudent')->name('student.manageAccount');
-    Route::post('manage/{id}', 'StudentController@updateStudentPost')->name('student.manageAccount_post');
     Route::get('get/{id}','StudentController@show');
     Route::post('new-student','StudentController@store');
 });

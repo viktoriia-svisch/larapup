@@ -12,8 +12,8 @@ class CreateFaculty extends FormRequest
          return [
                'semester_id' => 'required',
                'name' => 'required|min:2|bail',
-               'first_deadline' => 'required|bail',
-               'second_deadline'=>'required|after:first_deadline|bail'
+               'first_deadline' => 'required|date|bail',
+               'second_deadline'=>'required|after:first_deadline|date|bail'
          ];
     }
     public function messages()

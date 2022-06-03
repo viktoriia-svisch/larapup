@@ -11,7 +11,3 @@ body{
     -ms-user-select: none;
     user-select: none;
 }
-.cursor{
-    user-select: all;
-    cursor: pointer;
-}

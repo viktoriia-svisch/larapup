@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Requests;
-use App\Rules\CheckDate;
 use Illuminate\Foundation\Http\FormRequest;
 class CreateSemester extends FormRequest
 {
@@ -12,8 +11,8 @@ class CreateSemester extends FormRequest
     {
         return [
               'name' => 'required|min:2|bail',
-              'start_date' => ['required','after:now',new checkDate(),'date','bail'],
-              'end_date'=>['required','after:start_date','date','bail']
+              'start_date' => 'required|after:now|date|bail',
+              'end_date'=>'required|after:start_date|date|bail'
         ];
     }
     public function messages()

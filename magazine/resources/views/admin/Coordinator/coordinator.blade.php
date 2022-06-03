@@ -127,19 +127,19 @@
 @section("admin-content")
     <div class="container">
         <br>
-        <h1>Manage Student</h1>
+        <h1>Manage Coordinator</h1>
         <br>
         <div class="col-12 row m-0">
             <div class="col">
-                <a href="{{route('admin.createStudent')}}" class="btn btn-block btn-success">
+                <a href="{{route('admin.createCoordinator')}}" class="btn btn-block btn-success">
                     <i class="fas fa-plus"></i>
-                    New Student
+                    New Coordinator
                 </a>
             </div>
             <div class="col">
                 <button class="btn btn-block btn-default">
                     <i class="fas fa-cog"></i>
-                    Student Settings
+                    Coordinator Settings
                 </button>
             </div>
         </div>
@@ -152,7 +152,7 @@
                         <i class="fas fa-search"></i>
                     </span>
                     </div>
-                    <input class="form-control form-control-alternative " placeholder="Find student" type="text">
+                    <input class="form-control form-control-alternative " name="search" placeholder="Find coordinator" type="text">
                 </div>
             </div>
             <div class="col-auto">
@@ -179,72 +179,25 @@
         </div>
         <br>
         <div class="col-12 row m-0">
-            @foreach($availableStudent as $student)
-                @if ($student->status == STUDENT_STATUS['ONGOING'])
-                    <div class="col-12 col-md-4 col-lg-3">
-                        <div class="cnt-block">
-                            <figure>
-                                <img src="{{$student->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}"
-                                     class="img-responsive" alt="">
-                            </figure>
-                            <h4 class="col-12">
-                                {{ \Str::limit(($student->first_name . ' ' . $student->last_name), 20, '...')}}
-                            </h4>
-                            <p>{{ \Str::limit($student->email, 22, '...')}}</p>
-                            <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
-                            </div>
+            @foreach($coordinators as $coor)
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="cnt-block">
+                        <figure>
+                            <img src="{{$coor->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}"
+                                 class="img-responsive" alt="">
+                        </figure>
+                        <h4 class="col-12">
+                            {{ \Str::limit(($coor->first_name . ' ' . $coor->last_name), 20, '...')}}
+                        </h4>
+                        <p>{{ \Str::limit($coor->email, 22, '...')}}</p>
+                        <div class="col-12">
+                            <a class="btn btn-block btn-secondary">Update</a>
                         </div>
                     </div>
-                @elseif ($student->status == STUDENT_STATUS['FINISHED'])
-                    <div class="col-12 col-md-4 col-lg-3">
-                        <div class="cnt-block bg-gradient-green">
-                            <figure>
-                                <img src="{{$student->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}"
-                                     class="img-responsive" alt="">
-                            </figure>
-                            <h4 class="col-12 text-white">
-                                {{ \Str::limit(($student->first_name . ' ' . $student->last_name), 19, '...')}}
-                            </h4>
-                            <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
-                            <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
-                            </div>
-                        </div>
-                    </div>
-                @elseif ($student->status == STUDENT_STATUS['STANDBY'])
-                    <div class="col-12 col-md-4 col-lg-3">
-                        <div class="cnt-block bg-gradient-gray">
-                            <figure>
-                                <img src="http://www.webcoderskull.com/img/team4.png" class="img-responsive" alt="">
-                            </figure>
-                            <h4 class="col-12 text-white">
-                                {{ \Str::limit($student->first_name . ' ' . $student->last_name, 19, '...')}}
-                            </h4>
-                            <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
-                            <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
-                            </div>
-                        </div>
-                    </div>
-                @elseif ($student->status == STUDENT_STATUS['LEFT'])
-                    <div class="col-12 col-md-4 col-lg-3">
-                        <div class="cnt-block bg-gradient-red">
-                            <figure>
-                                <img src="http://www.webcoderskull.com/img/team4.png" class="img-responsive" alt="">
-                            </figure>
-                            <h4 class="col-12 text-white">
-                                {{ \Str::limit($student->first_name . ' ' . $student->last_name, 19, '...')}}
-                            </h4>
-                            <p class="text-white">{{ \Str::limit($student->email, 22, '...')}}</p>
-                            <div class="col-12">
-                                <a class="btn btn-block btn-secondary">Update</a>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                </div>
             @endforeach
         </div>
+        <div class="col-3 m-auto">{{$coordinators -> links()}}</div>
     </div>
 @endsection
 @push("custom-js")
