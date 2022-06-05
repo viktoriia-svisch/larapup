@@ -10,7 +10,7 @@ class CoordinatorController extends Controller
     public function coordinator(Request $request){
         $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search') . '%')
             ->orWhere('last_name', 'like', '%' . $request->get('search') . '%')
-            ->paginate(1);
+            ->paginate(PER_PAGE);
         return view('admin.Coordinator.coordinator', ['coordinators' => $coordinators]);
     }
 }
