@@ -4,7 +4,6 @@ body{
 .height-fluid {
     height: 100vh;
 }
-
 .nav-link{
     cursor: pointer;
     -webkit-user-select: none;

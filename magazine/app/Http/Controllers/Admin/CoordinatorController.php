@@ -1,16 +1,30 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateCoordinator;
 use App\Models\Coordinator;
-use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
 class CoordinatorController extends Controller
 {
-    public function coordinator(Request $request){
-        $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search') . '%')
-            ->orWhere('last_name', 'like', '%' . $request->get('search') . '%')
-            ->paginate(PER_PAGE);
-        return view('admin.Coordinator.coordinator', ['coordinators' => $coordinators]);
+    public function coordinator(){
+        return view('admin.coordinator.coordinator');
+    }
+    public function create()
+    {
+        return view('admin.coordinator.create-coordinator');
+    }
+    public function createCoordinator_post(CreateCoordinator $request){
+        $coordinator = new Coordinator($request->all([
+            'email',
+            'password',
+            'first_name',
+            'last_name',
+            'gender',
+            'dateOfBirth'
+        ]));
+        $coordinator->type = COORDINATOR_LEVEL['NORMAL'];
+        if ($coordinator->save())
+            return back()->with($this->responseBladeMessage(__('message.create_coordinator_success')));
+        return back()->with($this->responseBladeMessage(__('message.create_coordinator_failed'), false));
     }
 }

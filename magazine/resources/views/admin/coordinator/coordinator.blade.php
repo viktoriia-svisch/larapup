@@ -17,18 +17,6 @@
             padding: 0;
             list-style: none;
         }
-        .heading.heading-icon {
-            display: block;
-        }
-        .padding-lg {
-            display: block;
-            padding-top: 60px;
-            padding-bottom: 60px;
-        }
-        .practice-area.padding-lg {
-            padding-bottom: 55px;
-            padding-top: 55px;
-        }
         .practice-area .inner {
             border: 1px solid #999999;
             text-align: center;
@@ -121,13 +109,13 @@
 @endpush
 @section('breadcrumb')
     <div class="container">
-        {{ Breadcrumbs::render('dashboard.student', route('admin.dashboard'), route('admin.student')) }}
+        {{ Breadcrumbs::render('dashboard.coordinator', route('admin.dashboard'), route('admin.coordinator')) }}
     </div>
 @endsection
 @section("admin-content")
     <div class="container">
         <br>
-        <h1>Manage Coordinator</h1>
+        <h1>Manage Student</h1>
         <br>
         <div class="col-12 row m-0">
             <div class="col">
@@ -139,12 +127,13 @@
             <div class="col">
                 <button class="btn btn-block btn-default">
                     <i class="fas fa-cog"></i>
-                    Coordinator Settings
+                    Student Settings
                 </button>
             </div>
         </div>
         <hr>
-        <form method="get" class="col-12 row m-0">
+        <form method="get" action="{{route('admin.coordinator')}}" id="searchForm" class="col-12 row m-0">
+            {{csrf_field()}}
             <div class="form-group col">
                 <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
@@ -152,52 +141,33 @@
                         <i class="fas fa-search"></i>
                     </span>
                     </div>
-                    <input class="form-control form-control-alternative " name="search" placeholder="Find coordinator" type="text">
+                    <input class="form-control form-control-alternative" id="search_student_input"
+                           name="search_student_input" value="{{old('search_student_input')}}" placeholder="Find student Here" type="text">
                 </div>
             </div>
             <div class="col-auto">
                 <button type="submit" class="btn btn-neutral">Search</button>
             </div>
+            <input type="hidden" id="hidden" name="type" value="{{ old('type') ?? -1}}">
         </form>
         <div class="col-12 row m-0 pl-5 pr-5">
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">
-                <div class="rounded-circle bg-gradient-gray"></div>
-                <span>Standby Account</span>
+            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
+                 onclick="type({{COORDINATOR_STATUS['ACTIVE']}})">
+                <div class="rounded-circle bg-green"></div>
+                <span id="Standby">Active Account</span>
             </div>
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">
-                <div class="rounded-circle bg-white shadow-lg"></div>
-                <span>Activated Account</span>
-            </div>
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">
-                <div class="rounded-circle bg-gradient-green"></div>
-                <span>Graduated Account</span>
-            </div>
-            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center">
-                <div class="rounded-circle bg-gradient-red"></div>
-                <span>Suspended Account</span>
+            <div class="col-12 col-md-3 text-center m-0 mt-2 mb-2 p-0 d-flex justify-content-center align-items-center"
+                 onclick="type({{COORDINATOR_STATUS['DEACTIVATE']}})">
+                <div class="rounded-circle bg-gradient-gray shadow-lg"></div>
+                <span id="Activated">Deactivate Account</span>
             </div>
         </div>
         <br>
         <div class="col-12 row m-0">
-            @foreach($coordinators as $coor)
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="cnt-block">
-                        <figure>
-                            <img src="{{$coor->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}"
-                                 class="img-responsive" alt="">
-                        </figure>
-                        <h4 class="col-12">
-                            {{ \Str::limit(($coor->first_name . ' ' . $coor->last_name), 20, '...')}}
-                        </h4>
-                        <p>{{ \Str::limit($coor->email, 22, '...')}}</p>
-                        <div class="col-12">
-                            <a class="btn btn-block btn-secondary">Update</a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
         </div>
-        <div class="col-3 m-auto">{{$coordinators -> links()}}</div>
+        <hr>
+        <div class="col-12 d-flex justify-content-center">
+        </div>
     </div>
 @endsection
 @push("custom-js")

@@ -15,6 +15,7 @@ class CreateCoordinator extends FormRequest
             'password' => 'required|min:3|bail',
             'first_name' => 'required|min:2|bail',
             'last_name' => 'required|min:2|bail',
+            'gender' => 'required|integer'
         ];
     }
 }
