@@ -54,7 +54,7 @@
                 <h6 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw;">Gender</h6>
                 <input class="col-xl-1" type="radio" name="gender" value="{{GENDER['MALE']}}" id="genderMale" required>
                 <p class="col-xl-2" style="margin-top: -0.30vw">Male</p>
-                <input class="col-xl-1" type="radio" name="gender" value="{{GENDER['FEMALE']}}" id="genderFemale"required>
+                <input class="col-xl-1" type="radio" name="gender" value="{{GENDER['FEMALE']}}" id="genderFemale" required>
                 <p class="col" style="margin-top: -0.30vw">Female</p>
             </div>
             @if($errors->has('email'))
