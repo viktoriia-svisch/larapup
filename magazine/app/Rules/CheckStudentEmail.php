@@ -1,19 +1,19 @@
 <?php
 namespace App\Rules;
-use App\Helpers\DateTimeHelper;
 use App\Models\Student;
 use Illuminate\Contracts\Validation\Rule;
-class CheckAgeAccount implements Rule
+class CheckStudentEmail implements Rule
 {
     public function __construct()
     {
     }
     public function passes($attribute, $value)
     {
-        return DateTimeHelper::checkIfPassedYears('-16', $value);
+        $std = Student::where('email', $value)->first();
+        return $std == null;
     }
     public function message()
     {
-        return __('validation.age_not16');
+        return 'This email was existed before';
     }
 }

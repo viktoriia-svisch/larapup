@@ -1,6 +1,5 @@
 <?php
 namespace App\Models;
-use DateTime;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
@@ -16,11 +15,6 @@ class Coordinator extends Authenticate
         'email', 'password', 'first_name', 'last_name',
         'type', 'avatar_path', 'dateOfBirth'
     ];
-    public function setDateOfBirthAttribute($value)
-    {
-        $date = DateTime::createFromFormat('d/m/Y', $value)->format('Y-m-d');
-        $this->attributes['dateOfBirth'] = $date;
-    }
     public function setPasswordAttribute($value)
     {
         return $this->attributes['password'] = Hash::make($value);

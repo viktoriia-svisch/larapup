@@ -6,10 +6,6 @@ class ChanegStructure extends Migration
 {
     public function up()
     {
-        Schema::table('faculties',function (Blueprint $table){
-            $table->dropForeign('faculties_semester_id_foreign');
-            $table->dropColumn('semester_id');
-        });
         Schema::table('semesters',function (Blueprint $table){
             $table->unsignedInteger('faculty_id')->after('id');
             $table->foreign('faculty_id')->references('id')->on('faculties');
