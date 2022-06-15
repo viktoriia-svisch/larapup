@@ -19,7 +19,7 @@ class AdminController extends Controller
         $sem = Semester::paginate((PER_PAGE));
         dd($sem);
     }
-    public function store(Requestest $request)
+    public function store(Request $request)
     {
         $ad = new Semester();
         $ad->name = $request->get('name');
