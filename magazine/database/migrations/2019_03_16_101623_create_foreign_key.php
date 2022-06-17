@@ -26,6 +26,10 @@ class CreateForeignKey extends Migration
             $table->foreign('coordinator_id')->references('id')->on('coordinators');
             $table->foreign('article_id')->references('id')->on('articles');
         });
+        Schema::table('faculties', function (Blueprint $table) {
+            $table->unsignedInteger('semester_id')->change();
+            $table->foreign('semester_id')->references('id')->on('semesters');
+        });
         Schema::table('articles', function (Blueprint $table) {
             $table->unsignedInteger('student_id')->change();
             $table->unsignedInteger('faculty_id')->change();
