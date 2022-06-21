@@ -48,12 +48,18 @@
                     {{$errors->first('gender')}}
                 </p>
             @endif
-            <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
-                <h6 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw;">Gender</h6>
-                <input class="col-xl-1 " type="radio" name="gender" value="{{GENDER['MALE']}}" id="genderMale" required>
-                <p class="col-xl-2" style="margin-top: -0.30vw">Male</p>
-                <input class="col-xl-1" type="radio" name="gender" value="{{GENDER['FEMALE']}}" id="genderFemale" required>
-                <p class="col" style="margin-top: -0.30vw">Female</p>
+            <p class="text-muted mt-3 pb-0 mb-1">Gender</p>
+            <div class="row col-12" style="margin-top: 2vw;">
+                <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center" >
+                    <input name="gender" value="{{GENDER['MALE']}}" class="custom-control-input" id="genderMale"
+                           type="radio">
+                    <label class="custom-control-label" for="genderMale">Male</label>
+                </div>
+                <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
+                    <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input" id="genderFemale"
+                           checked="" type="radio">
+                    <label class="custom-control-label" for="genderFemale">Female</label>
+                </div>
             </div>
             @if($errors->has('email'))
                 <p class="col-12 text-danger">
