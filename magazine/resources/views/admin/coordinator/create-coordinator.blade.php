@@ -2,10 +2,15 @@
 @section('title', 'Dashboard')
 @push("custom-css")
 @endpush
+@section('breadcrumb')
+    <div class="container">
+        {{ Breadcrumbs::render('dashboard.coordinator.create', route('admin.dashboard'), route('admin.coordinator'), route('admin.createCoordinator')) }}
+    </div>
+@endsection
 @section("coordinator-content")
 <div class="container row col-md-12" style="margin-bottom: 10vw">
     <div class="col-sm-5 m-auto">
-        <h4 class="title">Create Coordinator</h4>
+        <h1 class="title">Create Coordinator</h1>
         <hr>
         <form action="{{route('admin.createCoordinator_post')}}" method="post">
             {{csrf_field()}}
