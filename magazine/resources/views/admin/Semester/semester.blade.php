@@ -28,21 +28,13 @@
                 </a>
             </div>
         </div>
-        <hr>
+        <hr class="mb-0">
+        <br>
         <form method="get" action="{{route('admin.semester')}}" class="col-12 row m-0">
             {{csrf_field()}}
             <div class="form-group col">
                 <input type="text" class="form-control form-control-alternative" id="search_semester_input"
-                       name="search_semester_input"
-                       value="@if ($searching) {{$searching}} @endif"
-                       placeholder="Type Semester Name or Year Here">
-            </div>
-            <div class="col-auto p-0">
-                @if ($searching)
-                    <button type="button" class="btn btn-icon btn-danger" onclick="resetSearch()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                @endif
+                       name="search_semester_input" placeholder="Type Semester Name Here">
             </div>
             <div class="col-auto">
                 <button type="submit" class="btn btn-info">
@@ -54,113 +46,92 @@
         <div class="col-12">
             <h1>Active Semester</h1>
             @if ($activeSemester)
-                <div class="card mb-4 border-4 border-success">
+                <div class="card mb-4 border-4 border-secondary">
                     <div class="card-body row m-0">
-                        <div class="col row p-0 m-0">
-                            <div class="col row d-flex align-items-center">
-                                <h2 class="col-12 heading-title">{{$activeSemester->name}}</h2>
-                                <p class="col-12 m-0">
-                                    {{$activeSemester->description}}
-                                </p>
+                        <div class="col-auto d-flex align-items-center">
+                            <h2 class="mb-0">{{$activeSemester->name}}</h2>
+                        </div>
+                        <div class="col row m-0">
+                            <div class="col-12 col-md-5 d-flex align-items-center">
+                                <h3 class="mb-0">
+                                    Start: {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->start_date)}}</h3>
                             </div>
-                            <div class="col-auto row m-0 d-flex align-items-center">
-                                <div class="col-12 col-md-5 d-flex align-items-center">
-                                    <h3 class="mb-0">
-                                        Start: {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->start_date)}}</h3>
-                                </div>
-                                <div class="col-12 col-md-5 d-flex align-items-center">
-                                    <h3 class="mb-0">
-                                        End: {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->end_date)}}</h3>
-                                </div>
+                            <div class="col-12 col-md-5 d-flex align-items-center">
+                                <h3 class="mb-0">
+                                    End: {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->end_date)}}</h3>
                             </div>
                         </div>
-                        <div class="col-auto d-flex align-items-center">
+                        <div class="col-auto">
                             <button class="btn btn-icon btn-default" type="button">
                                 <i class="fas fa-cog top-0"></i>
                             </button>
                         </div>
+                        <p class="col-12">
+                            {{$activeSemester->description}}
+                        </p>
                     </div>
                 </div>
-            @else
-                <h2 class="text-muted">No active semester currently</h2>
             @endif
             <hr>
             <h1>Future Semester</h1>
             @foreach($futureSemester as $semester)
                 <div class="card mb-4 border-4 border-warning">
                     <div class="card-body row m-0">
-                        <div class="col row p-0 m-0">
-                            <div class="col row d-flex align-items-center">
-                                <h2 class="col-12 heading-title">{{$semester->name}}</h2>
-                                <p class="col-12 m-0">
-                                    {{$semester->description}}
-                                </p>
+                        <div class="col-auto d-flex align-items-center">
+                            <h2 class="mb-0">{{$semester->name}}</h2>
+                        </div>
+                        <div class="col row m-0">
+                            <div class="col-12 col-md-5 d-flex align-items-center">
+                                <h3 class="mb-0">
+                                    Start: {{\App\Helpers\DateTimeHelper::formatDate($semester->start_date)}}</h3>
                             </div>
-                            <div class="col-auto row m-0 d-flex align-items-center">
-                                <div class="col-12 col-md-5 d-flex align-items-center">
-                                    <h3 class="mb-0">
-                                        Start: {{\App\Helpers\DateTimeHelper::formatDate($semester->start_date)}}</h3>
-                                </div>
-                                <div class="col-12 col-md-5 d-flex align-items-center">
-                                    <h3 class="mb-0">
-                                        End: {{\App\Helpers\DateTimeHelper::formatDate($semester->end_date)}}</h3>
-                                </div>
+                            <div class="col-12 col-md-5 d-flex align-items-center">
+                                <h3 class="mb-0">
+                                    End: {{\App\Helpers\DateTimeHelper::formatDate($semester->end_date)}}</h3>
                             </div>
                         </div>
-                        <div class="col-auto d-flex align-items-center">
+                        <div class="col-auto">
                             <button class="btn btn-icon btn-default" type="button">
                                 <i class="fas fa-cog top-0"></i>
                             </button>
                         </div>
+                        <p class="col-12">
+                            {{$semester->description}}
+                        </p>
                     </div>
                 </div>
             @endforeach
-            @if (count($futureSemester) == 0)
-                <h2 class="text-muted m-auto">No record found</h2>
-            @endif
             <hr>
             <h1>Past Semester</h1>
             @foreach($pastSemester as $semester)
                 <div class="card mb-4 border-4 border-secondary">
                     <div class="card-body row m-0">
-                        <div class="col row p-0 m-0">
-                            <div class="col row d-flex align-items-center">
-                                <h2 class="col-12 heading-title">{{$semester->name}}</h2>
-                                <p class="col-12 m-0">
-                                    {{$semester->description}}
-                                </p>
+                        <div class="col-auto d-flex align-items-center">
+                            <h2 class="mb-0">{{$semester->name}}</h2>
+                        </div>
+                        <div class="col row m-0">
+                            <div class="col-12 col-md-5 d-flex align-items-center">
+                                <h3 class="mb-0">
+                                    Start: {{\App\Helpers\DateTimeHelper::formatDate($semester->start_date)}}</h3>
                             </div>
-                            <div class="col-auto row m-0 d-flex align-items-center">
-                                <div class="col-12 col-md-5 d-flex align-items-center">
-                                    <h3 class="mb-0">
-                                        Start: {{\App\Helpers\DateTimeHelper::formatDate($semester->start_date)}}</h3>
-                                </div>
-                                <div class="col-12 col-md-5 d-flex align-items-center">
-                                    <h3 class="mb-0">
-                                        End: {{\App\Helpers\DateTimeHelper::formatDate($semester->end_date)}}</h3>
-                                </div>
+                            <div class="col-12 col-md-5 d-flex align-items-center">
+                                <h3 class="mb-0">
+                                    End: {{\App\Helpers\DateTimeHelper::formatDate($semester->end_date)}}</h3>
                             </div>
                         </div>
-                        <div class="col-auto d-flex align-items-center">
-                            <button class="btn btn-icon btn-default" type="button">
+                        <div class="col-auto">
+                            <button class="btn btn-icon btn-default" disabled type="button">
                                 <i class="fas fa-cog top-0"></i>
                             </button>
                         </div>
+                        <p class="col-12">
+                            {{$semester->description}}
+                        </p>
                     </div>
                 </div>
             @endforeach
-            @if (count($pastSemester) == 0)
-                <h2 class="text-muted m-auto">No record found</h2>
-            @endif
         </div>
     </div>
 @endsection
 @push("custom-js")
-    <script>
-        function resetSearch() {
-            let inputField = $('#search_semester_input');
-            inputField.val('');
-            location.href = '{{route('admin.semester')}}';
-        }
-    </script>
 @endpush
