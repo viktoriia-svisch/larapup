@@ -33,6 +33,24 @@ class CoordinatorController extends Controller
         }
         echo $output;
     }
+    public function createCoordinator_post(CreateCoordinator $request){
+        $coordinator = new Coordinator($request->all([
+            'email',
+            'password',
+            'first_name',
+            'last_name',
+            'gender',
+            'dateOfBirth'
+        ]));
+        $coordinator->type = COORDINATOR_LEVEL['NORMAL'];
+        if ($coordinator->save())
+            return back()->with($this->responseBladeMessage(__('message.create_coordinator_success')));
+        return back()->with($this->responseBladeMessage(__('message.create_coordinator_failed'), false));
+    }
+    public function create()
+    {
+        return view('admin.coordinator.create-coordinator');
+    }
     public function addToFaculty(Request $request){
         $faculty = $request->get('faculty');
         $semester = $request->get('semester');

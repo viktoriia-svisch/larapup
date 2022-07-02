@@ -1,28 +1,35 @@
 <?php
 namespace App\Models;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Notifications\Notifiable;
+use DateTime;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticate;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 class Coordinator extends Authenticate
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
     protected $table = 'coordinators';
     protected $hidden = [
         'password', 'deleted_at'
     ];
-    public function getJWTIdentifier()
+    protected $fillable = [
+        'email', 'password', 'first_name', 'last_name',
+        'type', 'avatar_path', 'dateOfBirth'
+    ];
+    public function setDateOfBirthAttribute($value)
     {
-        return $this->getKey();
+        $date = DateTime::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+        $this->attributes['dateOfBirth'] = $date;
     }
-    public function getJWTCustomClaims()
+    public function setPasswordAttribute($value)
     {
-        return [];
-    }
-    public function setPasswordAttribute($value){
         return $this->attributes['password'] = Hash::make($value);
     }
-    public function faculty_coordinator(){
-        return $this->hasMany(FacultyCoordinator::class);
+    public function faculty_semester_coordinator()
+    {
+        return $this->hasMany(FacultySemesterCoordinator::class);
+    }
+    public function comment_student(){
+        return $this->hasMany(CommentStudent::class);
     }
 }
