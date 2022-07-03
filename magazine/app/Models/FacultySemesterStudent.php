@@ -11,7 +11,4 @@ class FacultySemesterStudent extends Model
     {
         return $this->belongsTo(Student::class);
     }
-    public function comment_student(){
-        return $this->hasMany(CommentStudent::class);
-    }
 }

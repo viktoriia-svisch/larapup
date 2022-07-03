@@ -5,24 +5,20 @@ use App\Http\Requests\CreateStudent;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 class StudentController extends Controller
 {
     public function student(Request $request)
     {
-        $searchTerms = $request->get('search_student_input');
-        $searchType = $request->get('type');
-        $studentList = Student::with('faculty_semester_student');
-        if ($searchType != -1 && $searchType != null) {
-            $studentList->where('status', $request->get('type'));
-        }
-        if ($searchTerms != null){
-            $studentList->where(function ($query) use ($searchTerms) {
-                    $query->where('first_name', 'like', '%' . $searchTerms . '%')
-                        ->orwhere('last_name', 'like', '%' . $searchTerms . '%');
+        $studentList = Student::with('faculty_semester_student')
+            ->whereDoesntHave('faculty_semester_student.faculty_semester', function ($q) {
+                $q->whereHas('semester', function ($q) {
+                    $q->where('end_date', '>=', Carbon::now()->toDateString());
                 });
-        }
+            })
+            ->get();
         return view('admin.student.student', [
-            'availableStudent' => $studentList->paginate(PER_PAGE),
+            'availableStudent' => $studentList
         ]);
     }
     public function createStudent()
@@ -58,9 +54,14 @@ class StudentController extends Controller
         $student->last_name = $request->get('last_name') ?? $student->last_name;
         $student->dateOfBirth = $request->get('dateOfBirth') ?? $student->dateOfBirth;
         $student->gender = $request->get('gender') ?? $student->gender;
-        dd($request, $student);
-        if ($request->get('new_password')) {
-            $student->password = $request->get('new_password');
+        if ($request->get('old_password')){
+            if(Hash::check($request->get('old_password'),$student->password)) {
+                $student->password =  $request->get('new_password');
+            } else {
+                return back()->with([
+                    'updateStatus' => false
+                ]);
+            }
         }
         if ($student->save()) {
             return back()->with([

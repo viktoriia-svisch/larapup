@@ -7,24 +7,19 @@ class RedirectIfNotAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return $next($request);
+            switch ($guard) {
+                case ADMIN_GUARD:
+                    return redirect('admin/dashboard');
+                    break;
+                case STUDENT_GUARD:
+                    return redirect('student/dashboard');
+                    break;
+                case COORDINATOR_GUARD:
+                    return redirect('coordinator/dashboard');
+                    break;
+            }
+            return redirect('guest/article');
         }
-        switch ($guard){
-            case ADMIN_GUARD:
-                return redirect('/admin/login');
-                break;
-            case STUDENT_GUARD:
-                return redirect('/student/login');
-                break;
-            case COORDINATOR_GUARD:
-                if(Auth::guard(COORDINATOR_GUARD)->user()->level == COORDINATOR_LEVEL['NORMAL']){
-                    return redirect('/coordinator/login'); 
-                }
-                else{
-                    return redirect('/coordinator/login'); 
-                }
-                break;
-        }
-        return redirect('/guest/login');
+        return $next($request);
     }
 }
