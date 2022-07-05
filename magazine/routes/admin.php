@@ -20,6 +20,9 @@ Route::group([
     Route::get('faculty/create/{semester}', 'FacultyController@createFaculty')->name('admin.createFaculty');
     Route::post('faculty/create/{semester}', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
     Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');
+    Route::get('coordinator', 'CoordinatorController@coordinator')->name('admin.coordinator');
+    Route::get('coordinator/create', 'CoordinatorController@create')->name('admin.createCoordinator');
+    Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
     Route::get('get/{id}', 'AdminController@show');
     Route::post('new-semester', 'AdminController@store');
     Route::redirect('', 'admin/dashboard');

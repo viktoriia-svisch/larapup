@@ -11,4 +11,7 @@ class FacultySemesterCoordinator extends Model
     {
         return $this->belongsTo(Coordinator::class);
     }
+    public function comment_student(){
+        return $this->hasMany(CommentStudent::class);
+    }
 }
