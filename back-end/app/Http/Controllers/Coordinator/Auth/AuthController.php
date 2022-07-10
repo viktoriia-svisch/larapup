@@ -8,10 +8,10 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     use AuthenticatesUsers;
-    protected $redirectTo = '/student/dashboard';
+    protected $redirectTo = '/coordinator/dashboard';
     public function showLoginForm()
     {
-        return view('student.auth.login');
+        return view('student.auth.admin');
     }
     public function redirectTo()
     {
@@ -20,7 +20,7 @@ class AuthController extends Controller
     protected function loggedOut(Request $request)
     {
         self::flushAuth($request);
-        return redirect(route('student.login'));
+        return redirect('/login');
     }
     public function flushAuth(Request $request)
     {
@@ -29,7 +29,7 @@ class AuthController extends Controller
     }
     protected function guard()
     {
-        return Auth::guard(STUDENT_GUARD);
+        return Auth::guard(COORDINATOR_GUARD);
     }
     public function username()
     {
