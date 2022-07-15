@@ -2,12 +2,11 @@
 namespace App\Http\Requests;
 use App\Rules\CheckCoordinatorEmail;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 class CreateCoordinator extends FormRequest
 {
     public function authorize()
     {
-        return Auth::guard(ADMIN_GUARD)->check();
+        return true;
     }
     public function rules()
     {
