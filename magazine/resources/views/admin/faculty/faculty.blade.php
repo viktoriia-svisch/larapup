@@ -9,16 +9,24 @@
 @endsection
 @section("admin-content")
     <div class="container">
+        <h1 class="text-primary">Add new faculty</h1>
+        <p class="text-muted">Add faculty to the system.</p>
+        <form action="{{route('admin.createFaculty_post')}}" method="post">
+            {{csrf_field()}}
+            <h2 class="text-primary">Faculty name</h2>
+                <div class="form-group input-group-alternative">
+                    <input type="text" title="Faculty name" placeholder="Faculty name"
+                        class="form-control form-control-alternative" id="name" name="name">
+                </div>
+            <div class="col-12 row m-0">
+                <div class="col-12">
+                        <button class="btn btn-block m-0 btn-success">Create</button>
+                </div>
+            </div>
+        </form>
+        <br>
         <h1 class="text-primary">Faculties</h1>
         <p class="text-muted">Display all the faculty within the system.</p>
-        <div class="col-12 row m-0">
-            <div class="col-12">
-                <a href="{{route('admin.createFacultySemester')}}" class="btn btn-success btn-block">
-                    <i class="fas fa-plus"></i>
-                    New Faculty
-                </a>
-            </div>
-        </div>
         <hr>
         <form method="get" id="searchBox" action="{{route('admin.faculty')}}" class="col-12 row m-0">
             {{csrf_field()}}
