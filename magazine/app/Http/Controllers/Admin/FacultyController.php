@@ -44,7 +44,6 @@ class FacultyController extends Controller
     {
         $coor = new Faculty;
         $coor->name = $request->input('name');
-        $validated = $request->validated();
         $DuplicateFaculty = Faculty::where('name','=',$request->name)->first();
         if(!empty($DuplicateFaculty))
           {
