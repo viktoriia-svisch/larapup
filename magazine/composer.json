@@ -41,7 +41,6 @@
         "classmap": [
             "app/http/controllers/admin",
             "database/seeds",
-            "database/migrations",
             "database/factories"
         ],
         "files": [
