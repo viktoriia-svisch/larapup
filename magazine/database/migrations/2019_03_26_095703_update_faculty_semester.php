@@ -7,8 +7,8 @@ class UpdateFacultySemester extends Migration
     public function up()
     {
         Schema::table('faculty_semesters', function (Blueprint $table){
-        	$table->dateTime('first_final_deadline')->nullable();
-        	$table->dateTime('second_final_deadline')->nullable();
+        	$table->dateTime('first_final_deadline')->after('first_deadline')->nullable();
+        	$table->dateTime('second_final_deadline')->after('second_deadline')->nullable();
 		});
     }
     public function down()
