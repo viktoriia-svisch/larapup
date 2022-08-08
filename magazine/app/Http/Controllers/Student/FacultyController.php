@@ -44,11 +44,11 @@ class FacultyController extends Controller
                     });
             });
         }
-        $currentFaculty = Faculty::with(['faculty_semester.faculty_semester_student.student'])
-            ->whereHas('faculty_semester.faculty_semester_student.student', function ($q) {
+        $currentFaculty = FacultySemester::with(['faculty_semester_student.student'])
+            ->whereHas('faculty_semester_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })
-            ->whereHas('faculty_semester.semester', function ($query) {
+            ->whereHas('semester', function ($query) {
                 $query->whereDate('start_date', "<", Carbon::now()->toDateTimeString())
                     ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());
             })
@@ -62,16 +62,19 @@ class FacultyController extends Controller
             'currentFaculty' => $currentFaculty
         ]);
     }
-    public function facultyDetail($id)
+    public function facultyDetail($id, $semester)
     {
-        $faculty = Faculty::with(['faculty_semester'])
-            ->where('id', $id)
-            ->whereHas('faculty_semester.faculty_semester_student.student', function ($q) {
+        $faculty = FacultySemester::with(['faculty'])
+            ->where('id', $semester)
+			->whereHas('faculty', function ($q) use ($id){
+				$q->where('id', $id);
+			})
+            ->whereHas('faculty_semester_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })->first();
         if ($faculty)
             return view('student.faculty.faculty-detail', [
-                'faculty' => $faculty
+                'facultySemester' => $faculty
             ]);
         else
             return redirect()->route('student.faculty');
