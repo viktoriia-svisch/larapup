@@ -5,6 +5,7 @@ use App\Http\Requests\CreateStudent;
 use App\Http\Requests\UpdateStudentAccount;
 use App\Http\Resources\Student as StudentResource;
 use App\Models\Faculty;
+use App\Models\FacultySemester;
 use App\Models\Semester;
 use App\Models\Student;
 use Carbon\Carbon;
@@ -71,9 +72,22 @@ class StudentController extends Controller
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
             ->first();
+        $currentActiveData = FacultySemester::with(['faculty', 'semester'])
+            ->whereHas('faculty_semester_student.student', function ($query) {
+                $query->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
+            })
+            ->whereHas('semester', function ($query){
+                $query->where('start_date', '<=', Carbon::now()->toDateTimeString())
+                    ->where('end_date', '>', Carbon::now()->toDateTimeString());
+            })
+            ->whereDoesntHave('article', function ($query){
+                $query->whereHas('student', function ($query){
+                    $query->where('id', Auth::guard(STUDENT_GUARD));
+                });
+            });
         return view('student.dashboard',[
-            'activeSemester' => $currentSemester,
-            'activeFaculty' => $currentFaculty
+            'activeSemester' => null,
+            'activeFaculty' => null
         ]);
     }
     public function store(CreateStudent $request)
