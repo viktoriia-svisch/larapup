@@ -13,6 +13,10 @@ define('ARTICLE_STATUS', [
     'DECLINED' => 2,
     'FINISHED' => 3
 ]);
+define('ARTICLE_NEWS', [
+	'NEW' => 0,
+	'OLD' => 1
+]);
 define('COORDINATOR_LEVEL', [
     'NORMAL' => 0,
     'MASTER' => 1

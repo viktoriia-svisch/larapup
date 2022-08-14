@@ -46,9 +46,9 @@ Breadcrumbs::for('dashboard.faculty', function ($trail, $parentRoute, $routeActi
     $trail->parent('dashboard', $parentRoute);
     $trail->push("Faculty", $routeActive);
 });
-Breadcrumbs::for('dashboard.faculty.detail', function ($trail, $parentRoute, $parentRoute2, $faculty, $routeActive) {
+Breadcrumbs::for('dashboard.faculty.detail', function ($trail, $parentRoute, $parentRoute2, $routeActive) {
 	$trail->parent('dashboard.faculty', $parentRoute, $parentRoute2);
-	$trail->push($faculty->name, $routeActive);
+	$trail->push("Detail", $routeActive);
 });
 Breadcrumbs::for('dashboard.faculty.create', function ($trail, $parentRoute, $parent2Route, $routeActive) {
     $trail->parent('dashboard.faculty', $parentRoute, $parent2Route);
