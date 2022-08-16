@@ -80,12 +80,9 @@ class StudentController extends Controller
                 $query->where('start_date', '<=', Carbon::now()->toDateTimeString())
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
-            ->whereDoesntHave('article', function ($query){
-                $query->whereHas('student', function ($query){
-                    $query->where('id', Auth::guard(STUDENT_GUARD));
-                });
-            });
+            ->orderBy('second_deadline')->first();
         return view('student.dashboard',[
+            'activeData' => $currentActiveData,
             'activeSemester' => null,
             'activeFaculty' => null
         ]);
