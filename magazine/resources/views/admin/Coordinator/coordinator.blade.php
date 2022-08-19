@@ -147,7 +147,7 @@
             <div class="col">
                 <button class="btn btn-block btn-default">
                     <i class="fas fa-cog"></i>
-                    Student Settings
+                    Coordinator Settings
                 </button>
             </div>
         </div>
@@ -161,8 +161,8 @@
                         <i class="fas fa-search"></i>
                     </span>
                     </div>
-                    <input class="form-control form-control-alternative" id="search_student_input"
-                           name="search_student_input" value="{{old('search_student_input')}}" placeholder="Find student Here" type="text">
+                    <input class="form-control form-control-alternative" id="search_coordinator_input"
+                           name="search_coordinator_input" value="{{old('search_coordinator_input')}}" placeholder="Find Coordinator Here" type="text">
                 </div>
             </div>
             <div class="col-auto">
@@ -189,8 +189,28 @@
 
         </div>
         <hr>
+        <div class="col-12 row m-0">
+            @foreach($coordinators as $coor)
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="cnt-block">
+                        <figure>
+                            <img src="{{$coor->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}"
+                                 class="img-responsive" alt="">
+                        </figure>
+                        <h4 class="col-12">
+                            {{ \Str::limit(($coor->first_name . ' ' . $coor->last_name), 20, '...')}}
+                        </h4>
+                        <p>{{ \Str::limit($coor->email, 22, '...')}}</p>
+                        <div class="col-12">
+                            <a class="btn btn-block btn-secondary">Update</a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <hr>
         <div class="col-12 d-flex justify-content-center">
-
+            <div class="col-3 m-auto">{{$coordinators -> links()}}</div>
         </div>
     </div>
 @endsection
