@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
-use App\Models\Faculty;
+use App\Models\Article;
 use App\Models\FacultySemester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -62,21 +62,56 @@ class FacultyController extends Controller
             'currentFaculty' => $currentFaculty
         ]);
     }
-    public function facultyDetail($id, $semester)
+    public function facultyDetailArticle($id, $semester)
+    {
+        $article = Article::with('article_file')
+            ->where('faculty_semester_id', $id)
+            ->where('student_id', Auth::guard(STUDENT_GUARD)->user()->id)
+            ->first();
+        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-article', "article", ["article" => $article]);
+    }
+    private function facultyDetail($id, $semester, $view, $site = 'dashboard', $extData = [])
     {
         $faculty = FacultySemester::with(['faculty'])
-            ->where('id', $semester)
-			->whereHas('faculty', function ($q) use ($id){
-				$q->where('id', $id);
-			})
+            ->where('semester_id', $semester)
+            ->whereHas('faculty', function ($q) use ($id) {
+                $q->where('id', $id);
+            })
             ->whereHas('faculty_semester_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })->first();
+        switch ($site) {
+            case "member":
+                $isDashboard = false;
+                $isArticle = false;
+                break;
+            case "article":
+                $isDashboard = false;
+                $isArticle = true;
+                break;
+            default:
+                $isDashboard = true;
+                $isArticle = false;
+        }
+        $data = [
+            'facultySemester' => $faculty,
+            'isDashboard' => $isDashboard,
+            'isArticle' => $isArticle
+        ];
+        if (count($extData) > 0) {
+            $data = array_merge($data, $extData);
+        }
         if ($faculty)
-            return view('student.faculty.faculty-detail', [
-                'facultySemester' => $faculty
-            ]);
+            return view($view, $data);
         else
             return redirect()->route('student.faculty');
+    }
+    public function facultyDetailDashboard($id, $semester)
+    {
+        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-dashboard', "dashboard");
+    }
+    public function facultyDetailMember($id, $semester)
+    {
+        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-member', "member");
     }
 }

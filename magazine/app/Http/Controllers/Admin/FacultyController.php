@@ -57,16 +57,6 @@ class FacultyController extends Controller
                 ]); 
             }
     }
-    public function chooseSemester(){
-        return view('admin.faculty.Semester-choose');
-    }
-    public function chooseSemester_post(){
-    }
-    public function addStudentFaculty(){
-        return view('admin.faculty.add-student');
-    }
-    public function addStudentFaculty_post(){
-    }
     public function searchFaculty($semester, $request)
     {
         $search = Faculty::where('name', 'LIKE', '%' . $request . '%')

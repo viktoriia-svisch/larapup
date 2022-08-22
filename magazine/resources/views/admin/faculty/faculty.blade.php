@@ -9,22 +9,22 @@
 @endsection
 @section("admin-content")
     <div class="container">
-    <div class="row col-12">
-        <div class="col-sm-6">
-                <h1 class="text-primary">Add new faculty</h1>
-                        <div class="col-12 m-0 p-0">
-                                <button class="btn btn-block m-0 btn-success" data-toggle="modal" data-target="#modal-form">Create</button>
-                        </div>
-         </div>
-            <div class="col-sm-6">
-                <h1 class="text-primary">Add student into faculty</h1>
-                <div class="col-12 m-0 p-0">
-                    <a class="btn btn-block m-0 btn-success" href="{{route('admin.chooseSemester')}}">Add student</a>
+        <h1 class="text-primary">Add new faculty</h1>
+        <p class="text-muted">Add faculty to the system.</p>
+        <form action="{{route('admin.createFaculty_post')}}" method="post">
+            {{csrf_field()}}
+            <h2 class="text-primary">Faculty name</h2>
+                <div class="form-group input-group-alternative">
+                    <input type="text" title="Faculty name" placeholder="Faculty name"
+                        class="form-control form-control-alternative" id="name" name="name">
+                </div>
+            <div class="col-12 row m-0">
+                <div class="col-12">
+                        <button class="btn btn-block m-0 btn-success">Create</button>
                 </div>
             </div>
-    </div>
+        </form>
         <br>
-        <hr>
         <h1 class="text-primary">Faculties</h1>
         <p class="text-muted">Display all the faculty within the system.</p>
         <hr>
@@ -82,34 +82,6 @@
         <hr>
         <div class="col-12 d-flex justify-content-center">
             {{ $faculties->links() }}
-        </div>
-    </div>
-@endsection
-@section('modal')
-    <div class="col-md-4" id="modal">
-        <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <div class="card bg-secondary shadow border-0">
-                            <div class="card-body px-lg-5 py-lg-5">
-                                <form action="{{route('admin.createFaculty_post')}}" method="post">
-                                {{csrf_field()}}
-                                    <h2 class="text-primary">Faculty name</h2>
-                                    <div class="form-group input-group-alternative">
-                                    <input id="name" type="text" title="Faculty name" placeholder="Faculty name"
-                                    class="form-control form-control-alternative" id="name" name="name">
-                                    </div>
-                                <div class="col-12 m-0 p-0">
-                                    <button class="btn btn-block m-0 btn-success" id="submit" type="submit"
-                                            data-toggle="modal" data-target="#modal-form">Submit</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 @endsection

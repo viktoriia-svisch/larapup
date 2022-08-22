@@ -18,10 +18,6 @@ Route::group([
     Route::get('faculty', 'FacultyController@faculty')->name('admin.faculty');
     Route::post('faculty/create', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
     Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');
-    Route::get('faculty/choose-semester', 'FacultyController@chooseSemester')->name('admin.chooseSemester');
-    Route::post('faculty/choose-semester', 'FacultyController@chooseSemester_post')->name('admin.chooseSemester_post');
-    Route::get('faculty/add-student', 'FacultyController@addStudentFaculty')->name('admin.addStudentFaculty');
-    Route::post('faculty/add-student', 'FacultyController@addStudentFaculty_post')->name('admin.addStudentFaculty_post');
     Route::get('coordinator', 'CoordinatorController@coordinator')->name('admin.coordinator');
     Route::get('coordinator/create', 'CoordinatorController@create')->name('admin.createCoordinator');
     Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
