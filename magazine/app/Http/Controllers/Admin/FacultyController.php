@@ -47,15 +47,14 @@ class FacultyController extends Controller
         $DuplicateFaculty = Faculty::where('name','=',$request->name)->first();
         if(!empty($DuplicateFaculty))
           {
-            return back()->with(
-                $this->responseBladeMessage('Faculty already exist, please input another name.',false)
-            );
+            return redirect()->back()->with([
+                'success' => false]);
           }
         if ($coor->save())
             {
-                return back()->with(
-                    $this->responseBladeMessage('Create semester successfully.')
-                );
+                return redirect()->back()->with([
+                    'success' => true
+                ]); 
             }
     }
     public function chooseSemester(){
