@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
-use App\Models\Article;
+use App\Models\Faculty;
 use App\Models\FacultySemester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -20,14 +20,12 @@ class FacultyController extends Controller
             switch ($selectedMode) {
                 case '1':
                     $listFaculty->whereHas('semester', function ($query) {
-                        $query->whereDate('start_date', ">", Carbon::now()->toDateTimeString())
-                            ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());;
+                        $query->whereDate('start_date', ">", Carbon::now()->toDateTimeString());
                     });
                     break;
                 case '2':
                     $listFaculty->whereHas('semester', function ($query) {
-                        $query->whereDate('end_date', "<=", Carbon::now()->toDateTimeString())
-                            ->whereDate('start_date', "<=", Carbon::now()->toDateTimeString());
+                        $query->whereDate('start_date', "<=", Carbon::now()->toDateTimeString());
                     });
                     break;
                 default:
@@ -44,11 +42,11 @@ class FacultyController extends Controller
                     });
             });
         }
-        $currentFaculty = FacultySemester::with(['faculty_semester_student.student'])
-            ->whereHas('faculty_semester_student.student', function ($q) {
+        $currentFaculty = Faculty::with(['faculty_semester.faculty_semester_student.student'])
+            ->whereHas('faculty_semester.faculty_semester_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })
-            ->whereHas('semester', function ($query) {
+            ->whereHas('faculty_semester.semester', function ($query) {
                 $query->whereDate('start_date', "<", Carbon::now()->toDateTimeString())
                     ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());
             })
@@ -62,59 +60,18 @@ class FacultyController extends Controller
             'currentFaculty' => $currentFaculty
         ]);
     }
-    public function facultyDetailArticle($id, $semester)
+    public function facultyDetail($id)
     {
-        $article = Article::with('article_file')
-            ->where('faculty_semester_id', $id)
-            ->where('student_id', Auth::guard(STUDENT_GUARD)->user()->id)
-            ->first();
-        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-article', "article", ["article" => $article]);
-    }
-    private function facultyDetail($id, $semester, $view, $site = 'dashboard', $extData = [])
-    {
-        $faculty = FacultySemester::with(['faculty'])
-            ->where('semester_id', $semester)
-            ->whereHas('faculty', function ($q) use ($id) {
-                $q->where('id', $id);
-            })
-            ->whereHas('faculty_semester_student.student', function ($q) {
+        $faculty = Faculty::with(['faculty_semester'])
+            ->where('id', $id)
+            ->whereHas('faculty_semester.faculty_semester_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })->first();
-        switch ($site) {
-            case "member":
-                $isDashboard = false;
-                $isArticle = false;
-                break;
-            case "article":
-                $isDashboard = false;
-                $isArticle = true;
-                break;
-            default:
-                $isDashboard = true;
-                $isArticle = false;
-        }
-        $data = [
-            'facultySemester' => $faculty,
-            'isDashboard' => $isDashboard,
-            'isArticle' => $isArticle
-        ];
-        if (count($extData) > 0) {
-            $data = array_merge($data, $extData);
-        }
         if ($faculty)
-            return view($view, $data);
+            return view('student.faculty.faculty-detail', [
+                'faculty' => $faculty
+            ]);
         else
             return redirect()->route('student.faculty');
-    }
-    public function facultyDetailDashboard($id, $semester)
-    {
-        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-dashboard', "dashboard");
-    }
-    public function facultyDetailMember($id, $semester)
-    {
-        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-member', "member");
-    }
-    public function articlePost(Request $request){
-        dd($request);
     }
 }

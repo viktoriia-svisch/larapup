@@ -10,7 +10,10 @@ class CreateFaculty extends FormRequest
     public function rules()
     {
          return [
+               'semester_id' => 'required',
                'name' => 'required|min:2|bail',
+               'first_deadline' => 'required|bail',
+               'second_deadline'=>'required|after:first_deadline|bail'
          ];
     }
     public function messages()
@@ -18,6 +21,10 @@ class CreateFaculty extends FormRequest
          return [
              'name.required' =>  'Please input Faculty name',
              'name.min' => 'Faculty name must contain at least 2 characters',
+             'first_deadline.required' => 'Please input first deadline',
+             'first_deadline.after' => 'first date must after today?',
+             'second_deadline.required' => 'Please input second date',
+             'second_deadline.after' => 'End date must after start date?',
          ];
     }
 }

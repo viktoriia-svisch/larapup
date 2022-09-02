@@ -1,41 +1,51 @@
 @extends("layout.Student.student-layout")
+@section('title', 'Faculty Math')
 @push("custom-css")
 @endpush
 @section('breadcrumb')
     <div class="container">
-        {{ Breadcrumbs::render('dashboard.faculty.detail',
-         route('student.dashboard'),
-         route('student.faculty'),
-         route('student.faculty.detail',
-         [$facultySemester->faculty->id, $facultySemester->id])) }}
+        {{ Breadcrumbs::render('dashboard.faculty.detail', route('student.dashboard'), route('student.faculty'), $faculty, route('student.faculty.detail', [$faculty->id])) }}
     </div>
 @endsection
 @section("student-content")
-    <div class="container">
-        <br>
-        <div class="text-center col-12 text-muted">
-            Faculty
+    <div class="container-fluid row">
+        <div class="col-sm-12 col-md-8">
+            <div class="col-12">
+                <span class="text-muted">
+                    Faculty:
+                </span>
+                <h1 class="heading-title">{{$faculty->name}}</h1>
+                <hr>
+            </div>
+            <div class="col-12">
+                {{nl2br($faculty->description)}}
+            </div>
+            <hr>
+            <div class="col-12 row">
+                <div class="col-12 col-sm-6">
+                    <span class="text-muted">First deadline</span>
+                    <h3>{{\App\Helpers\DateTimeHelper::formatDateTime($faculty->first_deadline)}}</h3>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <span class="text-muted">Second deadline</span>
+                    <h3>{{\App\Helpers\DateTimeHelper::formatDateTime($faculty->second_deadline)}}</h3>
+                </div>
+            </div>
         </div>
-        <h1 class="text-center col-12 text-black">{{$facultySemester->faculty->name}}</h1>
-        <div class="d-flex justify-content-center align-items-center">
-            <a href="{{route('student.faculty.detail',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
-               class="btn text-white @if($isDashboard && !$isArticle) btn-primary @else bg-gradient-gray @endif">Dashboard</a>
-            <a href="{{route('student.faculty.article',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
-               class="btn text-white @if($isArticle && !$isDashboard) btn-primary @else bg-gradient-gray @endif">Article</a>
-            <a href="{{route('student.faculty.members',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
-               class="btn text-white @if(!$isDashboard && !$isArticle) btn-primary @else bg-gradient-gray @endif">Members</a>
+        <div class="col-sm-12 col-md-4">
+            <h3 class="text-center">Coordinator</h3>
+            <div class="card col-12">
+                <div class="card-body row">
+                    <div class="col-auto" style="width: 45px; height: 45px;">
+                    </div>
+                    <div class="col">
+                        {{$faculty->faculty_coordinator->coordinator->name}}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <h3 class="text-center">Members</h3>
         </div>
-        <hr>
-        <div class="col-12">
-            <span class="text-muted font-weight-bold">
-                Topic:
-            </span>
-            <span>
-                {{nl2br($facultySemester->description)}}
-            </span>
-        </div>
-        <hr>
-        @yield('faculty-detail')
     </div>
 @endsection
 @push("custom-js")
