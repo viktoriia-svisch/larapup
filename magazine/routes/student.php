@@ -9,7 +9,10 @@ Route::group([
     Route::get('dashboard', 'StudentController@dashboard')->name('student.dashboard');
     Route::redirect('','student/dashboard');
     Route::get('faculty', 'FacultyController@faculty')->name('student.faculty');
-    Route::get('faculty/{id}', 'FacultyController@facultyDetail')->name('student.faculty.detail');
+    Route::get('faculty/{id}/{semester}/dashboard', 'FacultyController@facultyDetailDashboard')->name('student.faculty.detail');
+    Route::get('faculty/{id}/{semester}/members', 'FacultyController@facultyDetailMember')->name('student.faculty.members');
+    Route::get('faculty/{id}/{semester}/article', 'FacultyController@facultyDetailArticle')->name('student.faculty.article');
+    Route::post('faculty/{id}/{semester}/article', 'FacultyController@articlePost')->name('student.faculty.article_post');
     Route::get('article', 'StudentController@article')->name('student.article');
     Route::get('manage/{id}', 'StudentController@updateStudent')->name('student.manageAccount');
     Route::post('manage/{id}', 'StudentController@updateStudentPost')->name('student.manageAccount_post');

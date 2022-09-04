@@ -15,8 +15,8 @@
                     <div class="card-body">
                         <h1 class="card-title">Active Semester</h1>
                         <p class="card-text">
-                            @if ($activeSemester !== null)
-                                {{\Illuminate\Support\Str::limit($activeSemester->name, 34)}}
+                            @if ($activeData !== null)
+                                {{\Illuminate\Support\Str::limit($activeData->semester->name, 34)}}
                             @else
                                 <span class="text-muted">
                                     Currently not in any
@@ -25,8 +25,8 @@
                         </p>
                         <span class="text-muted">
                             End date:
-                            @if ($activeSemester !== null)
-                                {{\App\Helpers\DateTimeHelper::formatDate($activeSemester->end_date)}}
+                            @if ($activeData !== null)
+                                {{\App\Helpers\DateTimeHelper::formatDate($activeData->semester->end_date)}}
                             @else
                                 <span class="text-muted">
                                     N/A
@@ -39,31 +39,28 @@
                     <div class="card-body">
                         <h1 class="card-title">Current Faculty</h1>
                         <div class="card-text row m-0 p-0">
-                            @if ($activeFaculty)
+                            @if ($activeData)
                                 <div class="col pl-0">
                                     <h2 class="col-12 p-0 mb-0 font-weight-bold">
-                                        {{\Illuminate\Support\Str::limit($activeFaculty->name, 24)}}
+                                        {{\Illuminate\Support\Str::limit($activeData->faculty->name, 24)}}
                                     </h2>
                                     <hr class="m-0 mb-2">
                                     <div class="col-12 pl-0">
                                         <span class="text-muted">Next due date: </span>
                                         <span class="text-warning">
                                             @if (
-                                            \App\Helpers\DateTimeHelper::isNowPassedDate($activeFaculty->first_deadline)
-                                            && !\App\Helpers\DateTimeHelper::isNowPassedDate($activeFaculty->second_deadline)
+                                            \App\Helpers\DateTimeHelper::isNowPassedDate($activeData->first_deadline)
+                                            && !\App\Helpers\DateTimeHelper::isNowPassedDate($activeData->second_deadline)
                                             )
-                                                {{\App\Helpers\DateTimeHelper::formatDateTime($activeFaculty->second_deadline)}}
-                                            @elseif (
-                                            !\App\Helpers\DateTimeHelper::isNowPassedDate($activeFaculty->first_deadline)
-                                            && !\App\Helpers\DateTimeHelper::isNowPassedDate($activeFaculty->second_deadline)
-                                            )
-                                                {{\App\Helpers\DateTimeHelper::formatDateTime($activeFaculty->first_deadline)}}
+                                                {{\App\Helpers\DateTimeHelper::formatDateTime($activeData->second_deadline)}}
+                                            @elseif (!\App\Helpers\DateTimeHelper::isNowPassedDate($activeData->first_deadline))
+                                                {{\App\Helpers\DateTimeHelper::formatDateTime($activeData->first_deadline)}}
                                             @endif
                                         </span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <a href="{{route('student.faculty.detail', [$activeFaculty->id])}}"
+                                    <a href="{{route('student.faculty.detail', [$activeData->faculty->id, $activeData->semester->id])}}"
                                        class="btn btn-info text-white">
                                         <span>Detail</span>
                                         <span class="badge badge-dark text-white">4</span>
