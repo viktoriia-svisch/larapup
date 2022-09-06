@@ -11,8 +11,8 @@ use Illuminate\Support\Carbon;
 class CoordinatorController extends Controller
 {
     public function coordinator(Request $request){
-        $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search_coordinator_input') . '%')
-            ->orWhere('last_name', 'like', '%' . $request->get('search_coordinator_input') . '%')
+        $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search') . '%')
+            ->orWhere('last_name', 'like', '%' . $request->get('search') . '%')
             ->paginate(PER_PAGE);
         return view('admin.Coordinator.coordinator', ['coordinators' => $coordinators]);
     }
@@ -58,5 +58,20 @@ class CoordinatorController extends Controller
         $coordinator = $request->get('coordinator');
         $ad = new FacultySemester();
         $ad2 = new FacultySemesterCoordinator();
+        $ad->faculty_id = $faculty;
+        $ad->semester_id = $semester;
+        if($ad->save()){
+            $faculty_semester = FacultySemester::orderBy('created_at', 'desc')->first('id');
+            $ad2->faculty_semester = $faculty_semester;
+            $ad2->coordinator = $coordinator;
+            if ($ad2->save()){
+                return redirect()->back()->with([
+                    'success' => true
+                ]);
+            }
+        }
+        return redirect()->back()->with([
+            'success' => false
+        ]);
     }
 }

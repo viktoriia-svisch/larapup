@@ -127,7 +127,7 @@
             <div class="col">
                 <button class="btn btn-block btn-default">
                     <i class="fas fa-cog"></i>
-                    Coordinator Settings
+                    Student Settings
                 </button>
             </div>
         </div>
@@ -141,8 +141,8 @@
                         <i class="fas fa-search"></i>
                     </span>
                     </div>
-                    <input class="form-control form-control-alternative" id="search_coordinator_input"
-                           name="search_coordinator_input" value="{{old('search_coordinator_input')}}" placeholder="Find Coordinator Here" type="text">
+                    <input class="form-control form-control-alternative" id="search_student_input"
+                           name="search_student_input" value="{{old('search_student_input')}}" placeholder="Find student Here" type="text">
                 </div>
             </div>
             <div class="col-auto">
@@ -163,9 +163,6 @@
             </div>
         </div>
         <br>
-        <div class="col-12 row m-0">
-        </div>
-        <hr>
         <div class="col-12 row m-0">
             @foreach($coordinators as $coor)
                 <div class="col-12 col-md-4 col-lg-3">
