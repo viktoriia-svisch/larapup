@@ -40,22 +40,32 @@ class FacultyController extends Controller
         $retrievedSemester = Semester::find($semester);
         return view('admin.faculty.create-faculty', ['semester' => $retrievedSemester]);
     }
-    public function createFaculty_post($semester, CreateFaculty $request)
+    public function createFaculty_post(CreateFaculty $request)
     {
         $coor = new Faculty;
-        $coor->semester_id = $semester->id;
         $coor->name = $request->input('name');
-        $coor->first_deadline = $request->input('first_deadline');
-        $coor->second_deadline = $request->input('second_deadline');
-        if ($coor->save()) {
+        $DuplicateFaculty = Faculty::where('name','=',$request->name)->first();
+        if(!empty($DuplicateFaculty))
+          {
             return redirect()->back()->with([
-                'success' => true
-            ]);
-        }
-        return redirect()->back()->with([
-            'success' => false
-        ]);
-        return view('admin.faculty.create-faculty');
+                'success' => false]);
+          }
+        if ($coor->save())
+            {
+                return redirect()->back()->with([
+                    'success' => true
+                ]); 
+            }
+    }
+    public function chooseSemester(){
+        return view('admin.faculty.Semester-choose');
+    }
+    public function chooseSemester_post(){
+    }
+    public function addStudentFaculty(){
+        return view('admin.faculty.add-student');
+    }
+    public function addStudentFaculty_post(){
     }
     public function searchFaculty($semester, $request)
     {

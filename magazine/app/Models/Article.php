@@ -13,4 +13,10 @@ class Article extends Model
     public function faculty_semester(){
         return $this->belongsTo(FacultySemester::class);
     }
+    public function comment_coordinator(){
+        return $this->hasMany(CommentCoordinator::class);
+    }
+    public function comment_student(){
+        return $this->hasMany(CommentStudent::class);
+    }
 }

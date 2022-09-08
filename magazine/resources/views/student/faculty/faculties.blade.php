@@ -15,7 +15,7 @@
             <div class="card">
                 <div class="card-body row">
                     <div class="col-12 col-sm-6 col-md-5 d-flex align-items-center">
-                        <h2>{{$currentFaculty->name}}</h2>
+                        <h2>{{$currentFaculty->faculty->name}}</h2>
                     </div>
                     <div class="col-12 col-sm-6 col-md">
                         <h3 class="text-muted">Deadline</h3>
@@ -31,7 +31,7 @@
                         </p>
                     </div>
                     <div class="col-12 col-sm-12 col-md-auto d-flex align-items-center">
-                        <a href="{{route('student.faculty.detail', [$currentFaculty->id])}}" class="btn btn-secondary">
+                        <a href="{{route('student.faculty.detail', [$currentFaculty->faculty->id, $currentFaculty->semester->id])}}" class="btn btn-secondary">
                             Detail
                         </a>
                     </div>

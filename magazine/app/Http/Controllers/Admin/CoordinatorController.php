@@ -11,8 +11,8 @@ use Illuminate\Support\Carbon;
 class CoordinatorController extends Controller
 {
     public function coordinator(Request $request){
-        $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search') . '%')
-            ->orWhere('last_name', 'like', '%' . $request->get('search') . '%')
+        $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search_coordinator_input') . '%')
+            ->orWhere('last_name', 'like', '%' . $request->get('search_coordinator_input') . '%')
             ->paginate(PER_PAGE);
         return view('admin.Coordinator.coordinator', ['coordinators' => $coordinators]);
     }
