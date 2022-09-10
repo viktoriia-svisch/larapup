@@ -58,20 +58,5 @@ class CoordinatorController extends Controller
         $coordinator = $request->get('coordinator');
         $ad = new FacultySemester();
         $ad2 = new FacultySemesterCoordinator();
-        $ad->faculty_id = $faculty;
-        $ad->semester_id = $semester;
-        if($ad->save()){
-            $faculty_semester = FacultySemester::orderBy('created_at', 'desc')->first('id');
-            $ad2->faculty_semester = $faculty_semester;
-            $ad2->coordinator = $coordinator;
-            if ($ad2->save()){
-                return redirect()->back()->with([
-                    'success' => true
-                ]);
-            }
-        }
-        return redirect()->back()->with([
-            'success' => false
-        ]);
     }
 }

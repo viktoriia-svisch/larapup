@@ -31,6 +31,19 @@ define('COORDINATOR_STATUS', [
     'ACTIVE' => 1,
     'DEACTIVATE' => 0,
 ]);
+define('FILE_MIMES', [
+    0 => 'application/pdf',
+    1 => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    2 => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    3 => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    4 => 'image/gif',
+    5 => 'image/jpg',
+    6 => 'image/jpeg',
+    7 => 'image/png',
+    8 => 'application/zip,application/octet-stream,application/x-zip-compressed,multipart/x-zip',
+    9 => 'application/lzh, application/x-lzh, application/x-lha, application/x-compress, application/x-compressed, application/x-lzh-archive, zz-application/zz-winassoc-lzh, application/maclha, application/octet-stream',
+    10 => '*',
+]);
 define('PER_PAGE', 20);
 define('MESSAGE', 'message');
 define('SEARCH', 'search');
