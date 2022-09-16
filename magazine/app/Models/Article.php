@@ -19,4 +19,7 @@ class Article extends Model
     public function comment_student(){
         return $this->hasMany(CommentStudent::class);
     }
+    public function publish(){
+        return $this->hasMany(Publish::class);
+    }
 }

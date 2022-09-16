@@ -18,25 +18,6 @@ class CoordinatorController extends Controller
         $coordinators = Coordinator::paginate(PER_PAGE);
         return CoordinatorResource::collection($coordinators);
     }
-    public function searchFaculty(Request $request)
-    {
-        $searchTerms = $request->get('search_faculty_input');
-        if ($searchTerms) {
-            $faculties = Faculty::with('faculty_semester')
-                ->where('name', 'LIKE', '%' . $searchTerms . '%')
-                ->paginate(PER_PAGE);
-            return view('coordinator.manage-coordinator', [
-                'faculties' => $faculties,
-                'searching' => $searchTerms
-            ]);
-        }
-        $faculties = Faculty::with('faculty_semester')
-            ->paginate(PER_PAGE);
-        return view('coordinator.manage-coordinator', [
-            'faculties' => $faculties,
-            'searching' => false
-        ]);
-    }
     public function dashboard(){
         return view('coordinator.dashboard');
     }

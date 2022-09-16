@@ -114,7 +114,7 @@ class FacultyController extends Controller
     {
         return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-member', "member");
     }
-    public function articlePost(Request $request){
+    public function articleFilePost(Request $request){
         dd($request);
     }
 }
