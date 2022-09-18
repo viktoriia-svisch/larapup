@@ -41,6 +41,26 @@
         </div>
     </div>
     <hr>
+    @if (\Session::has('action_response'))
+        @if (\Session::get('action_response')['status_ok'])
+            <div class="col-12 m-auto">
+                <div class="card bg-success text-white">
+                    <div class="card-body" style="padding: 1rem;">
+                        {{\Session::get('action_response')['status_message']}}
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="col-12 m-auto">
+                <div class="card bg-danger text-white">
+                    <div class="card-body" style="padding: 1rem;">
+                        {{\Session::get('action_response')['status_message']}}
+                    </div>
+                </div>
+            </div>
+        @endif
+        <br>
+    @endif
     @if ($article && count($article->publish) > 0)
         <div class="col-12 p-0 m-0 mb-5 mt-2 d-flex flex-column justify-content-center align-items-center">
             <a href="" class="btn btn-success btn-icon">
@@ -93,9 +113,9 @@
                                         {{\App\Helpers\DateTimeHelper::formatDateTime($file->updated_at ?? $file->created_at)}}
                                     </small>
                                 </div>
-                                <div class="col-auto row m-0 p-0">
+                                <div class="col-auto row m-0 p-0 text-white">
                                     <div class="col-auto d-flex align-items-center p-0 pl-1 pr-1">
-                                        <a class="btn btn-primary p-0"
+                                        <a class="btn btn-primary p-0 d-flex align-items-center justify-content-center"
                                            style="width: 3rem; height: 3rem; font-size: 1.5rem">
                                             <i class="fas fa-download"></i>
                                         </a>
@@ -188,8 +208,10 @@
                             <label class="btn btn-block btn-dribbble">
                                 Upload file
                                 <input type="file" multiple onchange="listenChangesWord(event.target)" hidden
-                                       name="wordDocument" id="wordDocument" class="form-control">
+                                       name="wordDocument[]" id="wordDocument" class="form-control">
                             </label>
+                            <input type="hidden" name="semester_id" value="{{$facultySemester->semester_id}}">
+                            <input type="hidden" name="faculty_semester_id" value="{{$facultySemester->id}}">
                         </div>
                         <div class="text-danger mt-1 mb-3" id="errorWord">
                         </div>
@@ -291,20 +313,23 @@
             else fileSize = fileSize.toFixed(2) + "MB";
             h5Name.innerText = "SIZE: " + fileSize;
             let spanName = generateElement("h2 font-weight-bold mb-0", "span");
+            if (fileName.length > 28) {
+                fileName = fileName.substr(0, 25) + '...';
+            }
             spanName.innerText = fileName;
             cardFiles.appendChild(h5Name);
             cardFiles.appendChild(spanName);
             let iconContainer;
             let icon;
             switch (mimeType) {
-                case "{{FILE_MIMES[1]}}":
+                case "{{FILE_MIMES[0]}}":
                     iconContainer = generateElement("icon icon-shape bg-primary text-white rounded-circle shadow");
                     icon = generateElement("fas fa-file-word", "i");
                     break;
+                case "{{FILE_MIMES[1]}}":
+                case "{{FILE_MIMES[2]}}":
+                case "{{FILE_MIMES[3]}}":
                 case "{{FILE_MIMES[4]}}":
-                case "{{FILE_MIMES[5]}}":
-                case "{{FILE_MIMES[6]}}":
-                case "{{FILE_MIMES[7]}}":
                     iconContainer = generateElement("icon icon-shape bg-primary text-white rounded-circle shadow");
                     icon = generateElement("fas fa-file-image", "i");
                     break;
