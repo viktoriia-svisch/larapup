@@ -1,11 +1,15 @@
 <?php
 namespace App\Http\Controllers\Student;
+use App\Helpers\StorageHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UploadArticleRequest;
 use App\Models\Article;
+use App\Models\ArticleFile;
 use App\Models\FacultySemester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 class FacultyController extends Controller
 {
     public function faculty(Request $request)
@@ -113,5 +117,37 @@ class FacultyController extends Controller
     public function facultyDetailMember($id, $semester)
     {
         return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-member', "member");
+    }
+    public function articleFilePost(UploadArticleRequest $request){
+        DB::beginTransaction();
+        $article = Article::with("student")->firstOrCreate([
+            "student_id" => Auth::id(),
+            "faculty_semester_id" =>$request->get("faculty_semester_id")
+        ]);
+        if ($article){
+            $files = $request->file("wordDocument");
+            $arrNew = [];
+            foreach ($files as $file){
+                try{
+                    $filePath = StorageHelper::saveArticle($article->id, $file);
+                }catch(\Exception $exception){
+                    DB::rollback();
+                    return back()->with($this->responseBladeMessage(
+                        "Cannot store file in the system",
+                        false
+                        ));
+                }
+                $articleFile = new ArticleFile();
+                $articleFile->title = $file->getClientOriginalName();
+                $articleFile->file_path = $filePath;
+                array_push($arrNew, $articleFile);
+            }
+            if ($article->article_file()->saveMany($arrNew)){
+                DB::commit();
+                return back()->with($this->responseBladeMessage("Upload successfully!"));
+            }
+        }
+        DB::rollback();
+        return back()->with($this->responseBladeMessage("Cannot initialize the article data!", false));
     }
 }
