@@ -32,7 +32,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">
+                        <a class="nav-link"  href="{{route('coordinator.coordinator')}}">
                             <i class="fas fa-search"></i>
                             Faculty
                         </a>

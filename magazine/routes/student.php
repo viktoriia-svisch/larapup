@@ -12,7 +12,7 @@ Route::group([
     Route::get('faculty/{id}/{semester}/dashboard', 'FacultyController@facultyDetailDashboard')->name('student.faculty.detail');
     Route::get('faculty/{id}/{semester}/members', 'FacultyController@facultyDetailMember')->name('student.faculty.members');
     Route::get('faculty/{id}/{semester}/article', 'FacultyController@facultyDetailArticle')->name('student.faculty.article');
-    Route::post('faculty/{faculty_semester_id}/{semester_id}/article_files', 'FacultyController@articleFilePost')->name('student.faculty.articleFiles_post');
+    Route::post('faculty/{id}/{semester}/article', 'FacultyController@articlePost')->name('student.faculty.article_post');
     Route::get('article', 'StudentController@article')->name('student.article');
     Route::get('manage/{id}', 'StudentController@updateStudent')->name('student.manageAccount');
     Route::post('manage/{id}', 'StudentController@updateStudentPost')->name('student.manageAccount_post');

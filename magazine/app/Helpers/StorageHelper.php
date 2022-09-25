@@ -1,6 +1,5 @@
 <?php
 namespace App\Helpers;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 class StorageHelper
 {
@@ -73,36 +72,5 @@ class StorageHelper
         if (!isset(self::TYPE_NAMES[$type]))
             throw new \Exception('type is undefined');
         return 'data/local/' . self::TYPE_NAMES[$type] . '/';
-    }
-    public static function save($file, $path, $fileName = '')
-    {
-        if (!$fileName) {
-            $fileName = $file->getClientOriginalName();
-        }
-        self::disk()->putFileAs($path, $file, $fileName);
-    }
-    public static function copy($sourcePath, $targetPath)
-    {
-        return self::disk()->copy($sourcePath, $targetPath);
-    }
-    public static function move($sourcePath, $targetPath)
-    {
-        return self::disk()->move($sourcePath, $targetPath);
-    }
-    public static function get($path)
-    {
-        return self::disk()->get($path);
-    }
-    public static function locatePath($path)
-    {
-        return self::disk()->path($path);
-    }
-    public static function urlPath($path)
-    {
-        return self::disk()->url($path);
-    }
-    public static function mimeType($path)
-    {
-        return self::disk()->mimeType($path);
     }
 }
