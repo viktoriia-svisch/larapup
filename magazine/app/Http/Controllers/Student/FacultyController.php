@@ -24,14 +24,12 @@ class FacultyController extends Controller
             switch ($selectedMode) {
                 case '1':
                     $listFaculty->whereHas('semester', function ($query) {
-                        $query->whereDate('start_date', ">", Carbon::now()->toDateTimeString())
-                            ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());;
+                        $query->whereDate('start_date', ">", Carbon::now()->toDateTimeString());
                     });
                     break;
                 case '2':
                     $listFaculty->whereHas('semester', function ($query) {
-                        $query->whereDate('end_date', "<=", Carbon::now()->toDateTimeString())
-                            ->whereDate('start_date', "<=", Carbon::now()->toDateTimeString());
+                        $query->whereDate('start_date', "<=", Carbon::now()->toDateTimeString());
                     });
                     break;
                 default:

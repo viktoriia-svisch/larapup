@@ -32,13 +32,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="{{route('coordinator.coordinator')}}">
+                        <a class="nav-link">
                             <i class="fas fa-search"></i>
                             Faculty
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">
+                        <a class="nav-link"
+                           href="{{route('coordinator.manageSemester')}}">
                             <i class="fas fa-graduation-cap"></i>
                             Semesters
                         </a>
