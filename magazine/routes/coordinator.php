@@ -10,7 +10,7 @@ Route::group([
     Route::get('cor','CoordinatorController@index');
     Route::get('get/{id}','CoordinatorController@show');
     Route::post('new-coordinator','CoordinatorController@store');
-    Route::get('coordinator-semester', 'CoordinatorController@CoordinatorSemester')->name('coordinator.manageSemester');
     Route::post('new-faculty','CoordinatorController@storeFaculty');
-    Route::get('search/{request}','CoordinatorController@search');
+    Route::get('coordinator','CoordinatorController@Coordinator')->name('coordinator.coordinator');
+    Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
 });
