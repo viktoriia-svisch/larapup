@@ -4,6 +4,7 @@
 @endpush
 @section('breadcrumb')
     <div class="container">
+        {{ Breadcrumbs::render('dashboard.faculty', route('coordinator.coordinator'), route('coordinator.faculty')) }}
     </div>
 @endsection
 @section("coordinator-content")
@@ -77,7 +78,7 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item cursor @if($viewMode == 0) selected bg-primary text-white @endif"
-                           onclick="selectMode(0)">
+                               onclick="selectMode(0)">
                             All
                         </a>
                         <a class="dropdown-item cursor @if($viewMode == 1) selected bg-primary text-white @endif"
