@@ -45,6 +45,13 @@ define('FILE_EXT', [
     3 => 'jpeg',
     4 => 'png',
 ]);
+define('FILE_EXT_INDEX', [
+    'docx'  => 0,
+    'gif'   => 1,
+    'jpg'   => 2,
+    'jpeg'  => 3,
+    'png'   => 4,
+]);
 define('FILE_MAXSIZE', '10485760'); 
 define('PER_PAGE', 20);
 define('MESSAGE', 'message');

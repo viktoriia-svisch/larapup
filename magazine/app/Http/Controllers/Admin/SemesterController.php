@@ -87,18 +87,4 @@ class SemesterController extends Controller
             $this->responseBladeMessage('Create semester unsuccessfully. Please try again', false)
         );
     }
-    public function createSemesterFaculty()
-    {
-        $lastSem = Semester::orderBy('end_date', 'desc')->first();
-        return view('admin.Semester.create-semester', [
-            'lastSemester' => $lastSem
-        ]);
-    }
-    public function createSemesterFaculty_post()
-    {
-        $lastSem = Semester::orderBy('end_date', 'desc')->first();
-        return view('admin.Semester.create-semester', [
-            'lastSemester' => $lastSem
-        ]);
-    }
 }

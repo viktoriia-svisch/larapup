@@ -2,10 +2,12 @@
 namespace App\Http\Controllers\Student;
 use App\Helpers\StorageHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MailController;
 use App\Http\Requests\UploadArticleRequest;
 use App\Models\Article;
 use App\Models\ArticleFile;
 use App\Models\FacultySemester;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -66,13 +68,15 @@ class FacultyController extends Controller
             'currentFaculty' => $currentFaculty
         ]);
     }
-    public function facultyDetailArticle($id, $semester)
+    public function facultyDetailArticle($faculty_id, $semester_id)
     {
         $article = Article::with('article_file')
-            ->where('faculty_semester_id', $id)
+            ->whereHas('faculty_semester', function ($query) use ($faculty_id) {
+                $query->where("faculty_id", $faculty_id);
+            })
             ->where('student_id', Auth::guard(STUDENT_GUARD)->user()->id)
             ->first();
-        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-article', "article", ["article" => $article]);
+        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-article', "article", ["article" => $article]);
     }
     private function facultyDetail($id, $semester, $view, $site = 'dashboard', $extData = [])
     {
@@ -118,31 +122,47 @@ class FacultyController extends Controller
     {
         return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-member', "member");
     }
-    public function articleFilePost(UploadArticleRequest $request){
+    public function articleFilePost(UploadArticleRequest $request)
+    {
         DB::beginTransaction();
         $article = Article::with("student")->firstOrCreate([
             "student_id" => Auth::id(),
-            "faculty_semester_id" =>$request->get("faculty_semester_id")
+            "faculty_semester_id" => $request->get("faculty_semester_id")
         ]);
-        if ($article){
+        if ($article) {
             $files = $request->file("wordDocument");
             $arrNew = [];
-            foreach ($files as $file){
-                try{
+            foreach ($files as $file) {
+                try {
                     $filePath = StorageHelper::saveArticle($article->id, $file);
-                }catch(\Exception $exception){
+                } catch (Exception $exception) {
                     DB::rollback();
                     return back()->with($this->responseBladeMessage(
                         "Cannot store file in the system",
                         false
-                        ));
+                    ));
                 }
                 $articleFile = new ArticleFile();
                 $articleFile->title = $file->getClientOriginalName();
                 $articleFile->file_path = $filePath;
+                $extIndex = 0;
+                foreach (FILE_EXT as $ext) {
+                    if (strcasecmp($file->getClientOriginalExtension(), $ext)) {
+                        $extIndex = array_search($ext, FILE_EXT);
+                        break;
+                    }
+                }
+                $articleFile->type = $extIndex;
                 array_push($arrNew, $articleFile);
             }
-            if ($article->article_file()->saveMany($arrNew)){
+            if ($article->article_file()->saveMany($arrNew)) {
+                $mailService = new MailController();
+                $coordinator = $article->faculty_semester->faculty_semester_coordinator[0]->coordinator;
+                $mailService->sendGradingEmail(
+                    $coordinator->email, $coordinator,
+                    $article->faculty_semester->faculty_id,
+                    $article->faculty_semester->semester_id
+                );
                 DB::commit();
                 return back()->with($this->responseBladeMessage("Upload successfully!"));
             }

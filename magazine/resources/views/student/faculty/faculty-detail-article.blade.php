@@ -100,12 +100,16 @@
                             <div class="card-body row">
                                 <div class="col-auto d-flex align-items-center">
                                     <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                                        <i class="fas fa-file-word"></i>
+                                        @if ($file->type == 0)
+                                            <i class="fas fa-file-word"></i>
+                                        @else
+                                            <i class="fas fa-file-image"></i>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col">
                                     <span class="h2 font-weight-bold mb-0">
-                                        {{\Illuminate\Support\Str::limit($file->title, 20)}}
+                                        {{\Illuminate\Support\Str::limit($file->title, 15, '...' .FILE_EXT[$file->type])}}
                                     </span>
                                     <br>
                                     <small class="text-muted">
@@ -345,13 +349,16 @@
             cardContainer.appendChild(cardBody);
             return cardContainer;
         }
+        @if($article)
         /**
          * Listen uploaded word files and generate preview elements
          * @param target
          */
         function listenChangesWord(target) {
-            if (target.files.length > 3) {
-                displayError("You can only upload maximum 3 files");
+            previewSection.html(null);
+            errorSection.html(null);
+            if (target.files.length > (3 - {{count($article->article_file)}})) {
+                displayError("You can only upload maximum " + (3 - {{count($article->article_file)}}) +" files");
                 submitFilesButton.attr("disabled", true);
                 isValidFileSubmissionUpload = false;
             } else {
@@ -364,11 +371,13 @@
                 );
             })
         }
+        @endif
         /**
          * Reset file upload input state
          */
         function resetFileInput(fileJQUERY = inputFiles) {
             previewSection.html(null);
+            errorSection.html(null);
             isValidFileSubmissionUpload = false;
             fileJQUERY.replaceWith(fileJQUERY.val('').clone(true));
         }

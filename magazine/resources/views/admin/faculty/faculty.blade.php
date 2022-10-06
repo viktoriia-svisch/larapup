@@ -8,6 +8,7 @@
     </div>
 @endsection
 @section("admin-content")
+    <div class="container">
     <div class="row col-12">
         <div class="col-sm-6">
                 <h1 class="text-primary">Add new faculty</h1>
