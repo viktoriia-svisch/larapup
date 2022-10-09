@@ -12,3 +12,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('search/{request}','Student\StudentController@search');
 Route::get('searchAll','Student\StudentController@searchAll');
 Route::get('searches/{request}','Coordinator\CoordinatorController@search');
+Route::post('faculty/add-semester-faculty/{semester}/{faculty}', 'Admin\FacultyController@addSemesterFaculty_post')->name('admin.addSemesterFaculty');
