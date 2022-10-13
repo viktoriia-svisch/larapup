@@ -119,7 +119,8 @@
                                 </div>
                                 <div class="col-auto row m-0 p-0 text-white">
                                     <div class="col-auto d-flex align-items-center p-0 pl-1 pr-1">
-                                        <a class="btn btn-primary p-0 d-flex align-items-center justify-content-center"
+                                        <a href="{{route("student.faculty.articleFiles_download", [$facultySemester->faculty_id, $facultySemester->semester_id, $file->id])}}"
+                                           class="btn btn-primary p-0 d-flex align-items-center justify-content-center"
                                            style="width: 3rem; height: 3rem; font-size: 1.5rem">
                                             <i class="fas fa-download"></i>
                                         </a>
@@ -358,7 +359,7 @@
             previewSection.html(null);
             errorSection.html(null);
             if (target.files.length > (3 - {{count($article->article_file)}})) {
-                displayError("You can only upload maximum " + (3 - {{count($article->article_file)}}) +" files");
+                displayError("You can only upload maximum " + (3 - {{count($article->article_file)}}) + " files");
                 submitFilesButton.attr("disabled", true);
                 isValidFileSubmissionUpload = false;
             } else {

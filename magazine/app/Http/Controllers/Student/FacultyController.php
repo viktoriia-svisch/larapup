@@ -8,10 +8,13 @@ use App\Models\Article;
 use App\Models\ArticleFile;
 use App\Models\FacultySemester;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class FacultyController extends Controller
 {
     public function faculty(Request $request)
@@ -78,12 +81,12 @@ class FacultyController extends Controller
             ->first();
         return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-article', "article", ["article" => $article]);
     }
-    private function facultyDetail($id, $semester, $view, $site = 'dashboard', $extData = [])
+    private function facultyDetail($faculty_id, $semester, $view, $site = 'dashboard', $extData = [])
     {
         $faculty = FacultySemester::with(['faculty'])
             ->where('semester_id', $semester)
-            ->whereHas('faculty', function ($q) use ($id) {
-                $q->where('id', $id);
+            ->whereHas('faculty', function ($q) use ($faculty_id) {
+                $q->where('id', $faculty_id);
             })
             ->whereHas('faculty_semester_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
@@ -114,13 +117,13 @@ class FacultyController extends Controller
         else
             return redirect()->route('student.faculty');
     }
-    public function facultyDetailDashboard($id, $semester)
+    public function facultyDetailDashboard($faculty_id, $semester_id)
     {
-        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-dashboard', "dashboard");
+        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-dashboard', "dashboard");
     }
-    public function facultyDetailMember($id, $semester)
+    public function facultyDetailMember($faculty_id, $semester_id)
     {
-        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-member', "member");
+        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member");
     }
     public function articleFilePost(UploadArticleRequest $request)
     {
@@ -169,5 +172,24 @@ class FacultyController extends Controller
         }
         DB::rollback();
         return back()->with($this->responseBladeMessage("Cannot initialize the article data!", false));
+    }
+    public function articleFileDelete(Request $request, $faculty_id, $semester_id)
+    {
+    }
+    public function articleFileDownload($faculty_id, $semester_id, $article_file_id)
+    {
+        $articleFile = ArticleFile::with("article")
+            ->whereHas("article.faculty_semester", function ($query) use ($faculty_id, $semester_id) {
+                $query->where("faculty_id", $faculty_id)->where("semester_id", $semester_id);
+            })->whereHas("article.student", function ($query) {
+                $query->where("id", Auth::guard(STUDENT_GUARD)->id());
+            })
+            ->where("id", $article_file_id)
+            ->first();
+        if ($articleFile) {
+            $path = StorageHelper::locatePath(StorageHelper::getArticlePath($articleFile->article_id, $articleFile->title));
+            return Response::download($path, $articleFile->title);
+        }
+        return redirect()->back()->with($this->responseBladeMessage("Failed to retrieve the file", false));
     }
 }
