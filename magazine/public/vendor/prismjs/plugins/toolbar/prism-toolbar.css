@@ -1,6 +1,7 @@
 div.code-toolbar {
 	position: relative;
 }
+
 div.code-toolbar > .toolbar {
 	position: absolute;
 	top: .3em;
@@ -8,15 +9,19 @@ div.code-toolbar > .toolbar {
 	transition: opacity 0.3s ease-in-out;
 	opacity: 0;
 }
+
 div.code-toolbar:hover > .toolbar {
 	opacity: 1;
 }
+
 div.code-toolbar > .toolbar .toolbar-item {
 	display: inline-block;
 }
+
 div.code-toolbar > .toolbar a {
 	cursor: pointer;
 }
+
 div.code-toolbar > .toolbar button {
 	background: none;
 	border: 0;
@@ -25,10 +30,11 @@ div.code-toolbar > .toolbar button {
 	line-height: normal;
 	overflow: visible;
 	padding: 0;
-	-webkit-user-select: none; 
+	-webkit-user-select: none; /* for button */
 	-moz-user-select: none;
 	-ms-user-select: none;
 }
+
 div.code-toolbar > .toolbar a,
 div.code-toolbar > .toolbar button,
 div.code-toolbar > .toolbar span {
@@ -40,6 +46,7 @@ div.code-toolbar > .toolbar span {
 	box-shadow: 0 2px 0 0 rgba(0,0,0,0.2);
 	border-radius: .5em;
 }
+
 div.code-toolbar > .toolbar a:hover,
 div.code-toolbar > .toolbar a:focus,
 div.code-toolbar > .toolbar button:hover,
