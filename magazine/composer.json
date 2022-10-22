@@ -40,7 +40,6 @@
             "App\\": "app/"
         },
         "classmap": [
-            "app/http/controllers/admin",
             "database/seeds",
             "database/factories"
         ],
