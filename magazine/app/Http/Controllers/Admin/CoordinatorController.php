@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateCoordinator;
 use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
+use App\Models\FacultySemesterCoordinator;
 use App\Models\FacultySemesterStudent;
 use App\Models\Semester;
 use Illuminate\Http\Request;
