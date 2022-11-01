@@ -76,7 +76,7 @@
     @endif
     <div class="container-fluid row m-0 p-0">
         <div class="col-12 col-md-6 m-0 p-0 pr-4 border-right">
-            <h2 class="col-12 row m-0 p-0 mb-4">
+            <div class="col-12 row m-0 p-0 mb-4">
                 <div class="h2 col p-0 m-0">
                     File Submission
                 </div>
@@ -92,7 +92,7 @@
                         </button>
                     @endif
                 </div>
-            </h2>
+            </div>
             @if ($article)
                 @foreach($article->article_file as $file)
                     <div class="col-12 row m-0 p-0 mb-4">
@@ -136,15 +136,16 @@
                         </div>
                     </div>
                 @endforeach
-                <h3 class="text-muted text-center mt-3">
-                    Student can upload 3 files at maximum. Each cannot exceed 10MB and must be WORD document
-                    (.docx) or image (.png, .jpeg, .gif)
-                </h3>
             @else
                 <h3 class="text-muted text-center mt-3">
                     You haven't upload any file
                 </h3>
             @endif
+            <hr>
+            <h3 class="text-muted text-center mt-3">
+                Student can upload 3 files at maximum. Each cannot exceed 10MB and must be WORD document
+                (.docx) or image (.png, .jpeg, .gif)
+            </h3>
         </div>
         <div class="col-12 col-md-6 m-0 p-0 pl-4">
             <h2 class="col-12 row m-0 p-0 mb-4">
@@ -218,10 +219,8 @@
                             <input type="hidden" name="semester_id" value="{{$facultySemester->semester_id}}">
                             <input type="hidden" name="faculty_semester_id" value="{{$facultySemester->id}}">
                         </div>
-                        <div class="text-danger mt-1 mb-3" id="errorWord">
-                        </div>
-                        <div id="previewSection">
-                        </div>
+                        <div class="text-danger mt-1 mb-3" id="errorWord"></div>
+                        <div id="previewSection"></div>
                         <hr>
                         <div class="custom-control custom-control-alternative custom-checkbox mb-3">
                             <input class="custom-control-input" id="terms" onchange="listenCheckboxTerms(event)"
@@ -243,7 +242,9 @@
         <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDelete"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <form action="" class="modal-content" id="deleteForm">
+                <form
+                    action="{{route("student.faculty.articleFiles_delete", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+                    class="modal-content" id="deleteForm">
                     <h2 class="modal-header">
                         Are you sure you want to delete this file?
                     </h2>
@@ -350,7 +351,6 @@
             cardContainer.appendChild(cardBody);
             return cardContainer;
         }
-        @if($article)
         /**
          * Listen uploaded word files and generate preview elements
          * @param target
@@ -358,21 +358,32 @@
         function listenChangesWord(target) {
             previewSection.html(null);
             errorSection.html(null);
-            if (target.files.length > (3 - {{count($article->article_file)}})) {
-                displayError("You can only upload maximum " + (3 - {{count($article->article_file)}}) + " files");
+            @if($article)
+            if (target.files.length > (3 - +'{{count($article->article_file)}}')) {
+                displayError("You can only upload maximum " + (3 - +'{{count($article->article_file)}}') + " files");
                 submitFilesButton.attr("disabled", true);
                 isValidFileSubmissionUpload = false;
             } else {
                 isValidFileSubmissionUpload = true;
+                errorSection.html(null);
             }
+            @else
+            if (target.files.length > 3) {
+                isValidFileSubmissionUpload = false;
+                submitFilesButton.attr("disabled", true);
+                displayError("You can only upload maximum 3 files per article. Accepted file extensions: DOCX, PNG, JPEG, GIF");
+            } else {
+                isValidFileSubmissionUpload = true;
+                errorSection.html(null);
+            }
+            @endif
             Array.from(target.files).forEach(file => {
                 let size = +file.size / (1024 * 1024); // to mb
                 document.getElementById("previewSection").appendChild(
                     renderPreviewFiles(file.name, size, file.type)
                 );
-            })
+            });
         }
-        @endif
         /**
          * Reset file upload input state
          */
