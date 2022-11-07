@@ -1,15 +1,16 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateCoordinator;
 use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
 use App\Models\FacultySemesterCoordinator;
 use App\Models\FacultySemesterStudent;
 use App\Models\Semester;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Input;
 class CoordinatorController extends Controller
 {
     public function coordinator(Request $request){
@@ -19,20 +20,38 @@ class CoordinatorController extends Controller
         return view('admin.Coordinator.coordinator', ['coordinators' => $coordinators]);
     }
     public function addToFaculty_index(){
-        $current = Carbon::now();
-        $semester = Semester::whereDate('end_date', '>=', $current)->get();
-        $coordinator = Coordinator::get();
-        return view('admin.Coordinator.addToFaculty',
-            ['semester' => $semester,
-                'coordinator' => $coordinator]);
+        $faculty = Faculty::get();
+        return view('admin.faculty.add-coordinator',
+            ['faculties' => $faculty]);
     }
     public function fetch(Request $request){
         $value = $request->get('value');
-        $faculty_semester = FacultySemester::where('semester_id', '=', $value)->get(['faculty_id']);
-        $data = Faculty::whereNotIn('faculty_id', $faculty_semester)->get();
-        $output = '<option value="">Select faculty</option>';
-        foreach ($data as $row){
-            $output .= '<option value="'. $row->get('id').'">'. $row->get('name') .'</option>';
+        $output = '<option value="0">Select a semester</option>';
+        $faculty_semester = FacultySemester::with('semester')->where('faculty_id', '=', $value)->get();
+        foreach ($faculty_semester as $row) {
+            $data = Semester::where('id', "=", $row->semester_id)->where('end_date', '>=', Carbon::now())->first();
+            if ($data != null) {
+                $output .= '<option value="' . $data->id . '">' . $data->name . '</option>';
+            }
+        }
+        echo $output;
+    }
+    public function fetchCoor(Request $request){
+        $semester = $request->get('semester');
+        $faculty = $request->get('faculty');
+        $output = '';
+        $facultySemester = FacultySemester::where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
+        if($facultySemester != null){
+            $notAvailableCoor = FacultySemesterCoordinator::where('faculty_semester_id', '=', $facultySemester->id)->get('coordinator_id');
+            $coors = Coordinator::whereNotIn('id', $notAvailableCoor)->get();
+            foreach ($coors as $coor){
+                $output .='<div class="col-xl-12 align-items-center" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">'
+                    .'<img  class="img-thumbnail col-xl-2" style="width: 53px"src="https:
+                    .'<label class="col-xl-6">'. $coor->first_name . ' ' . $coor->last_name.'</label>'
+                    .'<a href="'. route('admin.addToFaculty.addCoorToFaculty_post', ['faculty'=>$faculty,'semester'=>$semester, 'coordinator'=>$coor->id])
+                    .'" class="col-xl-4 submit-coordinator">Add Coordinator</a>'
+                    .'</div>';
+            }
         }
         echo $output;
     }
@@ -54,11 +73,18 @@ class CoordinatorController extends Controller
     {
         return view('admin.coordinator.create-coordinator');
     }
-    public function addToFaculty(Request $request){
-        $faculty = $request->get('faculty');
-        $semester = $request->get('semester');
-        $coordinator = $request->get('coordinator');
-        $ad = new FacultySemester();
-        $ad2 = new FacultySemesterCoordinator();
+    public function addToFaculty($coordinator, $faculty, $semester){
+        $faculty_semester = FacultySemester::where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
+        $ad = new FacultySemesterCoordinator();
+        $ad->faculty_semester_id = $faculty_semester->id;
+        $ad->coordinator_id = $coordinator;
+        if ($ad->save()){
+            return redirect()->back()->with([
+                'success' => true
+            ]);
+        }
+        return redirect()->back()->with([
+            'success' => false
+        ]);
     }
 }

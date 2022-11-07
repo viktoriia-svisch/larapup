@@ -186,7 +186,23 @@
         </div>
         <br>
         <div class="col-12 row m-0">
-
+            @foreach($coordinators as $coor)
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="cnt-block">
+                        <figure>
+                            <img src="{{$coor->avatar_path ?? 'http://www.webcoderskull.com/img/team4.png'}}"
+                                 class="img-responsive" alt="">
+                        </figure>
+                        <h4 class="col-12">
+                            {{ \Str::limit(($coor->first_name . ' ' . $coor->last_name), 20, '...')}}
+                        </h4>
+                        <p>{{ \Str::limit($coor->email, 22, '...')}}</p>
+                        <div class="col-12">
+                            <a class="btn btn-block btn-secondary">Update</a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
         </div>
         <hr>
         <div class="col-12 row m-0">

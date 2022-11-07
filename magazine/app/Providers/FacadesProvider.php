@@ -2,7 +2,6 @@
 namespace App\Providers;
 use App\Helpers\DateTimeHelper;
 use App\Helpers\StorageHelper;
-use App\Helpers\UploadFileValidate;
 use Illuminate\Support\ServiceProvider;
 class FacadesProvider extends ServiceProvider
 {
@@ -13,9 +12,6 @@ class FacadesProvider extends ServiceProvider
         });
         $this->app->singleton('storage_helper', function () {
             return new StorageHelper();
-        });
-        $this->app->singleton('file_validate', function () {
-            return new UploadFileValidate();
         });
     }
     public function boot()
