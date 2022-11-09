@@ -4,71 +4,65 @@
 @endpush
 @section('breadcrumb')
     <div class="container">
-        {{ Breadcrumbs::render('dashboard.faculty', route('admin.dashboard'), route('admin.faculty')) }}
+        {{ Breadcrumbs::render('dashboard.faculty', route('admin.dashboard'), route('admin.faculty'),route('admin.chooseSemester')) }}
     </div>
 @endsection
 @section("admin-content")
-<div class="container row col-12" style="margin-bottom: 10vw">
-    <div class="row col-md-8 m-auto">
-        <div class="col-sm-6">
-            <h4 style="text-align: center">List student this faculty</h4>
-            <input style="margin-top: 1vw" class="form-control" type="text" placeholder="search">
-            <hr>
-            <div class="col-xl-12" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">
-                <img  class="img-thumbnail col-xl-2" style="width: 53px"
-                      src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
-                <label class="col-xl-4">Hello</label>
-                <button class=" btn-primary col-xl-5">Delete</button>
+<div class="container">
+        <br>
+        @foreach($semester as $sem)
+        @foreach($faculty as $fac)
+        <h1 class="heading-title">Faculty {{$fac->name}} of semester {{$sem->name}} </h1>
+        @endforeach
+        @endforeach
+            <span class="text-gray">
+                You can add student to faculty of specific semester
+            </span>
+            <h1 class="text-primary">Current Students</h1>
+            <p class="text-muted">Display all the faculty within the semester.</p>
+            @if (count($AvailableStudent) == 0)
+            <h2 class="text-center text-muted">No record found</h2>
+            @endif
+            @foreach($AvailableStudent as $currentstudent)
+            @csrf
+            <div class="card mb-2">
+                <div class="card-body row">
+                    <div class="col">
+                        <div class="col-auto d-flex align-items-center">
+                            <h1 class="heading-title">{{$currentstudent->first_name}} {{$currentstudent->last_name}}</h1>
+                        </div>
+                    </div>
+                    <div class="col-auto d-flex align-items-center">
+                        <a class="btn btn-block m-0 btn-success" type="button">
+                            Remove student
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="col-xl-12" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">
-                <img  class="img-thumbnail col-xl-2" style="width: 53px"
-                      src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
-                <label class="col-xl-4">LMAO</label>
-                <button class=" btn-primary col-xl-5">Delete</button>
-            </div>
-            <div class="col-xl-12" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">
-                <img  class="img-thumbnail col-xl-2" style="width: 53px"
-                      src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
-                <label class="col-xl-4">SUPA</label>
-                <button class=" btn-primary col-xl-5">Delete</button>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <h4 style="text-align: center">List student</h4>
-            <input style="margin-top: 1vw" class="form-control" type="text" placeholder="search">
-            <hr>
-            <div class="col-xl-12" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">
-                <img  class="img-thumbnail col-xl-2" style="width: 53px"
-                      src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
-                <label class="col-xl-4">Hello</label>
-                <button class=" btn-primary col-xl-5">Add Student</button>
-            </div>
-            <div class="col-xl-12" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">
-                <img  class="img-thumbnail col-xl-2" style="width: 53px"
-                      src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
-                <label class="col-xl-4">LMAO</label>
-                <button class=" btn-primary col-xl-5">Add Student</button>
-            </div>
-            <div class="col-xl-12" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">
-                <img  class="img-thumbnail col-xl-2" style="width: 53px"
-                      src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
-                <label class="col-xl-4">Triết</label>
-                <button class=" btn-primary col-xl-5">Add Student</button>
-            </div>
-            <div class="col-xl-12" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">
-                <img  class="img-thumbnail col-xl-2" style="width: 53px"
-                      src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
-                <label class="col-xl-4">Minh</label>
-                <button class=" btn-primary col-xl-5">Add Student</button>
-            </div>
-            <div class="col-xl-12" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">
-                <img  class="img-thumbnail col-xl-2" style="width: 53px"
-                      src="https://i.pinimg.com/564x/a0/19/c0/a019c0dd116bd5a4a8627460c770ed62.jpg">
-                <label class="col-xl-4">Hiếu</label>
-                <button class=" btn-primary col-xl-5">Add Student</button>
-            </div>
-        </div>
-    </div>
+        @endforeach
+                <h1 class="text-primary">Student list</h2>
+            @if (count($StudentList) == 0)
+                <h2 class="text-center text-muted">No record found</h2>
+            @endif
+            @foreach($StudentList as $student)
+            <form action="{{route('admin.addStudentFaculty_post', [$FacultySemester->id, $student->id])}}" method="post" >
+                @csrf
+                <div class="card mb-2">
+                    <div class="card-body row">
+                        <div class="col">
+                            <div class="col-auto d-flex align-items-center">
+                                <h1 class="heading-title">{{$student->first_name}} {{$student->last_name}}</h1>
+                            </div>
+                        </div>
+                        <div class="col-auto d-flex align-items-center">
+                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit">
+                                Add student
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            @endforeach
 </div>
 @endsection
 @push("custom-js")

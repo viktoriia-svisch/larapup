@@ -14,8 +14,8 @@ define('ARTICLE_STATUS', [
     'FINISHED' => 3
 ]);
 define('ARTICLE_NEWS', [
-	'NEW' => 0,
-	'OLD' => 1
+    'NEW' => 0,
+    'OLD' => 1
 ]);
 define('COORDINATOR_LEVEL', [
     'NORMAL' => 0,
@@ -31,6 +31,28 @@ define('COORDINATOR_STATUS', [
     'ACTIVE' => 1,
     'DEACTIVATE' => 0,
 ]);
+define('FILE_MIMES', [
+    0 => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    1 => 'image/gif',
+    2 => 'image/jpg',
+    3 => 'image/jpeg',
+    4 => 'image/png',
+]);
+define('FILE_EXT', [
+    0 => 'docx',
+    1 => 'gif',
+    2 => 'jpg',
+    3 => 'jpeg',
+    4 => 'png',
+]);
+define('FILE_EXT_INDEX', [
+    'docx'  => 0,
+    'gif'   => 1,
+    'jpg'   => 2,
+    'jpeg'  => 3,
+    'png'   => 4,
+]);
+define('FILE_MAXSIZE', '10485760'); 
 define('PER_PAGE', 20);
 define('MESSAGE', 'message');
 define('SEARCH', 'search');

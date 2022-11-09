@@ -1,0 +1,23 @@
+body{
+    min-height: 100vh;
+}
+.height-fluid {
+    height: 100vh;
+}
+
+.nav-link{
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.cursor{
+    user-select: all;
+    cursor: pointer;
+}
+
+.text-black{
+    color: #000;
+}

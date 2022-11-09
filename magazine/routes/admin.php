@@ -19,9 +19,10 @@ Route::group([
     Route::post('faculty/create', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
     Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');
     Route::get('faculty/choose-semester', 'FacultyController@chooseSemester')->name('admin.chooseSemester');
-    Route::post('faculty/choose-semester', 'FacultyController@chooseSemester_post')->name('admin.chooseSemester_post');
-    Route::get('faculty/add-student', 'FacultyController@addStudentFaculty')->name('admin.addStudentFaculty');
-    Route::post('faculty/add-student', 'FacultyController@addStudentFaculty_post')->name('admin.addStudentFaculty_post');
+    Route::get('faculty/choose-semester/{semester}', 'FacultyController@chooseSemesterFaculty')->name('admin.chooseSemesterFaculty');
+    Route::post('faculty/choose-semester/{semester}/{faculty}', 'FacultyController@addSemesterFaculty_post')->name('admin.addSemesterFaculty');
+    Route::get('faculty/add-student/{facultysemester}', 'FacultyController@addStudentFaculty')->name('admin.addStudentFaculty');
+    Route::post('faculty/add-student/{facultysemester}/{student}', 'FacultyController@addStudentFaculty_post')->name('admin.addStudentFaculty_post');
     Route::get('faculty/add-coordinator', 'CoordinatorController@addToFaculty_index')->name('admin.addCoorToFaculty');
     Route::get('faculty/add-coordinator/coordinator/{coordinator}/faculty/{faculty}/semester/{semester}', 'CoordinatorController@addToFaculty')->name('admin.addToFaculty.addCoorToFaculty_post');
     Route::post('faculty/add-coordinator/fetch', 'CoordinatorController@fetch')->name('admin.addToFaculty.fetch');
@@ -32,6 +33,9 @@ Route::group([
     Route::get('coordinator', 'CoordinatorController@coordinator')->name('admin.coordinator');
     Route::get('coordinator/create', 'CoordinatorController@createCoordinator')->name('admin.createCoordinator');
     Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
+    Route::get('coordinator/addToFaculty', 'CoordinatorController@addToFaculty_index')->name('admin.addToFaculty');
+    Route::post('coordinator/addToFaculty/fetch', 'CoordinatorController@fetch')->name('admin.addToFaculty.fetch');
+    Route::post('coordinator/addToFaculty/add', 'CoordinatorController@addToFaculty')->name('admin.addToFaculty_post');
     Route::get('get/{id}', 'AdminController@show');
     Route::post('new-semester', 'AdminController@store');
     Route::redirect('', 'admin/dashboard');

@@ -4,6 +4,10 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     protected $table = 'articles';
+    protected $fillable =[
+        "student_id",
+        "faculty_semester_id"
+    ];
     public function article_file(){
         return $this->hasMany(ArticleFile::class);
     }
@@ -18,5 +22,8 @@ class Article extends Model
     }
     public function comment_student(){
         return $this->hasMany(CommentStudent::class);
+    }
+    public function publish(){
+        return $this->hasMany(Publish::class);
     }
 }

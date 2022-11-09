@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateCoordinator;
 use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
