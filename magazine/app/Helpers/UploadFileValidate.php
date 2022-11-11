@@ -6,7 +6,7 @@ class UploadFileValidate
     {
         foreach (FILE_EXT as $ext) {
             if (strcasecmp($fileOriginalExt, $ext) == 0) {
-                return true;
+                return $ext;
             }
         }
         return false;
@@ -15,7 +15,7 @@ class UploadFileValidate
     {
         foreach (FILE_MIMES as $mime) {
             if (strcasecmp($fileOriginalMime, $mime) == 0) {
-                return true;
+                return $mime;
             }
         }
         return false;

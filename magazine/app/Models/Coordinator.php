@@ -29,7 +29,7 @@ class Coordinator extends Authenticate
     {
         return $this->hasMany(FacultySemesterCoordinator::class);
     }
-    public function comment_student(){
-        return $this->hasMany(CommentStudent::class);
+    public function comment_coordinator(){
+        return $this->hasMany(CommentCoordinator::class);
     }
 }

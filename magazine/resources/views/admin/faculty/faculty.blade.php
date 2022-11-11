@@ -23,12 +23,6 @@
                 <a class="btn btn-block m-0 btn-success" href="{{route('admin.chooseSemester')}}">Add student</a>
             </div>
         </div>
-        <div class="col-sm-6">
-            <h1 class="text-primary">Add coordinator into faculty</h1>
-            <div class="col-12 m-0 p-0">
-                <a class="btn btn-block m-0 btn-success" href="{{route('admin.addCoorToFaculty')}}">Add student</a>
-            </div>
-        </div>
         </div>
     <br>
     <hr>

@@ -82,7 +82,7 @@
                 </div>
                 <div class="col-auto d-flex align-item-center p-0">
                     @if (!\App\Helpers\DateTimeHelper::isNowPassedDate($facultySemester->second_deadline))
-                        <button class="btn btn-default btn-icon"
+                        <button class="btn btn-icon"
                                 @if ($article && count($article->article_file) > 3)
                                 disabled
                                 @endif
@@ -99,7 +99,7 @@
                         <div class="col card">
                             <div class="card-body row">
                                 <div class="col-auto d-flex align-items-center">
-                                    <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                                    <div class="icon icon-shape bg-default text-white rounded-circle shadow">
                                         @if ($file->type == 0)
                                             <i class="fas fa-file-word"></i>
                                         @else
@@ -194,7 +194,7 @@
     </div>
 @endsection
 @section('modal')
-    @if (($article && count($article->article_file) > 0 && count($article->article_file) < 4) || !$article)
+    @if (($article && count($article->article_file) >= 0 && count($article->article_file) < 4) || !$article)
         <div class="modal fade" id="articleModal" tabindex="-1" role="dialog" aria-labelledby="articleModal"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -242,9 +242,8 @@
         <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDelete"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <form
-                    action="{{route("student.faculty.articleFiles_delete", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
-                    class="modal-content" id="deleteForm">
+                <form method="post" class="modal-content" id="deleteForm"
+                      action="{{route("student.faculty.articleFiles_delete", [$facultySemester->faculty_id, $facultySemester->semester_id])}}">
                     <h2 class="modal-header">
                         Are you sure you want to delete this file?
                     </h2>
@@ -275,7 +274,7 @@
             })
         });
         function uploadFilePopup() {
-            @if($article && count($article->article_file) > 2)
+            @if(($article && count($article->article_file) > 2) || !$article)
                 return;
             @else
             articleModal.modal('show');
@@ -342,7 +341,7 @@
                 default:
                     iconContainer = generateElement("icon icon-shape bg-danger text-white rounded-circle shadow");
                     icon = generateElement("fas fa-file", "i");
-                    displayError("There are a file that the format is not supported. Word files and Image files (PNG, JPEG, GIF) only.")
+                    displayError("There are a file that the format is not supported. Word files and Image files (PNG, JPEG, GIF) only.");
             }
             iconContainer.appendChild(icon);
             cardIcon.appendChild(iconContainer);

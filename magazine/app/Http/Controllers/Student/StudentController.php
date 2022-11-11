@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudent;
 use App\Http\Requests\UpdateStudentAccount;
-use App\Http\Resources\Student as StudentResource;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
 use App\Models\Semester;

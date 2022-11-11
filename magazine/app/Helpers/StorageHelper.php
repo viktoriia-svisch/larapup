@@ -77,21 +77,31 @@ class StorageHelper
     {
         return self::disk()->get(self::getCommentCoordinatorPath($idCoordinator, $id, $path));
     }
+    public static function deleteCommentCoordinator($idCoordinator, $idArticle, $fileName)
+    {
+        $dir = self::getCommentCoordinatorPath($idCoordinator, $idArticle) . $fileName;
+        return self::disk()->delete($dir);
+    }
     public static function saveCommentStudent($idStudent, $idArticle, UploadedFile $file, &$filePath = null)
     {
         $fileName = $file->getClientOriginalName();
         $filePath = self::getCommentStudentPath($idStudent, $idArticle);
         self::save($file, $filePath, $fileName);
-        return $filePath . $fileName;
+        return $fileName;
     }
-    public static function getCommentStudentPath($idStudent, $idArticle, $path = '')
+    public static function getCommentStudentPath($idStudent, $idArticle, $fileName = '')
     {
         $folderPath = self::getTypeFolder(self::TYPES['COMMENT']) . 'article/' . $idArticle . '/student/' . $idStudent . '/';
-        return $folderPath . $path;
+        return $folderPath . $fileName;
     }
     public static function getCommentStudent($idStudent, $id, $path)
     {
         return self::disk()->get(self::getCommentStudentPath($idStudent, $id, $path));
+    }
+    public static function deleteCommentStudent($idStudent, $idArticle, $fileName)
+    {
+        $dir = self::getCommentStudentPath($idStudent, $idArticle) . $fileName;
+        return self::disk()->delete($dir);
     }
     public static function saveProfile($idArticle, UploadedFile $file, &$filePath = null)
     {
