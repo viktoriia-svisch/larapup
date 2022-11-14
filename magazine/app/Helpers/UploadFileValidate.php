@@ -14,7 +14,7 @@ class UploadFileValidate
     public static function checkMime($fileOriginalMime)
     {
         foreach (FILE_MIMES as $mime) {
-            if (strcasecmp($fileOriginalMime, $mime) == 0) {
+            if (strcasecmp($fileOriginalMime, $mime) == 0 || (strpos($mime, $fileOriginalMime) !== false && $mime == FILE_MIMES[5])) {
                 return $mime;
             }
         }

@@ -115,68 +115,28 @@
                                 @endif
                             </p>
                             {{$comment->content}}
-                        </div>
-                        <div class="col-12">
-                            @if ($comment->image_path)
-                                <img alt="attachment image"
-                                     @if ($comment->student_id)
-                                     src="{{asset(\App\Helpers\StorageHelper::getCommentStudent($comment->student_id, $comment->article_id, $comment->image_path))}}"
-                                     @else
-                                     src="{{asset(\App\Helpers\StorageHelper::getCommentCoordinator($comment->coordinator_id, $comment->article_id, $comment->image_path))}}"
-                                     @endif
-                                     class="img-fluid img-center rounded">
-                            @endif
+                            <div class="col-12 pl-0">
+                                <br>
+                                @if ($comment->image_path)
+                                    <small class="font-weight-bold">Attachment file</small>
+                                    <br>
+                                    <a class="btn-link"
+                                       @if ($comment->student_id)
+                                       href="{{route("student.faculty.comment_attachmentDownload",
+                                   [$facultySemester->faculty_id, $facultySemester->semester_id, $comment->id, STUDENT_GUARD])}}"
+                                       @else
+                                       href="{{route("student.faculty.comment_attachmentDownload",
+                                   [$facultySemester->faculty_id, $facultySemester->semester_id, $comment->id, COORDINATOR_GUARD])}}"
+                                        @endif>
+                                        {{$comment->image_path}}
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
                 <br>
             @endforeach
-            <div class="col-12 row m-0 p-0 pl-3 pt-3 border-left position-relative"
-                 style="margin-left: 0.8rem !important">
-                <div class="time-section">
-                    <div class="dot-container">
-                        <i class="fas fa-circle"></i>
-                        <div class="message text-muted badge badge-primary">22/22/2222 44:44:44</div>
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <img alt=""
-                         style="width: 50px; height: 50px; object-fit: cover; object-position: center; overflow: hidden;"
-                         class="img-fluid rounded-circle">
-                </div>
-                <div class="col card p-0 pb-3">
-                    <div class="card-body p-3">
-                        <p class="text-primary font-weight-bold">123 (Coordinator)</p>
-                        content Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam architecto
-                        atque earum enim fuga, modi optio ut vel voluptatum!
-                    </div>
-                    <div class="col-12">
-                        <img src="https://i.ytimg.com/vi/YxC0qXPaOq0/maxresdefault.jpg" alt="attachment image"
-                             class="img-fluid img-center rounded">
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 row m-0 p-0 pl-3 pt-3 border-left position-relative"
-                 style="margin-left: 0.8rem !important">
-                <div class="time-section">
-                    <div class="dot-container">
-                        <i class="fas fa-circle"></i>
-                        <div class="message text-muted badge badge-primary">22/22/2222 44:44:44</div>
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <img alt=""
-                         style="width: 50px; height: 50px; object-fit: cover; object-position: center; overflow: hidden;"
-                         class="img-fluid rounded-circle">
-                </div>
-                <div class="col card p-0">
-                    <div class="card-body p-3">
-                        <p class="text-primary font-weight-bold">123 (Coordinator)</p>
-                        content Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam architecto
-                        atque earum enim fuga, modi optio ut vel voluptatum!
-                    </div>
-                </div>
-            </div>
         </section>
     </div>
 @endsection

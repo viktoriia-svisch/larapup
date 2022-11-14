@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Student;
 use App\Helpers\StorageHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CommentRequest;
 use App\Models\Article;
 use App\Models\CommentStudent;
 use App\Models\FacultySemester;
@@ -12,9 +13,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class CommentController extends Controller
 {
-    public function commentPost(Request $request, $faculty_id, $semester_id)
+    public function commentPost(CommentRequest $request, $faculty_id, $semester_id)
     {
         $student = Auth::guard(STUDENT_GUARD)->user();
         $facSemester = FacultySemester::with("semester")->where("faculty_id", $faculty_id)
@@ -69,5 +72,26 @@ class CommentController extends Controller
             );
         }
         return back()->with($this->responseBladeMessage("You are not allowed to comment in this faculty", false));
+    }
+    public function downloadAttachment($faculty_id, $semester_id, $comment_id, $type)
+    {
+        $comment = CommentStudent::with("article")
+            ->where("id", $comment_id)
+            ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
+                $query->where("faculty_id", $faculty_id)
+                ->where("semester_id", $semester_id);
+            })->first();
+        if ($type == STUDENT_GUARD) {
+            $comment->where("student_id", Auth::id())->first();
+            $pathRaw = StorageHelper::getCommentStudentPath(Auth::id(), $comment->article_id, $comment->image_path);
+        } else {
+            $comment->where("coordinator_id", Auth::id())->first();
+            $pathRaw = StorageHelper::getCommentCoordinatorPath(Auth::id(), $comment->article_id, $comment->image_path);
+        }
+        if ($comment) {
+            $path = StorageHelper::locatePath($pathRaw);
+            return Response::download($path, $comment->image_path);
+        }
+        return back()->with($this->responseBladeMessage("Cannot find the file to download", false));
     }
 }
