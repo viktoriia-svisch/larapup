@@ -28,7 +28,7 @@
                 </a>
             </div>
         </div>
-        <hr> 
+        <hr>
         <form method="get" action="{{route('admin.semester')}}" class="col-12 row m-0">
             {{csrf_field()}}
             <div class="form-group col">

@@ -18,12 +18,10 @@
         </div>
         <h1 class="text-center col-12 text-black">{{$facultySemester->faculty->name}}</h1>
         <div class="d-flex justify-content-center align-items-center">
-            <a href="{{route('student.faculty.detail',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
-               class="btn text-white @if($isDashboard && !$isArticle) btn-primary @else bg-gradient-gray @endif">Dashboard</a>
-            <a href="{{route('student.faculty.article',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
-               class="btn text-white @if($isArticle && !$isDashboard) btn-primary @else bg-gradient-gray @endif">Article</a>
-            <a href="{{route('student.faculty.members',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
-               class="btn text-white @if(!$isDashboard && !$isArticle) btn-primary @else bg-gradient-gray @endif">Members</a>
+            <a href="{{route('student.faculty.detail',[$facultySemester->faculty->id, $facultySemester->id])}}"
+               class="btn text-white @if($isDashboard) btn-primary @else bg-gradient-gray @endif">Dashboard</a>
+            <a href="{{route('student.faculty.members',[$facultySemester->faculty->id, $facultySemester->id])}}"
+               class="btn text-white @if(!$isDashboard) btn-primary @else bg-gradient-gray @endif">Members</a>
         </div>
         <hr>
         <div class="col-12">

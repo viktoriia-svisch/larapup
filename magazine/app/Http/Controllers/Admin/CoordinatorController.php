@@ -1,11 +1,9 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateCoordinator;
 use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
-use App\Models\FacultySemesterCoordinator;
 use App\Models\FacultySemesterStudent;
 use App\Models\Semester;
 use Illuminate\Http\Request;
@@ -13,8 +11,8 @@ use Illuminate\Support\Carbon;
 class CoordinatorController extends Controller
 {
     public function coordinator(Request $request){
-        $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search_coordinator_input') . '%')
-            ->orWhere('last_name', 'like', '%' . $request->get('search_coordinator_input') . '%')
+        $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search') . '%')
+            ->orWhere('last_name', 'like', '%' . $request->get('search') . '%')
             ->paginate(PER_PAGE);
         return view('admin.Coordinator.coordinator', ['coordinators' => $coordinators]);
     }
