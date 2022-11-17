@@ -1,3 +1,9 @@
+/**
+ * prism.js Coy theme for JavaScript, CoffeeScript, CSS and HTML
+ * Based on https://github.com/tshedor/workshop-wp-theme (Example: http://workshop.kansan.com/category/sessions/basics or http://workshop.timshedor.com/category/sessions/basics);
+ * @author Tim  Shedor
+ */
+
 code[class*="language-"],
 pre[class*="language-"] {
 	color: black;
@@ -9,14 +15,18 @@ pre[class*="language-"] {
 	word-break: normal;
 	word-wrap: normal;
 	line-height: 1.5;
+
 	-moz-tab-size: 4;
 	-o-tab-size: 4;
 	tab-size: 4;
+
 	-webkit-hyphens: none;
 	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
 }
+
+/* Code blocks */
 pre[class*="language-"] {
 	position: relative;
 	margin: .5em 0;
@@ -33,6 +43,7 @@ pre[class*="language-"]>code {
 	background-origin: content-box;
 	background-attachment: local;
 }
+
 code[class*="language"] {
 	max-height: inherit;
 	height: inherit;
@@ -40,6 +51,8 @@ code[class*="language"] {
 	display: block;
 	overflow: auto;
 }
+
+/* Margin bottom to accomodate shadow */
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
 	background-color: #fdfdfd;
@@ -48,6 +61,8 @@ pre[class*="language-"] {
 	box-sizing: border-box;
 	margin-bottom: 1em;
 }
+
+/* Inline code */
 :not(pre) > code[class*="language-"] {
 	position: relative;
 	padding: .2em;
@@ -57,6 +72,7 @@ pre[class*="language-"] {
 	display: inline;
 	white-space: normal;
 }
+
 pre[class*="language-"]:before,
 pre[class*="language-"]:after {
 	content: '';
@@ -75,6 +91,7 @@ pre[class*="language-"]:after {
 	-o-transform: rotate(-2deg);
 	transform: rotate(-2deg);
 }
+
 :not(pre) > code[class*="language-"]:after,
 pre[class*="language-"]:after {
 	right: 0.75em;
@@ -85,6 +102,7 @@ pre[class*="language-"]:after {
 	-o-transform: rotate(2deg);
 	transform: rotate(2deg);
 }
+
 .token.comment,
 .token.block-comment,
 .token.prolog,
@@ -92,9 +110,11 @@ pre[class*="language-"]:after {
 .token.cdata {
 	color: #7D8B99;
 }
+
 .token.punctuation {
 	color: #5F6364;
 }
+
 .token.property,
 .token.tag,
 .token.boolean,
@@ -105,6 +125,7 @@ pre[class*="language-"]:after {
 .token.deleted {
 	color: #c92c2c;
 }
+
 .token.selector,
 .token.attr-name,
 .token.string,
@@ -114,6 +135,7 @@ pre[class*="language-"]:after {
 .token.inserted {
 	color: #2f9c0a;
 }
+
 .token.operator,
 .token.entity,
 .token.url,
@@ -121,57 +143,74 @@ pre[class*="language-"]:after {
 	color: #a67f59;
 	background: rgba(255, 255, 255, 0.5);
 }
+
 .token.atrule,
 .token.attr-value,
 .token.keyword,
 .token.class-name {
 	color: #1990b8;
 }
+
 .token.regex,
 .token.important {
 	color: #e90;
 }
+
 .language-css .token.string,
 .style .token.string {
 	color: #a67f59;
 	background: rgba(255, 255, 255, 0.5);
 }
+
 .token.important {
 	font-weight: normal;
 }
+
 .token.bold {
 	font-weight: bold;
 }
 .token.italic {
 	font-style: italic;
 }
+
 .token.entity {
 	cursor: help;
 }
+
 .namespace {
 	opacity: .7;
 }
+
 @media screen and (max-width: 767px) {
 	pre[class*="language-"]:before,
 	pre[class*="language-"]:after {
 		bottom: 14px;
 		box-shadow: none;
 	}
+
 }
+
+/* Plugin styles */
 .token.tab:not(:empty):before,
 .token.cr:before,
 .token.lf:before {
 	color: #e0d7d1;
 }
+
+/* Plugin styles: Line Numbers */
 pre[class*="language-"].line-numbers.line-numbers {
 	padding-left: 0;
 }
+
 pre[class*="language-"].line-numbers.line-numbers code {
 	padding-left: 3.8em;
 }
+
 pre[class*="language-"].line-numbers.line-numbers .line-numbers-rows {
 	left: 0;
 }
+
+/* Plugin styles: Line Highlight */
 pre[class*="language-"][data-line] {
 	padding-top: 0;
 	padding-bottom: 0;
