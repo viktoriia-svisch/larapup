@@ -35,7 +35,7 @@ class CoordinatorController extends Controller
                 $output .= '<option value="' . $data->id . '">' . $data->name . '</option>';
             }
         }
-        echo $output;
+        return $output;
     }
     public function fetchCoor(Request $request){
         $semester = $request->get('semester');
@@ -54,7 +54,7 @@ class CoordinatorController extends Controller
                     .'</div>';
             }
         }
-        echo $output;
+        return $output;
     }
     public function createCoordinator_post(CreateCoordinator $request){
         $coordinator = new Coordinator($request->all([
