@@ -16,20 +16,21 @@ class FacultyController extends Controller
     {
         $selectedMode = $request->get('viewMode');
         $searchTerms = $request->get('search_faculty_input');
-        $listFaculty = FacultySemester::with(['faculty'])
-            ->whereHas('faculty_semester_coordinator.coordinator', function ($query) {
+        $listFaculty = FacultySemester::with(['faculty_semester_coordinator'])
+            ->whereHas('faculty_semester_coordinator.coordinator', function (Builder $query) {
                 $query->where('id', Auth::guard(COORDINATOR_GUARD)->user()->id);
             });
+        dd(1);
         if ($selectedMode) {
             switch ($selectedMode) {
                 case '1':
-                    $listFaculty->whereHas('semester', function ($query) {
+                    $listFaculty->whereHas('semester', function (Builder $query) {
                         $query->whereDate('start_date', ">", Carbon::now()->toDateTimeString())
                             ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());;
                     });
                     break;
                 case '2':
-                    $listFaculty->whereHas('semester', function ($query) {
+                    $listFaculty->whereHas('semester', function (Builder $query) {
                         $query->whereDate('end_date', "<=", Carbon::now()->toDateTimeString())
                             ->whereDate('start_date', "<=", Carbon::now()->toDateTimeString());
                     });
@@ -41,18 +42,18 @@ class FacultyController extends Controller
             $selectedMode = '0';
         }
         if ($searchTerms) {
-            $listFaculty->whereHas('faculty', function ($query) use ($searchTerms) {
+            $listFaculty->whereHas('faculty', function (Builder $query) use ($searchTerms) {
                 $query->where('name', 'like', '%' . $searchTerms . '%')
-                    ->orWhereHas('faculty_semester.semester', function ($query) use ($searchTerms) {
+                    ->orWhereHas('faculty_semester.semester', function (Builder $query) use ($searchTerms) {
                         $query->where('end_date', "like", '%' . $searchTerms . '%');
                     });
             });
         }
         $currentFaculty = FacultySemester::with(['faculty_semester_student.student'])
-            ->whereHas('faculty_semester_coordinator.coordinator', function ($q) {
+            ->whereHas('faculty_semester_coordinator.coordinator', function (Builder $q) {
                 $q->where('id', Auth::guard(COORDINATOR_GUARD)->user()->id);
             })
-            ->whereHas('semester', function ($query) {
+            ->whereHas('semester', function (Builder $query) {
                 $query->whereDate('start_date', "<", Carbon::now()->toDateTimeString())
                     ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());
             })

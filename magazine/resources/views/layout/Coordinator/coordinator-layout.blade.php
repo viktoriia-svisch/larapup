@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-6 collapse-brand">
                             <a href="{{route('coordinator.dashboard')}}">
-                                <img src="{{asset('favicon.ico')}}">
+                                <img src="{{asset('favicon.ico')}}" alt="Logo">
                             </a>
                         </div>
                         <div class="col-6 collapse-close">
@@ -32,7 +32,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="{{route('coordinator.coordinator')}}">
+                        <a class="nav-link"  href="{{route('coordinator.faculty')}}">
                             <i class="fas fa-search"></i>
                             Faculty
                         </a>
