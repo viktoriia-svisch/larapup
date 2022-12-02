@@ -13,7 +13,7 @@ Route::group([
     Route::post('new-faculty','CoordinatorController@storeFaculty');
     Route::get('coordinator','CoordinatorController@Coordinator')->name('coordinator.coordinator');
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
-    Route::get('faculty/{faculty_id}/{semester_id}/dashboard', 'FacultyController@facultyDetailDashboard')->name('coordinator.faculty.detail');
+    Route::get('faculty/{faculty_id}/{semester_id}/dashboard', 'FacultyController@facultyDetailDashboard')->name('coordinator.faculty.dashboard');
     Route::get('faculty/{faculty_id}/{semester_id}/published', 'FacultyController@facultyDetailListPublished')->name('coordinator.faculty.listPublished');
     Route::get('faculty/{faculty_id}/{semester_id}/published/{published_id}', 'FacultyController@facultyDetailPublished')->name('coordinator.faculty.published');
     Route::get('faculty/{faculty_id}/{semester_id}/students', 'FacultyController@facultyDetailStudents')->name('coordinator.faculty.students');

@@ -20,7 +20,6 @@ class FacultyController extends Controller
             ->whereHas('faculty_semester_coordinator.coordinator', function (Builder $query) {
                 $query->where('id', Auth::guard(COORDINATOR_GUARD)->user()->id);
             });
-        dd(1);
         if ($selectedMode) {
             switch ($selectedMode) {
                 case '1':
@@ -58,10 +57,10 @@ class FacultyController extends Controller
                     ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());
             })
             ->first();
-        return view('coordinator.faculties', [
+        return view('coordinator.Faculty.faculties', [
             'viewMode' => $selectedMode,
             'searchTerms' => $searchTerms,
-            'semester_faculties' => $listFaculty
+            'faculties' => $listFaculty
                 ->orderBy('semester_id', 'desc')
                 ->paginate(PER_PAGE),
             'currentFaculty' => $currentFaculty

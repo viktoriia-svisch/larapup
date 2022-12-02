@@ -2,7 +2,7 @@
 @push("custom-css")
 @endpush
 @section("content")
-    <nav class="fixed-top navbar navbar-horizontal navbar-expand-lg navbar-dark bg-primary">
+    <nav class="fixed-top navbar navbar-horizontal navbar-expand-lg navbar-dark bg-warning">
         <div class="container">
             <a class="navbar-brand text-white" href="{{route('coordinator.dashboard')}}"><strong>Greenwich</strong> Magazine</a>
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbar-primary" aria-controls="navbar-primary" aria-expanded="false" aria-label="Toggle navigation">
