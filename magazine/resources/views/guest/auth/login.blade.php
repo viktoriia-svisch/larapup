@@ -4,7 +4,7 @@
 @endpush
 @section("content")
     <div class="height-fluid d-flex justify-content-center align-items-center">
-        <form class="col-12 col-md-10" style="max-width: 450px" method="post" action="{{route('guest.loginPost')}}">
+        <form class="col-md-3 col-xs-12" method="post" action="{{route('guest.loginPost')}}">
             {{ csrf_field() }}
             <div class="col-12">
                 <h1>Guest portal</h1>

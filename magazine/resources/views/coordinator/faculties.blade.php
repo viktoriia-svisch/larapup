@@ -31,9 +31,6 @@
                         </p>
                     </div>
                     <div class="col-12 col-sm-12 col-md-auto d-flex align-items-center">
-                        <a href="{{route('coordinator.faculty.dashboard', [$currentFaculty->faculty->id, $currentFaculty->semester->id])}}" class="btn btn-primary">
-                            Detail
-                        </a>
                     </div>
                 </div>
             </div>
@@ -98,18 +95,11 @@
         </div>
         <br>
         <div class="col-12">
-            @if (count($faculties) > 0)
+            @if (count($semester_faculties) > 0)
                 @foreach($semester_faculties as $semester)
-                    <div class="card mb-4">
+                    <div class="card">
                         <div class="card-body">
-                            <div class="col">
-                                <h2>{{$semester->faculty->name}}</h2>
-                            </div>
-                            <div class="col-auto">
-                            </div>
-                            <div class="col d-flex justify-content-center align-items-center">
-                                <a href="{{route("coordinator.faculty.dashboard", [$semester->])}}" class="btn btn-secondary"></a>
-                            </div>
+                            <h2>{{$semester->faculty->name}}</h2>
                         </div>
                     </div>
                 @endforeach
