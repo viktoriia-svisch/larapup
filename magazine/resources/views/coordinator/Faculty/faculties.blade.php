@@ -31,6 +31,10 @@
                         </p>
                     </div>
                     <div class="col-12 col-sm-12 col-md-auto d-flex align-items-center">
+                        <a href="{{route('coordinator.faculty.dashboard', [$currentFaculty->faculty->id, $currentFaculty->semester->id])}}"
+                           class="btn btn-primary">
+                            Detail
+                        </a>
                     </div>
                 </div>
             </div>
@@ -78,7 +82,7 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item cursor @if($viewMode == 0) selected bg-primary text-white @endif"
-                               onclick="selectMode(0)">
+                           onclick="selectMode(0)">
                             All
                         </a>
                         <a class="dropdown-item cursor @if($viewMode == 1) selected bg-primary text-white @endif"
@@ -95,11 +99,19 @@
         </div>
         <br>
         <div class="col-12">
-            @if (count($semester_faculties) > 0)
-                @foreach($semester_faculties as $semester)
-                    <div class="card">
+            @if (count($faculties) > 0)
+                @foreach($faculties as $facultySemester)
+                    <div class="card mb-4">
                         <div class="card-body">
-                            <h2>{{$semester->faculty->name}}</h2>
+                            <div class="col">
+                                <h2>{{$facultySemester->faculty->name}}</h2>
+                            </div>
+                            <div class="col-auto">
+                            </div>
+                            <div class="col d-flex justify-content-center align-items-center">
+                                <a href="{{route("coordinator.faculty.dashboard", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+                                   class="btn btn-secondary"></a>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -108,7 +120,7 @@
             @endif
             <hr>
             <div class="col-12 d-flex justify-content-center">
-                {{$semester_faculties->appends(['viewMode' => $viewMode, 'search_faculty_input'=>$searchTerms])->links()}}
+                {{$faculties->appends(['viewMode' => $viewMode, 'search_faculty_input'=>$searchTerms])->links()}}
             </div>
         </div>
     </div>
