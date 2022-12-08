@@ -4,7 +4,7 @@
 @endpush
 @section('breadcrumb')
     <div class="container">
-        {{ Breadcrumbs::render('dashboard.faculty', route('coordinator.coordinator'), route('coordinator.faculty')) }}
+        {{ Breadcrumbs::render('dashboard.faculty', route('coordinator.coordinator'), route('coordinator.faculty'), route("coordinator.faculty.article.publish")) }}
     </div>
 @endsection
 @section("coordinator-content")

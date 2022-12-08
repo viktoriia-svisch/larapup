@@ -1,5 +1,5 @@
 @extends("coordinator.faculty.faculty-detail")
-@section('title', 'Faculty '.$facultySemester->faculty->name.' - Dashboard')
+@section('title', 'Faculty '.$facultySemester->faculty->name.' - Articles')
 @push("custom-css")
     <style>
         .time-section {
@@ -59,8 +59,13 @@
         </div>
         <br>
         <hr>
-        <div class="container-fluid">
-        </div>
+        @foreach($articles as $article)
+            <div class="card">
+                {{$article->student_id}}
+                <a href="{{route("coordinator.faculty.article.publish", [$facultySemester->faculty_id, $facultySemester->semester_id, $article->id])}}"
+                   class="btn">Publish this</a>
+            </div>
+        @endforeach
     </div>
 @endsection
 @push("custom-js")

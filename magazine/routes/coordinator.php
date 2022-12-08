@@ -13,18 +13,20 @@ Route::group([
     Route::post('new-faculty','CoordinatorController@storeFaculty');
     Route::get('coordinator','CoordinatorController@Coordinator')->name('coordinator.coordinator');
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
-    Route::get('faculty/{faculty_id}/{semester_id}/dashboard',                  'FacultyController@facultyDetailDashboard')
+    Route::get('faculty/{faculty_id}/{semester_id}/dashboard',                      'FacultyController@facultyDetailDashboard')
         ->name('coordinator.faculty.dashboard');
-    Route::get('faculty/{faculty_id}/{semester_id}/published',                  'FacultyController@facultyDetailListPublished')
+    Route::get('faculty/{faculty_id}/{semester_id}/published',                      'FacultyController@facultyDetailListPublished')
         ->name('coordinator.faculty.listPublished');
-    Route::get('faculty/{faculty_id}/{semester_id}/published/{published_id}',   'FacultyController@facultyDetailPublished')
+    Route::get('faculty/{faculty_id}/{semester_id}/published/{published_id}',       'FacultyController@facultyDetailPublished')
         ->name('coordinator.faculty.published');
-    Route::get('faculty/{faculty_id}/{semester_id}/students',                   'FacultyController@facultyDetailStudents')
+    Route::get('faculty/{faculty_id}/{semester_id}/students',                       'FacultyController@facultyDetailStudents')
         ->name('coordinator.faculty.students');
-    Route::get('faculty/{faculty_id}/{semester_id}/articles',                   'FacultyController@facultyDetailListArticle')
+    Route::get('faculty/{faculty_id}/{semester_id}/articles',                       'FacultyController@facultyDetailListArticle')
         ->name('coordinator.faculty.listArticle');
-    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}',      'FacultyController@facultyDetailArticle')
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}',          'FacultyController@facultyDetailArticle')
         ->name('coordinator.faculty.article');
-    Route::get('faculty/{faculty_id}/{semester_id}/settings',                   'FacultyController@facultyDetailSettings')
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}/publish',  'FacultyController@facultyDetailArticlePublish')
+        ->name('coordinator.faculty.article.publish');
+    Route::get('faculty/{faculty_id}/{semester_id}/settings',                       'FacultyController@facultyDetailSettings')
         ->name('coordinator.faculty.settings');
 });

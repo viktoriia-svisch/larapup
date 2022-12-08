@@ -1,16 +1,12 @@
 <?php
 namespace App\Http\Controllers\Student;
-use App\Http\Controllers\Controller;
-use App\Models\Article;
-use App\Models\CommentCoordinator;
-use App\Models\CommentStudent;
+use App\Http\Controllers\FacultySemesterBaseController;
 use App\Models\FacultySemester;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-class FacultyController extends Controller
+class FacultyController extends FacultySemesterBaseController
 {
     public function faculty(Request $request)
     {
@@ -68,76 +64,18 @@ class FacultyController extends Controller
     }
     public function facultyDetailArticle($faculty_id, $semester_id)
     {
-        $article = Article::with('article_file')
-            ->whereHas('faculty_semester', function (Builder $query) use ($faculty_id) {
-                $query->where("faculty_id", $faculty_id);
-            })
-            ->where('student_id', Auth::guard(STUDENT_GUARD)->user()->id)
-            ->first();
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-article', "article", ["article" => $article]);
-    }
-    private function facultyDetail($faculty_id, $semester, $view, $site = 'dashboard', $extData = [])
-    {
-        $faculty = FacultySemester::with(['faculty'])
-            ->where('semester_id', $semester)
-            ->whereHas('faculty', function (Builder $q) use ($faculty_id) {
-                $q->where('id', $faculty_id);
-            })
-            ->whereHas('faculty_semester_student.student', function (Builder $q) {
-                $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
-            })->first();
-        $article = Article::with("student")
-            ->where("student_id", Auth::guard(STUDENT_GUARD)->user()->id)
-            ->whereHas("faculty_semester", function (Builder $query) use ($faculty) {
-                $query->where("id", $faculty->id);
-            })->first();
-        switch ($site) {
-            case "member":
-                $isDashboard = false;
-                $isArticle = false;
-                break;
-            case "article":
-                $isDashboard = false;
-                $isArticle = true;
-                break;
-            default:
-                $isDashboard = true;
-                $isArticle = false;
-        }
-        $data = [
-            'facultySemester' => $faculty,
-            "article" => $article,
-            'isDashboard' => $isDashboard,
-            'isArticle' => $isArticle
-        ];
-        if (count($extData) > 0) {
-            $data = array_merge($data, $extData);
-        }
-        if ($faculty)
-            return view($view, $data);
-        else
-            return redirect()->route('student.faculty');
+        $article = $this->retrieveDetailArticleByStudent($faculty_id, $semester_id, Auth::guard(STUDENT_GUARD)->user()->id);
+        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-article', "article", ["article" => $article], STUDENT_GUARD);
     }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
-        $commentStudent = CommentStudent::with("student")
-            ->where("student_id", Auth::guard(STUDENT_GUARD)->user()->id)
-            ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
-                $query->where("faculty_id", $faculty_id)->where("semester_id", $semester_id);
-            })
-            ->get();
-        $commentCoordinator = CommentCoordinator::with("coordinator")
-            ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
-                $query->where("faculty_id", $faculty_id)->where("semester_id", $semester_id);
-            })
-            ->select(DB::raw("id, article_id, coordinator_id as user_id, content, image_path, notified, created_at, updated_at, 'coordinator' as table_name"))
-            ->get()->merge($commentStudent)->sortByDesc("created_at");
+        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, STUDENT_GUARD, null);
         return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-dashboard', "dashboard", [
-            "comments" => $commentCoordinator
-        ]);
+            "comments" => $listComment
+        ], STUDENT_GUARD);
     }
     public function facultyDetailMember($faculty_id, $semester_id)
     {
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member");
+        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member", [], STUDENT_GUARD);
     }
 }

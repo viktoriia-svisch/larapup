@@ -1,30 +1,15 @@
-@extends("coordinator.faculty.faculty-detail")
-@section('title', 'Faculty '.$facultySemester->faculty->name.' - Dashboard')
+@extends("layout.Coordinator.coordinator-layout")
+@section('title', 'Faculty '.$facultySemester->faculty->name.' - Publishing')
 @push("custom-css")
-    <style>
-        .time-section {
-            position: absolute;
-            top: calc(25px + 1rem);
-            left: 0;
-            -webkit-transform: translate(-50%, -50%);
-            -moz-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-            -o-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-        }
-        .message {
-            display: none;
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translate(calc(-100% - 5px), -50%);
-        }
-        .time-section:hover .message {
-            display: inline-block;
-        }
-    </style>
 @endpush
-@section('faculty-detail')
+@section('breadcrumb')
+    <div class="container">
+        {{ Breadcrumbs::render('dashboard.faculty.detail.newPublish', route('coordinator.dashboard'),
+        route('coordinator.faculty'), route('coordinator.faculty.dashboard', [$facultySemester->faculty_id, $facultySemester->semester_id]),
+        route('coordinator.faculty.article.publish', [$facultySemester->faculty_id, $facultySemester->semester_id, $article->id])) }}
+    </div>
+@endsection
+@section('coordinator-content')
     <div class="col-12">
         <h2 class="heading-title">Submission</h2>
         <div class="card">
@@ -59,8 +44,6 @@
         </div>
         <br>
         <hr>
-        <div class="container-fluid">
-        </div>
     </div>
 @endsection
 @push("custom-js")

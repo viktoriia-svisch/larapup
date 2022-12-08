@@ -1,16 +1,13 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\FacultySemesterBaseController;
 use App\Models\Article;
-use App\Models\CommentCoordinator;
-use App\Models\CommentStudent;
 use App\Models\FacultySemester;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-class FacultyController extends Controller
+class FacultyController extends FacultySemesterBaseController
 {
     public function faculty(Request $request)
     {
@@ -70,38 +67,6 @@ class FacultyController extends Controller
     {
         return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-article', "article");
     }
-    private function facultyDetail($faculty_id, $semester, $view, $site = 'dashboard', $extData = [])
-    {
-        $faculty = FacultySemester::with(['faculty'])
-            ->where('semester_id', $semester)
-            ->whereHas('faculty', function (Builder $q) use ($faculty_id) {
-                $q->where('id', $faculty_id);
-            })
-            ->whereHas('faculty_semester_coordinator.coordinator', function (Builder $q) {
-                $q->where('id', Auth::guard(COORDINATOR_GUARD)->user()->id);
-            })->first();
-        switch ($site) {
-            case "dashboard":
-            case "published":
-            case "articles":
-            case "members":
-            case "settings":
-                break;
-            default:
-                $site = "dashboard";
-        }
-        $data = [
-            'facultySemester' => $faculty,
-            "site" => $site
-        ];
-        if (count($extData) > 0) {
-            $data = array_merge($data, $extData);
-        }
-        if ($faculty)
-            return view($view, $data);
-        else
-            return redirect()->route('coordinator.faculty');
-    }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
         return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-dashboard', "dashboard", [
@@ -111,7 +76,36 @@ class FacultyController extends Controller
     {
         return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member");
     }
-    public function facultyDetailSettings($faculty_id, $semester_id){
+    public function facultyDetailSettings($faculty_id, $semester_id)
+    {
         return 1;
+    }
+    public function facultyDetailListArticle(Request $request, $faculty_id, $semester_id)
+    {
+        $articles = Article::with('article_file')
+            ->whereHas('faculty_semester', function (Builder $query) use ($faculty_id, $semester_id) {
+                $query->where("faculty_id", $faculty_id)->where("semester_id", $semester_id);
+            });
+        $searchStudent = $request->get("student_name");
+        if ($searchStudent) {
+            $articles->whereHas("student", function (Builder $student) use ($searchStudent) {
+                $student->where("first_name", "like", "%$searchStudent%")
+                    ->orWhere("last_name", "like", "%$searchStudent%")
+                    ->orWhere("email", "like", "%$searchStudent%");
+            });
+        }
+        $articles = $articles->paginate(PER_PAGE);
+        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.Articles.faculty-detail-listArticle', "articles", ["articles" => $articles]);
+    }
+    public function facultyDetailArticlePublish(Request $request, $faculty_id, $semester_id, $article_id)
+    {
+        $facultySemester = $this->retrieveFacultySemester($faculty_id, $semester_id);
+        $article = $this->retrieveDetailArticle($faculty_id, $semester_id, $article_id);
+        if ($article && $facultySemester)
+            return view("coordinator.Faculty.Articles.faculty-detail-publishing", [
+                "facultySemester" => $facultySemester,
+                "article" => $article
+            ]);
+        return redirect()->route("coordinator.faculty.listArticle");
     }
 }
