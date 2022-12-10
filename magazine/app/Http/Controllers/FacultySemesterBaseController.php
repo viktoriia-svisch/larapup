@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 class FacultySemesterBaseController extends Controller
 {
-    public function facultyDetail($faculty_id, $semester_id, $view, $site = 'dashboard', $extData = [], $guard = COORDINATOR_GUARD)
+    public function facultyDetail($faculty_id, $semester_id, $view, $site = 'dashboard', $extData = [], $guard = COORDINATOR_GUARD, $redirectRoute = 'coordinator.faculty')
     {
         $facultySemester = $this->retrieveFacultySemester($faculty_id, $semester_id, $guard);
         switch ($site) {
@@ -32,19 +32,23 @@ class FacultySemesterBaseController extends Controller
         if ($facultySemester)
             return view($view, $data);
         else
-            return redirect()->route('coordinator.faculty');
+            return redirect()->route($redirectRoute);
     }
     public function retrieveFacultySemester($faculty_id, $semester_id, $guard = COORDINATOR_GUARD)
     {
         $faculty = FacultySemester::with(['faculty'])
             ->where('semester_id', $semester_id)
-            ->whereHas('faculty', function (Builder $q) use ($faculty_id) {
-                $q->where('id', $faculty_id);
-            })
-            ->whereHas('faculty_semester_coordinator.coordinator', function (Builder $q) use ($guard) {
+            ->where('faculty_id', $faculty_id);
+        if ($guard == COORDINATOR_GUARD) {
+            $faculty = $faculty->whereHas('faculty_semester_coordinator.coordinator', function (Builder $q) use ($guard) {
                 $q->where('id', Auth::guard($guard)->user()->id);
-            })->first();
-        return $faculty;
+            });
+        } elseif ($guard == STUDENT_GUARD) {
+            $faculty = $faculty->whereHas('faculty_semester_student.student', function (Builder $q) use ($guard) {
+                $q->where('id', Auth::guard($guard)->user()->id);
+            });
+        }
+        return $faculty->first();
     }
     public function retrieveDetailArticle($faculty_id, $semester_id, $article_id)
     {
@@ -73,7 +77,7 @@ class FacultySemesterBaseController extends Controller
             ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
                 $query->where("faculty_id", $faculty_id)->where("semester_id", $semester_id);
             });
-        if ($guard) {
+        if ($guard == STUDENT_GUARD) {
             $commentStudent = $commentStudent->where("student_id", Auth::guard($guard)->user()->id);
         }
         return $commentStudent->get();
@@ -84,7 +88,7 @@ class FacultySemesterBaseController extends Controller
             ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
                 $query->where("faculty_id", $faculty_id)->where("semester_id", $semester_id);
             });
-        if ($guard) {
+        if ($guard == COORDINATOR_GUARD) {
             $commentCoordinator = $commentCoordinator->where("coordinator_id", Auth::guard($guard)->user()->id);
         }
         return $commentCoordinator->get();
