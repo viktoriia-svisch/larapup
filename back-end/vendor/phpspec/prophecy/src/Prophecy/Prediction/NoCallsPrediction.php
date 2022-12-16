@@ -1,0 +1,33 @@
+<?php
+namespace Prophecy\Prediction;
+use Prophecy\Call\Call;
+use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\MethodProphecy;
+use Prophecy\Util\StringUtil;
+use Prophecy\Exception\Prediction\UnexpectedCallsException;
+class NoCallsPrediction implements PredictionInterface
+{
+    private $util;
+    public function __construct(StringUtil $util = null)
+    {
+        $this->util = $util ?: new StringUtil;
+    }
+    public function check(array $calls, ObjectProphecy $object, MethodProphecy $method)
+    {
+        if (!count($calls)) {
+            return;
+        }
+        $verb = count($calls) === 1 ? 'was' : 'were';
+        throw new UnexpectedCallsException(sprintf(
+            "No calls expected that match:\n".
+            "  %s->%s(%s)\n".
+            "but %d %s made:\n%s",
+            get_class($object->reveal()),
+            $method->getMethodName(),
+            $method->getArgumentsWildcard(),
+            count($calls),
+            $verb,
+            $this->util->stringifyCalls($calls)
+        ), $method, $calls);
+    }
+}
