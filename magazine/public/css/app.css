@@ -1,20 +1,28 @@
-body{
+body {
     min-height: 100vh;
+    position: relative;
+}
+.flashMessage {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    max-width: 350px;
+    z-index: 9000;
 }
 .height-fluid {
     height: 100vh;
 }
-.nav-link{
+.nav-link {
     cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
-.cursor{
+.cursor {
     user-select: all;
     cursor: pointer;
 }
-.text-black{
+.text-black {
     color: #000;
 }

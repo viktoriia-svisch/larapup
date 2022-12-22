@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateCoordinatorAccount;
 use App\Http\Resources\Coordinator as CoordinatorResource;
 use App\Http\Resources\Faculty as FacultyResource;
 use App\Models\Coordinator;
@@ -53,37 +52,6 @@ class CoordinatorController extends Controller
             'activeData' => $currentActiveData,
             'activeSemester' => null,
             'activeFaculty' => null
-        ]);
-    }
-    public function updateCoordinator($id){
-        $coordinator = Coordinator::find($id);
-        return view('coordinator.manage.coordinator-detail',[
-            'coordinator' => $coordinator]);
-    }
-    public function updateCoordinatorPost(UpdateCoordinatorAccount $request, $id)
-    {
-        $coordinator = Coordinator::find($id);
-        if (!$coordinator) return redirect()->back()->withInput();
-        $coordinator->first_name = $request->get('first_name') ?? $coordinator->first_name;
-        $coordinator->last_name = $request->get('last_name') ?? $coordinator->last_name;
-        $coordinator->dateOfBirth = $request->get('dateOfBirth') ?? $coordinator->dateOfBirth;
-        $coordinator->gender = $request->get('gender') ?? $coordinator->gender;
-        if ($request->get('old_password')) {
-            if (Hash::check($request->get('old_password'), $coordinator->password)) {
-                $coordinator->password = $request->get('new_password');
-            } else {
-                return back()->with([
-                    'updateStatus' => false
-                ]);
-            }
-        }
-        if ($coordinator->save()) {
-            return back()->with([
-                'updateStatus' => true
-            ]);
-        }
-        return back()->with([
-            'updateStatus' => false
         ]);
     }
     public function dashboard(){
