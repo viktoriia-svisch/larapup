@@ -22,12 +22,9 @@ class StorageHelper
     public static function savePublishFileSubmission($idFacultySemester, $idPublish, UploadedFile $file, &$filePath = null)
     {
         $fileName = $file->getClientOriginalName();
-        $filePath = self::getPublishFilePath($idFacultySemester, $idPublish);
+        $filePath = self::getArticleFilePath($idFacultySemester, $idPublish);
         self::save($file, $filePath, $fileName);
-        return [
-            "full" => $filePath . $fileName,
-            "file" => $fileName
-        ];
+        return $filePath . $fileName;
     }
     public static function getPublishFilePath($idFacultySemester, $idPublish, $path = '')
     {

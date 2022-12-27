@@ -4,6 +4,7 @@ body{
 .height-fluid {
     height: 100vh;
 }
+
 .nav-link{
     cursor: pointer;
     -webkit-user-select: none;
@@ -11,10 +12,12 @@ body{
     -ms-user-select: none;
     user-select: none;
 }
+
 .cursor{
     user-select: all;
     cursor: pointer;
 }
+
 .text-black{
     color: #000;
 }

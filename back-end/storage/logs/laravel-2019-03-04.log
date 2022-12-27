@@ -1,4 +1,0 @@
-[2019-03-04 16:52:57] production.ERROR: Cannot redeclare App\Providers\RouteServiceProvider::mapApiAdminRoutes() {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Cannot redeclare App\\Providers\\RouteServiceProvider::mapApiAdminRoutes() at D:\\Project laravel\\larang-topup\\back-end\\app\\Providers\\RouteServiceProvider.php:92)
-[stacktrace]
-#0 {main}
-"} 
