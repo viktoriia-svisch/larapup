@@ -1,12 +1,17 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
+use App\Helpers\StorageHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
 use App\Models\Article;
 use App\Models\FacultySemester;
+use App\Models\Publish;
+use App\Models\PublishContent;
+use ErrorException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 class FacultyController extends FacultySemesterBaseController
 {
     public function faculty(Request $request)
@@ -107,5 +112,89 @@ class FacultyController extends FacultySemesterBaseController
                 "article" => $article
             ]);
         return redirect()->route("coordinator.faculty.listArticle");
+    }
+    public function facultyDetailArticlePublish_Post(Request $request, $faculty_id, $semester_id, $article_id)
+    {
+        $title = $request->get("title");
+        $listDescription = $request->get("description") ?? [];
+        $listImage[] = $request->file("image") ?? [];
+        $listImageDescription = $request->get("imageDescription") ?? [];
+        if (sizeof($listDescription) !== sizeof($listImageDescription)) {
+            return back()->with($this->responseBladeMessage("The sending data was not correct!", false));
+        }
+        $facultySemester = FacultySemester::with("semester")
+            ->where("faculty_id", $faculty_id)->where("semester_id", $semester_id)
+            ->whereHas("faculty_semester_coordinator", function (Builder $builder) {
+                $builder->where("coordinator_id", Auth::guard(COORDINATOR_GUARD)->user()->id);
+            })->whereHas("article", function (Builder $builder) use ($article_id) {
+                $builder->where("id", $article_id);
+            })->first();
+        $article = $this->retrieveDetailArticle($faculty_id, $semester_id, $article_id);
+        if (!$facultySemester || !$article) {
+            return redirect()->route("coordinator.faculty.listArticle");
+        }
+        DB::beginTransaction();
+        $publishData = Publish::with("publish_content")->firstOrNew([
+            "coordinator_id" => Auth::guard(COORDINATOR_GUARD)->user()->id,
+            "article_id" => $article_id
+        ]);
+        $publishData->title = $title;
+        if (!$publishData->save()) {
+            DB::rollback();
+            return back()->with($this->responseBladeMessage("Cannot begin to publish", false));
+        }
+        $listPublishDataDetail = $publishData->publish_content;
+        $arrNewContent = [];
+        foreach ($listDescription as $key => $description) {
+            try {
+                $existedDetail = $listPublishDataDetail[$key];
+                $existedDetail->content = $description;
+                try {
+                    $pathInfo = StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $listImage[$key]);
+                    if ($pathInfo && $pathInfo["file"]) {
+                        $existedDetail->image_path = $pathInfo["file"];
+                        $existedDetail->image_description = $listImageDescription[$key];
+                    }
+                } catch (ErrorException $exception) {
+                } finally {
+                    $existedDetail->publish_id = $publishData->id;
+                    if (!$existedDetail->save()) {
+                        DB::rollback();
+                        return back()->with($this->responseBladeMessage("Cannot save the content of the publish document", false));
+                    }
+                }
+            } catch (ErrorException $e) {
+                $newContent = new PublishContent();
+                $newContent->content = $description;
+                try {
+                    if ($listImage[$key]){
+                        $pathInfo = StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $listImage[$key]);
+                        if ($pathInfo && $pathInfo["file"]) {
+                            $newContent->image_path = $pathInfo["file"];
+                            $newContent->image_description = $listImageDescription[$key];
+                        }
+                    }
+                } catch (ErrorException $e) {
+                } finally {
+                    array_push($arrNewContent, $newContent);
+                }
+            }
+        }
+        if (sizeof($arrNewContent) > 0) {
+            $models = $publishData->publish_content()->saveMany($arrNewContent);
+            if (!$models || sizeof($models) == 0) {
+                DB::rollback();
+                return back()->with($this->responseBladeMessage("Cannot save the content of the publish document", false));
+            }
+        }
+        if (sizeof($listDescription) < sizeof($listPublishDataDetail)) {
+            $deletedCount = sizeof($listPublishDataDetail) - sizeof($listDescription);
+        }
+        if ($publishData->save()) {
+            DB::commit();
+            return back()->with($this->responseBladeMessage("Success", true));
+        }
+        DB::rollback();
+        return back()->with($this->responseBladeMessage("Cannot save the content of the publish document", false));
     }
 }
