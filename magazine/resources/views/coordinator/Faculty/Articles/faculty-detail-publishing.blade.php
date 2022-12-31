@@ -12,7 +12,6 @@
             justify-content: center;
             align-items: center;
             border-radius: 0.5rem;
-            border: 1px solid whitesmoke;
             position: relative;
         }
         .card-Placeholder::before {
@@ -118,35 +117,81 @@
             <br>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control form-control-alternative" id="title" name="title"
-                   placeholder="Publishing title">
+            <label for="title">Title of the published</label>
+            @if ($published)
+                <input type="text" class="form-control form-control-alternative" id="title" name="title"
+                       value="{{$published->title}}" placeholder="Publishing title">
+            @else
+                <input type="text" class="form-control form-control-alternative" id="title" name="title"
+                       placeholder="Publishing title">
+            @endif
+            <small class="form-text">Not exceed 170 characters and is required at least 3 characters.</small>
         </div>
         <hr style="width: 50%; margin: auto;">
         <section id="formEntering">
-            <div class="card cloning-section mb-5">
-                <div class="card-body form-group">
-                    <textarea class="form-control form-control-alternative" name="description[]" rows="5"
-                              placeholder="Write a section text here..."></textarea>
-                    <br>
-                    <div class="card card-Placeholder">
-                        <div class="card-body">
-                            <div class="col-12 p-0 m-0">
-                                <label class="image-holder">
-                                    <i class="fas fa-image fa-4x"></i>
-                                    <input type="file" name="image[]" accept="image/jpeg, image/png" hidden
-                                           class="form-control">
-                                </label>
-                            </div>
+            @if ($published && sizeof($published->publish_content) > 0)
+                @foreach($published->publish_content as $pubContent)
+                    <div class="card cloning-section mb-5">
+                        <div class="card-body form-group">
+                            <textarea class="form-control form-control-alternative" name="description[]" rows="5"
+                                      placeholder="Write a section text here...">{{nl2br(htmlentities($pubContent->content))}}</textarea>
+                            <small class="form-text">
+                                Not exceed 450 characters and is required at least 3 characters.
+                            </small>
                             <br>
-                            <input type="text" placeholder="Description of the image" name="imageDescription[]"
-                                   id="imageDescription" class="form-control form-control-alternative">
+                            <div class="card card-Placeholder">
+                                @if ($pubContent->image_path)
+                                @else
+                                    <div class="card-body">
+                                        <div class="col-12 p-0 m-0">
+                                            <label class="image-holder">
+                                                <i class="fas fa-image fa-4x"></i>
+                                                <input type="file" name="image[]" accept="image/jpeg, image/png" hidden
+                                                       class="form-control">
+                                            </label>
+                                        </div>
+                                        <br>
+                                        <input type="text" placeholder="Description of the image"
+                                               name="imageDescription[]"
+                                               id="imageDescription" class="form-control form-control-alternative">
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="deleteBtn">
+                            <button class="btn btn-danger" type="button" onclick="deleteSection(this)">Delete</button>
                         </div>
                     </div>
+                @endforeach
+            @else
+                <div class="card cloning-section mb-5">
+                    <div class="card-body form-group">
+                    <textarea class="form-control form-control-alternative" name="description[]" rows="5"
+                              placeholder="Write a section text here..."></textarea>
+                        <br>
+                        <small class="form-text">Not exceed 450 characters and is required at least 3 characters.
+                        </small>
+                        <br>
+                        <div class="card card-Placeholder">
+                            <div class="card-body">
+                                <div class="col-12 p-0 m-0">
+                                    <label class="image-holder">
+                                        <i class="fas fa-image fa-4x"></i>
+                                        <input type="file" name="image[]" accept="image/jpeg, image/png" hidden
+                                               class="form-control">
+                                    </label>
+                                </div>
+                                <br>
+                                <input type="text" placeholder="Description of the image" name="imageDescription[]"
+                                       id="imageDescription" class="form-control form-control-alternative">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deleteBtn">
+                        <button class="btn btn-danger" type="button" onclick="deleteSection(this)">Delete</button>
+                    </div>
                 </div>
-                <div class="deleteBtn">
-                    <button class="btn btn-danger" type="button" onclick="deleteSection(this)">Delete</button>
-                </div>
-            </div>
+            @endif
         </section>
         <button class="btn btn-block btn-default" type="button" onclick="cloneWriteSection()">Add more section</button>
         <hr>
@@ -170,7 +215,7 @@
                 flashMessage("You can only have 5 sections of text!", true, 4000);
                 return;
             }
-            formToClone.clone().appendTo("#formEntering").find("input, textarea").val("").find("textarea").val("").end();
+            formToClone.clone(true).appendTo("#formEntering").find("input, textarea").val("").find("textarea").val("").end();
         }
         function deleteSection(dom) {
             let checkDomSection = document.getElementsByClassName("cloning-section");
