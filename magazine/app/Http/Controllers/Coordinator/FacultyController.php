@@ -2,13 +2,11 @@
 namespace App\Http\Controllers\Coordinator;
 use App\Helpers\StorageHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
-use App\Http\Requests\PublishRequest;
 use App\Models\Article;
 use App\Models\FacultySemester;
 use App\Models\Publish;
 use App\Models\PublishContent;
 use ErrorException;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -72,7 +70,7 @@ class FacultyController extends FacultySemesterBaseController
     }
     public function facultyDetailArticle($faculty_id, $semester_id)
     {
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-article', "article");
+        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-article', "article");
     }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
@@ -104,26 +102,18 @@ class FacultyController extends FacultySemesterBaseController
         $articles = $articles->paginate(PER_PAGE);
         return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.Articles.faculty-detail-listArticle', "articles", ["articles" => $articles]);
     }
-    public function facultyDetailArticlePublish($faculty_id, $semester_id, $article_id)
+    public function facultyDetailArticlePublish(Request $request, $faculty_id, $semester_id, $article_id)
     {
         $facultySemester = $this->retrieveFacultySemester($faculty_id, $semester_id);
         $article = $this->retrieveDetailArticle($faculty_id, $semester_id, $article_id);
-        $publishing = Publish::with("publish_content")
-            ->where("coordinator_id", Auth::guard(COORDINATOR_GUARD)->user()->id)
-            ->where("article_id", $article_id)
-            ->whereHas("article.faculty_semester", function (Builder $builder) use ($faculty_id, $semester_id) {
-                $builder->where("semester_id", $semester_id)
-                    ->where("faculty_id", $faculty_id);
-            })->first();
         if ($article && $facultySemester)
             return view("coordinator.Faculty.Articles.faculty-detail-publishing", [
                 "facultySemester" => $facultySemester,
-                "article" => $article,
-                "published" => $publishing
+                "article" => $article
             ]);
         return redirect()->route("coordinator.faculty.listArticle");
     }
-    public function facultyDetailArticlePublish_Post(PublishRequest $request, $faculty_id, $semester_id, $article_id)
+    public function facultyDetailArticlePublish_Post(Request $request, $faculty_id, $semester_id, $article_id)
     {
         $title = $request->get("title");
         $listDescription = $request->get("description") ?? [];
@@ -165,7 +155,7 @@ class FacultyController extends FacultySemesterBaseController
                         $existedDetail->image_path = $pathInfo["file"];
                         $existedDetail->image_description = $listImageDescription[$key];
                     }
-                } catch (Exception $exception) {
+                } catch (ErrorException $exception) {
                 } finally {
                     $existedDetail->publish_id = $publishData->id;
                     if (!$existedDetail->save()) {
@@ -173,18 +163,18 @@ class FacultyController extends FacultySemesterBaseController
                         return back()->with($this->responseBladeMessage("Cannot save the content of the publish document", false));
                     }
                 }
-            } catch (Exception $e) {
+            } catch (ErrorException $e) {
                 $newContent = new PublishContent();
                 $newContent->content = $description;
                 try {
-                    if ($listImage[$key]) {
+                    if ($listImage[$key]){
                         $pathInfo = StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $listImage[$key]);
                         if ($pathInfo && $pathInfo["file"]) {
                             $newContent->image_path = $pathInfo["file"];
                             $newContent->image_description = $listImageDescription[$key];
                         }
                     }
-                } catch (Exception $e) {
+                } catch (ErrorException $e) {
                 } finally {
                     array_push($arrNewContent, $newContent);
                 }

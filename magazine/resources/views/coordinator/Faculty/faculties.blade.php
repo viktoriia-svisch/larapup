@@ -31,7 +31,7 @@
                         </p>
                     </div>
                     <div class="col-12 col-sm-12 col-md-auto d-flex align-items-center">
-                        <a href="{{route('coordinator.faculty.dashboard', [$currentFaculty->faculty->id, $currentFaculty->semester->id])}}"
+                        <a href="{{route('coordinator.coordinator', [$currentFaculty->faculty->id, $currentFaculty->semester->id])}}"
                            class="btn btn-primary">
                             Detail
                         </a>
@@ -109,7 +109,7 @@
                             <div class="col-auto">
                             </div>
                             <div class="col d-flex justify-content-center align-items-center">
-                                <a href="{{route("coordinator.faculty.dashboard", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+                                <a href="{{route("coordinator.coordinator", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
                                    class="btn btn-secondary"></a>
                             </div>
                         </div>
