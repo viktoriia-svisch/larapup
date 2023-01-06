@@ -15,4 +15,7 @@ Route::group([
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
     Route::get('manage/{id}', 'CoordinatorController@updateCoordinator')->name('coordinator.manageAccount');
     Route::post('manage/{id}', 'CoordinatorController@updateCoordinatorPost')->name('coordinator.manageAccount_post');
+    Route::get('faculty/{faculty_id}/{semester_id}/dashboard', 'FacultyController@facultyDetailDashboard')->name('coordinator.faculty.detail');
+    Route::get('faculty/{faculty_id}/{semester_id}/members', 'FacultyController@facultyDetailMember')->name('coordinator.faculty.members');
+    Route::get('faculty/{faculty_id}/{semester_id}/article', 'FacultyController@facultyDetailArticle')->name('coordinator.faculty.article');
 });

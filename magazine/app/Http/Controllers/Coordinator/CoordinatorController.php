@@ -89,12 +89,6 @@ class CoordinatorController extends Controller
     public function dashboard(){
         return view('coordinator.dashboard');
     }
-    public function search($request){
-        $search = Coordinator::where('first_name', 'LIKE', '%' . $request . '%')
-            ->orWhere('last_name', 'like', '%' . $request . '%')
-            ->get();
-        return response()->json($search);
-    }
     public function show($id)
     {
         $coordinator = Coordinator::find($id);

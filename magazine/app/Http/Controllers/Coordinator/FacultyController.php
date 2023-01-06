@@ -70,16 +70,19 @@ class FacultyController extends FacultySemesterBaseController
     }
     public function facultyDetailArticle($faculty_id, $semester_id)
     {
-        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-article', "article");
+        $article = $this->retrieveDetailArticleByStudent($faculty_id, $semester_id, Auth::guard(COORDINATOR_GUARD)->user()->id);
+        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-article', "article", ["article" => $article], COORDINATOR_GUARD);
     }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
+        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, COORDINATOR_GUARD, null);
         return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-dashboard', "dashboard", [
-        ]);
+            "comments" => $listComment
+        ], COORDINATOR_GUARD);
     }
     public function facultyDetailMember($faculty_id, $semester_id)
     {
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member");
+        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-member', "member", [], COORDINATOR_GUARD);
     }
     public function facultyDetailSettings($faculty_id, $semester_id)
     {
