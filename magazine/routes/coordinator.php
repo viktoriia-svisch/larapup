@@ -18,4 +18,20 @@ Route::group([
     Route::get('faculty/{faculty_id}/{semester_id}/dashboard', 'FacultyController@facultyDetailDashboard')->name('coordinator.faculty.detail');
     Route::get('faculty/{faculty_id}/{semester_id}/members', 'FacultyController@facultyDetailMember')->name('coordinator.faculty.members');
     Route::get('faculty/{faculty_id}/{semester_id}/article', 'FacultyController@facultyDetailArticle')->name('coordinator.faculty.article');
+    Route::get('faculty/{faculty_id}/{semester_id}/published','FacultyController@facultyDetailListPublished')
+        ->name('coordinator.faculty.listPublished');
+    Route::get('faculty/{faculty_id}/{semester_id}/published/{published_id}','FacultyController@facultyDetailPublished')
+        ->name('coordinator.faculty.published');
+    Route::get('faculty/{faculty_id}/{semester_id}/students','FacultyController@facultyDetailStudents')
+        ->name('coordinator.faculty.students');
+    Route::get('faculty/{faculty_id}/{semester_id}/articles','FacultyController@facultyDetailListArticle')
+        ->name('coordinator.faculty.listArticle');
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}','FacultyController@facultyDetailArticle')
+        ->name('coordinator.faculty.article');
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}/publish','FacultyController@facultyDetailArticlePublish')
+        ->name('coordinator.faculty.article.publish');
+    Route::post('faculty/{faculty_id}/{semester_id}/articles/{article_id}/publish','FacultyController@facultyDetailArticlePublish_Post')
+        ->name('coordinator.faculty.article.publishPost');
+    Route::get('faculty/{faculty_id}/{semester_id}/settings','FacultyController@facultyDetailSettings')
+        ->name('coordinator.faculty.settings');
 });

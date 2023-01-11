@@ -2,6 +2,11 @@
 @section('title', 'Update Information Coordinator')
 @push("custom-css")
 @endpush
+@section('breadcrumb')
+    <div class="container">
+        {{ Breadcrumbs::render('dashboard.profile', route('coordinator.dashboard'), route('coordinator.manageAccount',[$coordinator->id])) }}
+    </div>
+@endsection
 @section("coordinator-content")
     <div class="container row col-md-12">
         <br>
