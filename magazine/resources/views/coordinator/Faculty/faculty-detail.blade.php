@@ -18,8 +18,8 @@
         </div>
         <h1 class="text-center col-12 text-black">{{$facultySemester->faculty->name}}</h1>
         <div class="d-flex justify-content-center align-items-center">
-            <a href="{{route('coordinator.faculty.detail',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
-            class="btn text-white @if($site == "dashboard") btn-primary @else bg-gradient-gray @endif">Dashboard</a>
+                <a href="{{route('coordinator.faculty.dashboard',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
+                   class="btn text-white @if($site == "dashboard") btn-primary @else bg-gradient-gray @endif">Dashboard</a>
             <a href="{{route('coordinator.faculty.listPublished',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
                    class="btn text-white @if($site == "published") btn-primary @else bg-gradient-gray @endif">Publishes</a>
             <a href="{{route('coordinator.faculty.article',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
