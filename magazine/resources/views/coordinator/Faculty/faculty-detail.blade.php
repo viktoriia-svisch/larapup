@@ -6,7 +6,7 @@
         {{ Breadcrumbs::render('dashboard.faculty.detail',
          route('coordinator.dashboard'),
          route('coordinator.faculty'),
-         route('coordinator.faculty.detail',
+         route('coordinator.faculty.dashboard',
          [$facultySemester->faculty->id, $facultySemester->id])) }}
     </div>
 @endsection
