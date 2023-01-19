@@ -12,8 +12,8 @@ class UpdateCoordinatorAccount extends FormRequest
     {
         return [
             'new_password' =>['same:confirm_password','bail'],
-            'first_name' => ['required|min:2|max:40|bail'],
-            'last_name' => ['required|min:2|max:80|bail'],
+            'first_name' => 'required|min:2|max:40|bail',
+            'last_name' => 'required|min:2|max:80|bail',
             'gender' => 'required|integer',
             'dateOfBirth' => 'required', 'date_format:d/m/Y'
         ];
