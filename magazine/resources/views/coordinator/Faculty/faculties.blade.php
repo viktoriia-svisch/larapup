@@ -109,7 +109,7 @@
                             <div class="col-auto">
                             </div>
                             <div class="col d-flex justify-content-center align-items-center">
-                                <a href="{{route("coordinator.coordinator", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+                                <a href="{{route("coordinator.faculty.dashboard", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
                                    class="btn btn-secondary"></a>
                             </div>
                         </div>
