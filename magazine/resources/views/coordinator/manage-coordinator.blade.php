@@ -60,7 +60,7 @@
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <a href="{{route('coordinator.faculty.detail', [$activeData->faculty->id, $activeData->semester->id])}}"
+                                    <a href="{{route('student.faculty.detail', [$activeData->faculty->id, $activeData->semester->id])}}"
                                        class="btn btn-info text-white">
                                         <span>Detail</span>
                                         <span class="badge badge-dark text-white">4</span>
