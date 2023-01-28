@@ -51,11 +51,19 @@
                         <div class="nav-link disabled">
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('coordinator.logout')}}">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Logout
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#" id="navbar-default_dropdown_1" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user"></i>
+                            Account
                         </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-default_dropdown_1">
+                            <a class="dropdown-item"
+                               href="{{route('coordinator.manageAccount', \Illuminate\Support\Facades\Auth::guard(COORDINATOR_GUARD)->user()->id)}}">
+                                User
+                            </a>
+                            <a class="dropdown-item" href="{{route('coordinator.logout')}}">Log out</a>
+                        </div>
                     </li>
                 </ul>
             </div>
