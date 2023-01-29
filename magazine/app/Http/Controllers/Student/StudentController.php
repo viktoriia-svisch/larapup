@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudent;
 use App\Http\Requests\UpdateStudentAccount;
+use App\Http\Resources\Student as StudentResource;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
 use App\Models\Semester;
@@ -102,6 +103,20 @@ class StudentController extends Controller
                 $std
             );
         return $this->responseMessage('Create unsuccessfully', true);
+    }
+    public function search($request){
+        $search = Student::where('first_name', 'LIKE', '%' . $request . '%')
+            ->orWhere('last_name', 'like', '%' . $request . '%')
+            ->get();
+        return response()->json($search);
+    }
+    public function searchAll(Request $request)
+    {
+        $data = $request->get('data');
+        $search = Student::where('first_name', 'like', "%{$data}%")
+            ->orWhere('last_name', 'like', "%{$data}%")
+            ->get();
+        return response()->json($search);
     }
     public function show($id)
     {

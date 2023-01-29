@@ -1,6 +1,5 @@
 var components = require('../components.js');
 var peerDependentsMap = null;
-
 function getPeerDependentsMap() {
 	var peerDependentsMap = {};
 	Object.keys(components.languages).forEach(function (language) {
@@ -22,16 +21,13 @@ function getPeerDependentsMap() {
 	});
 	return peerDependentsMap;
 }
-
 function getPeerDependents(mainLanguage) {
 	if (!peerDependentsMap) {
 		peerDependentsMap = getPeerDependentsMap();
 	}
 	return peerDependentsMap[mainLanguage] || [];
 }
-
 function loadLanguages(arr, withoutDependencies) {
-	// If no argument is passed, load all components
 	if (!arr) {
 		arr = Object.keys(components.languages).filter(function (language) {
 			return language !== 'meta';
@@ -40,30 +36,22 @@ function loadLanguages(arr, withoutDependencies) {
 	if (arr && !arr.length) {
 		return;
 	}
-
 	if (!Array.isArray(arr)) {
 		arr = [arr];
 	}
-
 	arr.forEach(function (language) {
 		if (!components.languages[language]) {
 			console.warn('Language does not exist ' + language);
 			return;
 		}
-		// Load dependencies first
 		if (!withoutDependencies && components.languages[language].require) {
 			loadLanguages(components.languages[language].require);
 		}
-
 		var pathToLanguage = './prism-' + language;
 		delete require.cache[require.resolve(pathToLanguage)];
 		delete Prism.languages[language];
 		require(pathToLanguage);
-
-		// Reload dependents
 		var dependents = getPeerDependents(language).filter(function (dependent) {
-			// If dependent language was already loaded,
-			// we want to reload it.
 			if (Prism.languages[dependent]) {
 				delete Prism.languages[dependent];
 				return true;
@@ -75,8 +63,6 @@ function loadLanguages(arr, withoutDependencies) {
 		}
 	});
 }
-
 module.exports = function (arr) {
-	// Don't expose withoutDependencies
 	loadLanguages(arr);
 };

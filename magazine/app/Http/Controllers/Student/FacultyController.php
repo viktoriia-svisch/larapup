@@ -1,33 +1,35 @@
 <?php
 namespace App\Http\Controllers\Student;
-use App\Http\Controllers\FacultySemesterBaseController;
+use App\Helpers\StorageHelper;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UploadArticleRequest;
+use App\Models\Article;
+use App\Models\ArticleFile;
 use App\Models\FacultySemester;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-class FacultyController extends FacultySemesterBaseController
+use Illuminate\Support\Facades\DB;
+class FacultyController extends Controller
 {
     public function faculty(Request $request)
     {
         $selectedMode = $request->get('viewMode');
         $searchTerms = $request->get('search_faculty_input');
         $listFaculty = FacultySemester::with(['faculty'])
-            ->whereHas('faculty_semester_student.student', function (Builder $query) {
+            ->whereHas('faculty_semester_student.student', function ($query) {
                 $query->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             });
         if ($selectedMode) {
             switch ($selectedMode) {
                 case '1':
-                    $listFaculty->whereHas('semester', function (Builder $query) {
-                        $query->whereDate('start_date', ">", Carbon::now()->toDateTimeString())
-                            ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());;
+                    $listFaculty->whereHas('semester', function ($query) {
+                        $query->whereDate('start_date', ">", Carbon::now()->toDateTimeString());
                     });
                     break;
                 case '2':
-                    $listFaculty->whereHas('semester', function (Builder $query) {
-                        $query->whereDate('end_date', "<=", Carbon::now()->toDateTimeString())
-                            ->whereDate('start_date', "<=", Carbon::now()->toDateTimeString());
+                    $listFaculty->whereHas('semester', function ($query) {
+                        $query->whereDate('start_date', "<=", Carbon::now()->toDateTimeString());
                     });
                     break;
                 default:
@@ -37,18 +39,18 @@ class FacultyController extends FacultySemesterBaseController
             $selectedMode = '0';
         }
         if ($searchTerms) {
-            $listFaculty->whereHas('faculty', function (Builder $query) use ($searchTerms) {
-                $query->where('name', 'like', "%$searchTerms%")
-                    ->orWhereHas('faculty_semester.semester', function (Builder $query) use ($searchTerms) {
+            $listFaculty->whereHas('faculty', function ($query) use ($searchTerms) {
+                $query->where('name', 'like', '%' . $searchTerms . '%')
+                    ->orWhereHas('faculty_semester.semester', function ($query) use ($searchTerms) {
                         $query->where('end_date', "like", '%' . $searchTerms . '%');
                     });
             });
         }
         $currentFaculty = FacultySemester::with(['faculty_semester_student.student'])
-            ->whereHas('faculty_semester_student.student', function (Builder $q) {
+            ->whereHas('faculty_semester_student.student', function ($q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })
-            ->whereHas('semester', function (Builder $query) {
+            ->whereHas('semester', function ($query) {
                 $query->whereDate('start_date', "<", Carbon::now()->toDateTimeString())
                     ->whereDate('end_date', ">", Carbon::now()->toDateTimeString());
             })
@@ -62,20 +64,88 @@ class FacultyController extends FacultySemesterBaseController
             'currentFaculty' => $currentFaculty
         ]);
     }
-    public function facultyDetailArticle($faculty_id, $semester_id)
+    public function facultyDetailArticle($id, $semester)
     {
-        $article = $this->retrieveDetailArticleByStudent($faculty_id, $semester_id, Auth::guard(STUDENT_GUARD)->user()->id);
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-article', "article", ["article" => $article], STUDENT_GUARD);
+        $article = Article::with('article_file')
+            ->where('faculty_semester_id', $id)
+            ->where('student_id', Auth::guard(STUDENT_GUARD)->user()->id)
+            ->first();
+        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-article', "article", ["article" => $article]);
     }
-    public function facultyDetailDashboard($faculty_id, $semester_id)
+    private function facultyDetail($id, $semester, $view, $site = 'dashboard', $extData = [])
     {
-        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, STUDENT_GUARD, null);
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-dashboard', "dashboard", [
-            "comments" => $listComment
-        ], STUDENT_GUARD);
+        $faculty = FacultySemester::with(['faculty'])
+            ->where('semester_id', $semester)
+            ->whereHas('faculty', function ($q) use ($id) {
+                $q->where('id', $id);
+            })
+            ->whereHas('faculty_semester_student.student', function ($q) {
+                $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
+            })->first();
+        switch ($site) {
+            case "member":
+                $isDashboard = false;
+                $isArticle = false;
+                break;
+            case "article":
+                $isDashboard = false;
+                $isArticle = true;
+                break;
+            default:
+                $isDashboard = true;
+                $isArticle = false;
+        }
+        $data = [
+            'facultySemester' => $faculty,
+            'isDashboard' => $isDashboard,
+            'isArticle' => $isArticle
+        ];
+        if (count($extData) > 0) {
+            $data = array_merge($data, $extData);
+        }
+        if ($faculty)
+            return view($view, $data);
+        else
+            return redirect()->route('student.faculty');
     }
-    public function facultyDetailMember($faculty_id, $semester_id)
+    public function facultyDetailDashboard($id, $semester)
     {
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member", [], STUDENT_GUARD);
+        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-dashboard', "dashboard");
+    }
+    public function facultyDetailMember($id, $semester)
+    {
+        return $this->facultyDetail($id, $semester, 'student.faculty.faculty-detail-member', "member");
+    }
+    public function articleFilePost(UploadArticleRequest $request){
+        DB::beginTransaction();
+        $article = Article::with("student")->firstOrCreate([
+            "student_id" => Auth::id(),
+            "faculty_semester_id" =>$request->get("faculty_semester_id")
+        ]);
+        if ($article){
+            $files = $request->file("wordDocument");
+            $arrNew = [];
+            foreach ($files as $file){
+                try{
+                    $filePath = StorageHelper::saveArticle($article->id, $file);
+                }catch(\Exception $exception){
+                    DB::rollback();
+                    return back()->with($this->responseBladeMessage(
+                        "Cannot store file in the system",
+                        false
+                        ));
+                }
+                $articleFile = new ArticleFile();
+                $articleFile->title = $file->getClientOriginalName();
+                $articleFile->file_path = $filePath;
+                array_push($arrNew, $articleFile);
+            }
+            if ($article->article_file()->saveMany($arrNew)){
+                DB::commit();
+                return back()->with($this->responseBladeMessage("Upload successfully!"));
+            }
+        }
+        DB::rollback();
+        return back()->with($this->responseBladeMessage("Cannot initialize the article data!", false));
     }
 }
