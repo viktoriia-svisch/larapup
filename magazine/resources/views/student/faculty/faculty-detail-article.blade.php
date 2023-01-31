@@ -76,13 +76,13 @@
     @endif
     <div class="container-fluid row m-0 p-0">
         <div class="col-12 col-md-6 m-0 p-0 pr-4 border-right">
-            <h2 class="col-12 row m-0 p-0 mb-4">
+            <div class="col-12 row m-0 p-0 mb-4">
                 <div class="h2 col p-0 m-0">
                     File Submission
                 </div>
                 <div class="col-auto d-flex align-item-center p-0">
                     @if (!\App\Helpers\DateTimeHelper::isNowPassedDate($facultySemester->second_deadline))
-                        <button class="btn btn-default btn-icon"
+                        <button class="btn btn-icon"
                                 @if ($article && count($article->article_file) > 3)
                                 disabled
                                 @endif
@@ -92,20 +92,24 @@
                         </button>
                     @endif
                 </div>
-            </h2>
+            </div>
             @if ($article)
                 @foreach($article->article_file as $file)
                     <div class="col-12 row m-0 p-0 mb-4">
                         <div class="col card">
                             <div class="card-body row">
                                 <div class="col-auto d-flex align-items-center">
-                                    <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                                        <i class="fas fa-file-word"></i>
+                                    <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                                        @if ($file->type == 0)
+                                            <i class="fas fa-file-word"></i>
+                                        @else
+                                            <i class="fas fa-file-image"></i>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col">
                                     <span class="h2 font-weight-bold mb-0">
-                                        {{\Illuminate\Support\Str::limit($file->title, 20)}}
+                                        {{\Illuminate\Support\Str::limit($file->title, 15, '...' .FILE_EXT[$file->type])}}
                                     </span>
                                     <br>
                                     <small class="text-muted">
@@ -115,7 +119,8 @@
                                 </div>
                                 <div class="col-auto row m-0 p-0 text-white">
                                     <div class="col-auto d-flex align-items-center p-0 pl-1 pr-1">
-                                        <a class="btn btn-primary p-0 d-flex align-items-center justify-content-center"
+                                        <a href="{{route("student.faculty.articleFiles_download", [$facultySemester->faculty_id, $facultySemester->semester_id, $file->id])}}"
+                                           class="btn btn-primary p-0 d-flex align-items-center justify-content-center"
                                            style="width: 3rem; height: 3rem; font-size: 1.5rem">
                                             <i class="fas fa-download"></i>
                                         </a>
@@ -131,15 +136,16 @@
                         </div>
                     </div>
                 @endforeach
-                <h3 class="text-muted text-center mt-3">
-                    Student can upload 3 files at maximum. Each cannot exceed 10MB and must be WORD document
-                    (.docx) or image (.png, .jpeg, .gif)
-                </h3>
             @else
                 <h3 class="text-muted text-center mt-3">
                     You haven't upload any file
                 </h3>
             @endif
+            <hr>
+            <h3 class="text-muted text-center mt-3">
+                Student can upload 3 files at maximum. Each cannot exceed 10MB and must be WORD document
+                (.docx) or image (.png, .jpeg, .gif)
+            </h3>
         </div>
         <div class="col-12 col-md-6 m-0 p-0 pl-4">
             <h2 class="col-12 row m-0 p-0 mb-4">
@@ -188,7 +194,7 @@
     </div>
 @endsection
 @section('modal')
-    @if (($article && count($article->article_file) > 0 && count($article->article_file) < 4) || !$article)
+    @if (($article && count($article->article_file) >= 0 && count($article->article_file) < 4) || !$article)
         <div class="modal fade" id="articleModal" tabindex="-1" role="dialog" aria-labelledby="articleModal"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -213,10 +219,8 @@
                             <input type="hidden" name="semester_id" value="{{$facultySemester->semester_id}}">
                             <input type="hidden" name="faculty_semester_id" value="{{$facultySemester->id}}">
                         </div>
-                        <div class="text-danger mt-1 mb-3" id="errorWord">
-                        </div>
-                        <div id="previewSection">
-                        </div>
+                        <div class="text-danger mt-1 mb-3" id="errorWord"></div>
+                        <div id="previewSection"></div>
                         <hr>
                         <div class="custom-control custom-control-alternative custom-checkbox mb-3">
                             <input class="custom-control-input" id="terms" onchange="listenCheckboxTerms(event)"
@@ -238,7 +242,8 @@
         <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDelete"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <form action="" class="modal-content" id="deleteForm">
+                <form method="post" class="modal-content" id="deleteForm"
+                      action="{{route("student.faculty.articleFiles_delete", [$facultySemester->faculty_id, $facultySemester->semester_id])}}">
                     <h2 class="modal-header">
                         Are you sure you want to delete this file?
                     </h2>
@@ -269,7 +274,7 @@
             })
         });
         function uploadFilePopup() {
-            @if($article && count($article->article_file) > 2)
+            @if(($article && count($article->article_file) > 2) || !$article)
                 return;
             @else
             articleModal.modal('show');
@@ -336,7 +341,7 @@
                 default:
                     iconContainer = generateElement("icon icon-shape bg-danger text-white rounded-circle shadow");
                     icon = generateElement("fas fa-file", "i");
-                    displayError("There are a file that the format is not supported. Word files and Image files (PNG, JPEG, GIF) only.")
+                    displayError("There are a file that the format is not supported. Word files and Image files (PNG, JPEG, GIF) only.");
             }
             iconContainer.appendChild(icon);
             cardIcon.appendChild(iconContainer);
@@ -350,25 +355,40 @@
          * @param target
          */
         function listenChangesWord(target) {
-            if (target.files.length > 3) {
-                displayError("You can only upload maximum 3 files");
+            previewSection.html(null);
+            errorSection.html(null);
+            @if($article)
+            if (target.files.length > (3 - +'{{count($article->article_file)}}')) {
+                displayError("You can only upload maximum " + (3 - +'{{count($article->article_file)}}') + " files");
                 submitFilesButton.attr("disabled", true);
                 isValidFileSubmissionUpload = false;
             } else {
                 isValidFileSubmissionUpload = true;
+                errorSection.html(null);
             }
+            @else
+            if (target.files.length > 3) {
+                isValidFileSubmissionUpload = false;
+                submitFilesButton.attr("disabled", true);
+                displayError("You can only upload maximum 3 files per article. Accepted file extensions: DOCX, PNG, JPEG, GIF");
+            } else {
+                isValidFileSubmissionUpload = true;
+                errorSection.html(null);
+            }
+            @endif
             Array.from(target.files).forEach(file => {
                 let size = +file.size / (1024 * 1024); // to mb
                 document.getElementById("previewSection").appendChild(
                     renderPreviewFiles(file.name, size, file.type)
                 );
-            })
+            });
         }
         /**
          * Reset file upload input state
          */
         function resetFileInput(fileJQUERY = inputFiles) {
             previewSection.html(null);
+            errorSection.html(null);
             isValidFileSubmissionUpload = false;
             fileJQUERY.replaceWith(fileJQUERY.val('').clone(true));
         }

@@ -1,0 +1,29 @@
+<?php
+namespace App\Http\Requests;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+class UpdateCoordinatorAccount extends FormRequest
+{
+    public function authorize()
+    {
+        return Auth::guard(COORDINATOR_GUARD)->check() || Auth::guard(ADMIN_GUARD)->check();
+    }
+    public function rules()
+    {
+        return [
+            'new_password' =>['same:confirm_password','bail'],
+            'first_name' => 'required|min:2|max:40|bail',
+            'last_name' => 'required|min:2|max:80|bail',
+            'gender' => 'required|integer',
+            'dateOfBirth' => 'required', 'date_format:d/m/Y'
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'new_password.same' =>  'Confirm Password must be coincided with New Password',
+            'first_name' => 'The First Name must be between 2 and 40 characters',
+            'last_name' => 'The Last Name must be between 2 and 80 characters'
+        ];
+    }
+}

@@ -37,6 +37,7 @@ define('FILE_MIMES', [
     2 => 'image/jpg',
     3 => 'image/jpeg',
     4 => 'image/png',
+    5 => 'application/zip,application/octet-stream,application/x-zip-compressed,multipart/x-zip',
 ]);
 define('FILE_EXT', [
     0 => 'docx',
@@ -44,6 +45,14 @@ define('FILE_EXT', [
     2 => 'jpg',
     3 => 'jpeg',
     4 => 'png',
+    5 => 'zip'
+]);
+define('FILE_EXT_INDEX', [
+    'docx'  => 0,
+    'gif'   => 1,
+    'jpg'   => 2,
+    'jpeg'  => 3,
+    'png'   => 4,
 ]);
 define('FILE_MAXSIZE', '10485760'); 
 define('PER_PAGE', 20);

@@ -4,7 +4,8 @@
 @endpush
 @section("content")
     <div class="height-fluid d-flex justify-content-center align-items-center bg-orange">
-        <form class="col-md-3 col-xs-12" method="post" action="{{route('coordinator.loginPost')}}">
+        <form class="col-12 col-md-10" style="max-width: 450px" method="post"
+              action="{{route('coordinator.loginPost')}}">
             {{ csrf_field() }}
             <div class="col-12">
                 <h1 class="text-white">Coordinator portal</h1>
@@ -15,7 +16,8 @@
                             <i class="fas fa-user"></i>
                         </span>
                         </div>
-                        <input class="form-control form-control-alternative" placeholder="Enter your email here" name="email"
+                        <input class="form-control form-control-alternative" title="Login email"
+                               placeholder="Enter your email here" name="email"
                                id="school_id" type="email">
                     </div>
                 </div>
@@ -32,11 +34,11 @@
                 </div>
                 <div class="form-group row">
                     @if($errors->has('email'))
-                        <p class="col-12 text-danger">
+                        <p class="col-12 text-black">
                             {{$errors->first('email')}}
                         </p>
                     @elseif($errors->has('password'))
-                        <p class="col-12 text-danger">
+                        <p class="col-12 text-black">
                             {{$errors->first('password')}}
                         </p>
                     @endif
