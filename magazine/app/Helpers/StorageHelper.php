@@ -36,12 +36,12 @@ class StorageHelper
     }
     public static function deletePublishFile($idFacultySemester, $idPublish, $fileDir)
     {
-        $dir = self::getArticleFilePath($idFacultySemester, $idPublish) . $fileDir;
+        $dir = self::getPublishFilePath($idFacultySemester, $idPublish) . $fileDir;
         return self::disk()->delete($dir);
     }
     public static function getPublishFile($idFacultySemester, $idPublish, $path)
     {
-        return self::disk()->get(self::getArticleFilePath($idFacultySemester, $idPublish, $path));
+        return self::disk()->get(self::getPublishFilePath($idFacultySemester, $idPublish, $path));
     }
     public static function saveArticleFileSubmission($idFacultySemester, $idArticle, UploadedFile $file, &$filePath = null)
     {

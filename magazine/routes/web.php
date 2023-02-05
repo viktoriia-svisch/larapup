@@ -2,8 +2,8 @@
 use App\Helpers\StorageHelper;
 use App\Models\PublishImage;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
+use Intervention\Image\Facades\Image;
 Route::get('/', function () {
     return redirect(\route('student.login'));
 });
@@ -20,12 +20,10 @@ Route::get('resources/publish/{idFacultySemester}/{idPublish}/{filename}',
             abort(404);
         }
         try {
-            $file = StorageHelper::getPublishFile($idFacultySemester, $idPublish, $filename);
-            $mime = FILE_MIMES[$publish->image_ext];
-            $response = Response::make($file, 200);
-            $response->header("Content-Type", $mime);
-            return $response;
+            $file = StorageHelper::getPublishFilePath($idFacultySemester, $idPublish, $filename);
+            return Image::make(storage_path("app/" . $file))->response();
         } catch (Exception $exception) {
+            dd($exception);
             abort(404);
         }
         return;

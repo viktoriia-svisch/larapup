@@ -138,8 +138,8 @@ class FacultyController extends FacultySemesterBaseController
     {
         $title = $request->get("title");
         $listDescription = $request->get("description");
-        $listImage = $request->get("old_image") ?? [];
-        $listNewImage = $request->file("image") ?? [];
+        $listImage = $request->get("old_image");
+        $listNewImage = $request->file("image");
         $facultySemester = FacultySemester::with("semester")
             ->where("faculty_id", $faculty_id)->where("semester_id", $semester_id)
             ->whereHas("faculty_semester_coordinator", function (Builder $builder) {
@@ -162,37 +162,44 @@ class FacultyController extends FacultySemesterBaseController
             DB::rollback();
             return back()->with($this->responseBladeMessage("Cannot begin to publish", false));
         }
-        foreach ($listImage as $oldImageValidation) {
-            if (!in_array($oldImageValidation, $publishData->publish_image)) {
-                DB::rollBack();
-                return back()->with($this->responseBladeMessage("Invalid Integrity data!", false));
-            }
+        $arrExistedImage = [];
+        foreach ($publishData->publish_image as $imgOb){
+            array_push($arrExistedImage, $imgOb->image_path);
         }
-        $arrDeletedImage = [];
-        foreach ($publishData->publish_image as $key => $image) {
-            if (!in_array($image->image_path, $listImage)) {
-                if ($image->delete()) {
-                    array_push($arrDeletedImage, $image);
-                } else {
+        if ($listImage)
+            foreach ($listImage as $oldImageValidation) {
+                if (!in_array($oldImageValidation, $arrExistedImage)) {
                     DB::rollBack();
-                    return back()->with($this->responseBladeMessage("Cannot delete old data", false));
+                    return back()->with($this->responseBladeMessage("Invalid Integrity data!", false));
                 }
             }
-        }
-        $arrNewImage = [];
-        foreach ($listNewImage as $key => $newImage) {
-            try {
-                $newImage = new PublishImage([
-                    "image_path" => StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $newImage),
-                    "image_ext" => FILE_EXT_INDEX[$newImage->getClientOriginalExtension()],
-                    "description" => "N/D"
-                ]);
-                array_push($arrNewImage, $newImage);
-            } catch (Exception $exception) {
-                DB::rollBack();
-                return back()->with($this->responseBladeMessage("Cannot save new data", false));
+        $arrDeletedImage = [];
+        if ($publishData->publish_image)
+            foreach ($publishData->publish_image as $key => $image) {
+                if (!in_array($image->image_path, $listImage)) {
+                    if ($image->delete()) {
+                        array_push($arrDeletedImage, $image);
+                    } else {
+                        DB::rollBack();
+                        return back()->with($this->responseBladeMessage("Cannot delete old data", false));
+                    }
+                }
             }
-        }
+        $arrNewImage = [];
+        if ($listNewImage)
+            foreach ($listNewImage as $key => $img) {
+                try {
+                    $newImage = new PublishImage([
+                        "image_path" => StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $img)["file"],
+                        "image_ext" => FILE_EXT_INDEX[$img->getClientOriginalExtension()],
+                        "description" => "N/D"
+                    ]);
+                    array_push($arrNewImage, $newImage);
+                } catch (Exception $exception) {
+                    DB::rollBack();
+                    return back()->with($this->responseBladeMessage("Cannot save new data", false));
+                }
+            }
         if (sizeof($arrNewImage) > 0) {
             $resultSaved = $publishData->publish_image()->saveMany($arrNewImage);
             if (sizeof($resultSaved) > 0) {
