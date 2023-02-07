@@ -21,7 +21,7 @@ Route::get('resources/publish/{idFacultySemester}/{idPublish}/{filename}',
         }
         try {
             $file = StorageHelper::getPublishFilePath($idFacultySemester, $idPublish, $filename);
-            return Image::make(storage_path("app/" . $file))->response();
+            return Image::make(storage_path("app/" . $file))->response(FILE_EXT[$publish->image_ext]);
         } catch (Exception $exception) {
             dd($exception);
             abort(404);
