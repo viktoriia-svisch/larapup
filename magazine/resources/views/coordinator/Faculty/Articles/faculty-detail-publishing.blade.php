@@ -159,7 +159,7 @@
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 <img alt="" class="img-thumbnail rounded ml-1 mr-1 img-prev-tag"
-                                     src="{{route("resources.publishes", [$facultySemester->id, $published->id, $image->image_path])}}">
+                                     src="{{asset('storage/'. \App\Helpers\StorageHelper::getPublishFilePath($facultySemester->id, $published->id, $image->image_path, true))}}">
                                 <input type="hidden" name="old_image[]" value="{{$image->image_path}}">
                             </div>
                         @endforeach
