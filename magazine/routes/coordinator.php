@@ -15,7 +15,6 @@ Route::group([
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
     Route::get('manage/{id}', 'CoordinatorController@updateCoordinator')->name('coordinator.manageAccount');
     Route::post('manage/{id}', 'CoordinatorController@updateCoordinatorPost')->name('coordinator.manageAccount_post');
-    Route::get('faculty/{faculty_id}/{semester_id}/article', 'FacultyController@facultyDetailArticle')->name('coordinator.faculty.article');
     Route::get('faculty/{faculty_id}/{semester_id}/dashboard','FacultyController@facultyDetailDashboard')
         ->name('coordinator.faculty.dashboard');
     Route::get('faculty/{faculty_id}/{semester_id}/published','FacultyController@facultyDetailListPublished')
@@ -26,7 +25,9 @@ Route::group([
         ->name('coordinator.faculty.students');
     Route::get('faculty/{faculty_id}/{semester_id}/articles','FacultyController@facultyDetailListArticle')
         ->name('coordinator.faculty.listArticle');
-    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}','FacultyController@facultyDetailArticle')
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_file_id}/download','ArticleController@articleFileDownload')
+        ->name('coordinator.faculty.listArticle.download');
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}/discussion','ArticleController@facultyArticleDiscussion')
         ->name('coordinator.faculty.article');
     Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}/publish','FacultyController@facultyDetailArticlePublish')
         ->name('coordinator.faculty.article.publish');

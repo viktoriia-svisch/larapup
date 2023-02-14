@@ -70,7 +70,7 @@ class ArticleController extends Controller
             ->where("id", $article_file_id)
             ->first();
         if ($articleFile) {
-            $path = StorageHelper::locatePath(StorageHelper::getArticleFilePath($articleFile->article_id, $articleFile->title));
+            $path = StorageHelper::locatePath(StorageHelper::getArticleFilePath($articleFile->article->faculty_semester->id, $articleFile->article_id, $articleFile->title));
             return Response::download($path, $articleFile->title);
         }
         return redirect()->back()->with($this->responseBladeMessage("Failed to retrieve the file", false));

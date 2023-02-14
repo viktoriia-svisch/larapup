@@ -6,7 +6,6 @@ use App\Http\Requests\PublishRequest;
 use App\Models\Article;
 use App\Models\FacultySemester;
 use App\Models\Publish;
-use App\Models\PublishContent;
 use App\Models\PublishImage;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -69,11 +68,6 @@ class FacultyController extends FacultySemesterBaseController
                 ->paginate(PER_PAGE),
             'currentFaculty' => $currentFaculty
         ]);
-    }
-    public function facultyDetailArticle($faculty_id, $semester_id)
-    {
-        $article = $this->retrieveDetailArticleByStudent($faculty_id, $semester_id, Auth::guard(COORDINATOR_GUARD)->user()->id);
-        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-article', "article", ["article" => $article], COORDINATOR_GUARD);
     }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
