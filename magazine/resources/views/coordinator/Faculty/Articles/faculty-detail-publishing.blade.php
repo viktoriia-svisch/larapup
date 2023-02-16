@@ -152,20 +152,19 @@
             </div>
             <div class="card card-Placeholder">
                 @if ($published && sizeof($published->publish_image) > 0)
-                    <div class="row m-0 p-2">
+                    <div class="row m-0 p-0">
                         @foreach($published->publish_image  as $image)
                             <div class="m-1 img-preview position-relative">
-                                <button class="btn btn-danger btn-img-preview" onclick="deleteExistedImage(this)"
-                                        type="button">
+                                <button class="btn btn-danger btn-img-preview" type="button">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 <img alt="" class="img-thumbnail rounded ml-1 mr-1 img-prev-tag"
-                                     src="{{asset('storage/'. \App\Helpers\StorageHelper::getPublishFilePath($facultySemester->id, $published->id, $image->image_path, true))}}">
+                                     src="{{route("resources.publishes", [$facultySemester->id, $published->id, $image->image_path])}}">
                                 <input type="hidden" name="old_image[]" value="{{$image->image_path}}">
                             </div>
                         @endforeach
                     </div>
-                    <hr class="mt-2 mb-2">
+                    <hr>
                 @endif
                 <div class="card-body row m-0 d-flex flex-wrap align-items-center" id="imagePreviewSection">
                     <label class="m-1 btn btn-primary d-flex justify-content-center align-items-center"
@@ -198,8 +197,11 @@
         let publishFormBtn = $("#submitFormBtn");
         function createPreviewDom(blobImage, file) {
             let imgPreviewContainer = $("<div/>").addClass("m-1 img-preview img-preview-blob position-relative");
+            let button = $("<button/>").addClass("btn btn-danger btn-img-preview").attr("type", "button");
+            let contentButton = $("<i/>").addClass("fa fa-trash");
             let img = $("<img/>").attr("alt", "prev-img").attr("src", blobImage).addClass("img-thumbnail rounded ml-1 mr-1 img-prev-tag");
-            imgPreviewContainer.append(img);
+            button.append(contentButton);
+            imgPreviewContainer.append(button).append(img);
             SectionAppendImage.append(imgPreviewContainer);
         }
         function listUploadImage(event) {
@@ -260,10 +262,6 @@
                     document.getElementById("formEntering").removeChild(domSection);
                 }
             });
-        }
-        function deleteExistedImage(target) {
-            let domParent = target.parentElement;
-            domParent.parentElement.removeChild(domParent);
         }
     </script>
 @endpush
