@@ -29,10 +29,30 @@ class StorageHelper
             "file" => $fileName
         ];
     }
-    public static function getPublishFilePath($idFacultySemester, $idPublish, $path = '')
+    public static function getPublishFilePath($idFacultySemester, $idPublish, $path = '', $strict = false)
     {
-        $folderPath = self::getTypeFolder(self::TYPES['ARTICLE']) . 'semester/' . $idFacultySemester . '/publish/' . $idPublish . '/';
+        $folderPath = self::getTypeFolder(self::TYPES['PUBLISH'], $strict) . $idPublish . '/fs/' . $idFacultySemester . '/';
         return $folderPath . $path;
+    }
+    private static function getTypeFolder($type, $strict = true)
+    {
+        if (!isset(self::TYPE_NAMES[$type]))
+            throw new Exception('type is undefined');
+        if ($strict) {
+            return 'data/local/' . self::TYPE_NAMES[$type] . '/';
+        }
+        return 'public/data/local/' . self::TYPE_NAMES[$type] . '/';
+    }
+    public static function save($file, $path, $fileName = '')
+    {
+        if (!$fileName) {
+            $fileName = $file->getClientOriginalName();
+        }
+        self::disk()->putFileAs($path, $file, $fileName);
+    }
+    private static function disk()
+    {
+        return Storage::disk('local');
     }
     public static function deletePublishFile($idFacultySemester, $idPublish, $fileDir)
     {
@@ -141,23 +161,6 @@ class StorageHelper
     public static function urlPath($path)
     {
         return self::disk()->url($path);
-    }
-    private static function disk()
-    {
-        return Storage::disk('local');
-    }
-    private static function getTypeFolder($type)
-    {
-        if (!isset(self::TYPE_NAMES[$type]))
-            throw new Exception('type is undefined');
-        return 'data/local/' . self::TYPE_NAMES[$type] . '/';
-    }
-    public static function save($file, $path, $fileName = '')
-    {
-        if (!$fileName) {
-            $fileName = $file->getClientOriginalName();
-        }
-        self::disk()->putFileAs($path, $file, $fileName);
     }
     public static function mimeType($path)
     {
