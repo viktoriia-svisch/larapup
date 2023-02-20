@@ -12,12 +12,14 @@ class StorageHelper
         'COMMENT' => 2,
         'PROFILE' => 3,
         'PUBLISH' => 4,
+        'AVATAR' => 5,
     ];
     const TYPE_NAMES = [
         1 => 'articles',
         2 => 'comments',
         3 => 'profiles',
         4 => 'publishes',
+        5 => 'avatar'
     ];
     public static function savePublishFileSubmission($idFacultySemester, $idPublish, UploadedFile $file, &$filePath = null)
     {
@@ -62,6 +64,30 @@ class StorageHelper
     public static function getPublishFile($idFacultySemester, $idPublish, $path)
     {
         return self::disk()->get(self::getPublishFilePath($idFacultySemester, $idPublish, $path));
+    }
+    public static function saveAvatarUser($idUser, $type, UploadedFile $file, &$filePath = null)
+    {
+        $fileName = $file->getClientOriginalName();
+        $filePath = self::getAvatarUserPath($idUser, $type);
+        self::save($file, $filePath, $fileName);
+        return [
+            "full" => $filePath . $fileName,
+            "file" => $fileName
+        ];
+    }
+    public static function getAvatarUserPath($idUser, $type = "student", $path = '', $strict = false)
+    {
+        $folderPath = self::getTypeFolder(self::TYPES['AVATAR'], $strict) . $type . '/' . $idUser . '/';
+        return $folderPath . $path;
+    }
+    public static function deleteAvatarUser($idUser, $type, $fileDir)
+    {
+        $dir = self::getAvatarUserPath($idUser, $type) . $fileDir;
+        return self::disk()->delete($dir);
+    }
+    public static function getAvatarUser($idUser, $type, $path)
+    {
+        return self::disk()->get(self::getAvatarUserPath($idUser, $type, $path));
     }
     public static function saveArticleFileSubmission($idFacultySemester, $idArticle, UploadedFile $file, &$filePath = null)
     {
