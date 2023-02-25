@@ -24,7 +24,7 @@
                 </div>
             </div>
             <hr>
-            <div class="col-xl-12" style=" margin-top: 2vw">
+            <div class="row col-xl-12" style=" margin-top: 2vw">
                 <p class="col-xl-12" style="text-align: center; font-weight: bold ">
                     {{$student->last_name}} {{$student->first_name}}
                 </p>
