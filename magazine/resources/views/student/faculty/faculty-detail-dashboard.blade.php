@@ -107,10 +107,11 @@
                     </div>
                     <div class="col card p-0">
                         <div class="card-body p-3">
-                            <p class="text-primary font-weight-bold">
-                                @if ($comment->student)
+                                @if ($comment->student_id)
+                                <p class="text-primary font-weight-bold">
                                     {{$comment->student->first_name . ' ' . $comment->student->last_name}}
                                 @else
+                                <p class="text-danger font-weight-bold">
                                     {{$comment->coordinator->first_name . ' ' . $comment->coordinator->last_name}}
                                 @endif
                             </p>

@@ -12,12 +12,14 @@ class StorageHelper
         'COMMENT' => 2,
         'PROFILE' => 3,
         'PUBLISH' => 4,
+        'AVATAR' => 5,
     ];
     const TYPE_NAMES = [
         1 => 'articles',
         2 => 'comments',
         3 => 'profiles',
         4 => 'publishes',
+        5 => 'avatar'
     ];
     public static function savePublishFileSubmission($idFacultySemester, $idPublish, UploadedFile $file, &$filePath = null)
     {
@@ -29,19 +31,63 @@ class StorageHelper
             "file" => $fileName
         ];
     }
-    public static function getPublishFilePath($idFacultySemester, $idPublish, $path = '')
+    public static function getPublishFilePath($idFacultySemester, $idPublish, $path = '', $strict = false)
     {
-        $folderPath = self::getTypeFolder(self::TYPES['ARTICLE']) . 'semester/' . $idFacultySemester . '/publish/' . $idPublish . '/';
+        $folderPath = self::getTypeFolder(self::TYPES['PUBLISH'], $strict) . $idPublish . '/fs/' . $idFacultySemester . '/';
         return $folderPath . $path;
+    }
+    private static function getTypeFolder($type, $strict = true)
+    {
+        if (!isset(self::TYPE_NAMES[$type]))
+            throw new Exception('type is undefined');
+        if ($strict) {
+            return 'data/local/' . self::TYPE_NAMES[$type] . '/';
+        }
+        return 'public/data/local/' . self::TYPE_NAMES[$type] . '/';
+    }
+    public static function save($file, $path, $fileName = '')
+    {
+        if (!$fileName) {
+            $fileName = $file->getClientOriginalName();
+        }
+        self::disk()->putFileAs($path, $file, $fileName);
+    }
+    private static function disk()
+    {
+        return Storage::disk('local');
     }
     public static function deletePublishFile($idFacultySemester, $idPublish, $fileDir)
     {
-        $dir = self::getArticleFilePath($idFacultySemester, $idPublish) . $fileDir;
+        $dir = self::getPublishFilePath($idFacultySemester, $idPublish) . $fileDir;
         return self::disk()->delete($dir);
     }
     public static function getPublishFile($idFacultySemester, $idPublish, $path)
     {
-        return self::disk()->get(self::getArticleFilePath($idFacultySemester, $idPublish, $path));
+        return self::disk()->get(self::getPublishFilePath($idFacultySemester, $idPublish, $path));
+    }
+    public static function saveAvatarUser($idUser, $type, UploadedFile $file, &$filePath = null)
+    {
+        $fileName = $file->getClientOriginalName();
+        $filePath = self::getAvatarUserPath($idUser, $type);
+        self::save($file, $filePath, $fileName);
+        return [
+            "full" => $filePath . $fileName,
+            "file" => $fileName
+        ];
+    }
+    public static function getAvatarUserPath($idUser, $type = "student", $path = '', $strict = false)
+    {
+        $folderPath = self::getTypeFolder(self::TYPES['AVATAR'], $strict) . $type . '/' . $idUser . '/';
+        return $folderPath . $path;
+    }
+    public static function deleteAvatarUser($idUser, $type, $fileDir)
+    {
+        $dir = self::getAvatarUserPath($idUser, $type) . $fileDir;
+        return self::disk()->delete($dir);
+    }
+    public static function getAvatarUser($idUser, $type, $path)
+    {
+        return self::disk()->get(self::getAvatarUserPath($idUser, $type, $path));
     }
     public static function saveArticleFileSubmission($idFacultySemester, $idArticle, UploadedFile $file, &$filePath = null)
     {
@@ -141,23 +187,6 @@ class StorageHelper
     public static function urlPath($path)
     {
         return self::disk()->url($path);
-    }
-    private static function disk()
-    {
-        return Storage::disk('local');
-    }
-    private static function getTypeFolder($type)
-    {
-        if (!isset(self::TYPE_NAMES[$type]))
-            throw new Exception('type is undefined');
-        return 'data/local/' . self::TYPE_NAMES[$type] . '/';
-    }
-    public static function save($file, $path, $fileName = '')
-    {
-        if (!$fileName) {
-            $fileName = $file->getClientOriginalName();
-        }
-        self::disk()->putFileAs($path, $file, $fileName);
     }
     public static function mimeType($path)
     {

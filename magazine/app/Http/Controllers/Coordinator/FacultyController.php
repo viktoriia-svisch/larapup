@@ -2,11 +2,12 @@
 namespace App\Http\Controllers\Coordinator;
 use App\Helpers\StorageHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
+use App\Http\Requests\PublishRequest;
 use App\Models\Article;
 use App\Models\FacultySemester;
 use App\Models\Publish;
-use App\Models\PublishContent;
-use ErrorException;
+use App\Models\PublishImage;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -68,18 +69,16 @@ class FacultyController extends FacultySemesterBaseController
             'currentFaculty' => $currentFaculty
         ]);
     }
-    public function facultyDetailArticle($faculty_id, $semester_id)
-    {
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-article', "article");
-    }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
+        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, COORDINATOR_GUARD, null);
         return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-dashboard', "dashboard", [
-        ]);
+            "comments" => $listComment
+        ], COORDINATOR_GUARD);
     }
     public function facultyDetailMember($faculty_id, $semester_id)
     {
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member");
+        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-member', "member", [], COORDINATOR_GUARD);
     }
     public function facultyDetailSettings($faculty_id, $semester_id)
     {
@@ -100,28 +99,41 @@ class FacultyController extends FacultySemesterBaseController
             });
         }
         $articles = $articles->paginate(PER_PAGE);
-        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.Articles.faculty-detail-listArticle', "articles", ["articles" => $articles]);
+        return $this->facultyDetail(
+            $faculty_id,
+            $semester_id,
+            'coordinator.Faculty.Articles.faculty-detail-listArticle',
+            "articles",
+            [
+                "articles" => $articles
+            ]
+        );
     }
-    public function facultyDetailArticlePublish(Request $request, $faculty_id, $semester_id, $article_id)
+    public function facultyDetailArticlePublish($faculty_id, $semester_id, $article_id)
     {
         $facultySemester = $this->retrieveFacultySemester($faculty_id, $semester_id);
         $article = $this->retrieveDetailArticle($faculty_id, $semester_id, $article_id);
+        $publishing = Publish::with("publish_image")
+            ->where("coordinator_id", Auth::guard(COORDINATOR_GUARD)->user()->id)
+            ->where("article_id", $article_id)
+            ->whereHas("article.faculty_semester", function (Builder $builder) use ($faculty_id, $semester_id) {
+                $builder->where("semester_id", $semester_id)
+                    ->where("faculty_id", $faculty_id);
+            })->first();
         if ($article && $facultySemester)
             return view("coordinator.Faculty.Articles.faculty-detail-publishing", [
                 "facultySemester" => $facultySemester,
-                "article" => $article
+                "article" => $article,
+                "published" => $publishing
             ]);
         return redirect()->route("coordinator.faculty.listArticle");
     }
-    public function facultyDetailArticlePublish_Post(Request $request, $faculty_id, $semester_id, $article_id)
+    public function facultyDetailArticlePublish_Post(PublishRequest $request, $faculty_id, $semester_id, $article_id)
     {
         $title = $request->get("title");
-        $listDescription = $request->get("description") ?? [];
-        $listImage[] = $request->file("image") ?? [];
-        $listImageDescription = $request->get("imageDescription") ?? [];
-        if (sizeof($listDescription) !== sizeof($listImageDescription)) {
-            return back()->with($this->responseBladeMessage("The sending data was not correct!", false));
-        }
+        $listDescription = $request->get("description");
+        $listImage = $request->get("old_image");
+        $listNewImage = $request->file("image");
         $facultySemester = FacultySemester::with("semester")
             ->where("faculty_id", $faculty_id)->where("semester_id", $semester_id)
             ->whereHas("faculty_semester_coordinator", function (Builder $builder) {
@@ -134,67 +146,72 @@ class FacultyController extends FacultySemesterBaseController
             return redirect()->route("coordinator.faculty.listArticle");
         }
         DB::beginTransaction();
-        $publishData = Publish::with("publish_content")->firstOrNew([
+        $publishData = Publish::with("publish_image")->firstOrNew([
             "coordinator_id" => Auth::guard(COORDINATOR_GUARD)->user()->id,
             "article_id" => $article_id
         ]);
         $publishData->title = $title;
+        $publishData->content = $listDescription;
         if (!$publishData->save()) {
             DB::rollback();
             return back()->with($this->responseBladeMessage("Cannot begin to publish", false));
         }
-        $listPublishDataDetail = $publishData->publish_content;
-        $arrNewContent = [];
-        foreach ($listDescription as $key => $description) {
-            try {
-                $existedDetail = $listPublishDataDetail[$key];
-                $existedDetail->content = $description;
-                try {
-                    $pathInfo = StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $listImage[$key]);
-                    if ($pathInfo && $pathInfo["file"]) {
-                        $existedDetail->image_path = $pathInfo["file"];
-                        $existedDetail->image_description = $listImageDescription[$key];
-                    }
-                } catch (ErrorException $exception) {
-                } finally {
-                    $existedDetail->publish_id = $publishData->id;
-                    if (!$existedDetail->save()) {
-                        DB::rollback();
-                        return back()->with($this->responseBladeMessage("Cannot save the content of the publish document", false));
-                    }
-                }
-            } catch (ErrorException $e) {
-                $newContent = new PublishContent();
-                $newContent->content = $description;
-                try {
-                    if ($listImage[$key]){
-                        $pathInfo = StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $listImage[$key]);
-                        if ($pathInfo && $pathInfo["file"]) {
-                            $newContent->image_path = $pathInfo["file"];
-                            $newContent->image_description = $listImageDescription[$key];
-                        }
-                    }
-                } catch (ErrorException $e) {
-                } finally {
-                    array_push($arrNewContent, $newContent);
+        $arrExistedImage = [];
+        foreach ($publishData->publish_image as $imgOb){
+            array_push($arrExistedImage, $imgOb->image_path);
+        }
+        if ($listImage)
+            foreach ($listImage as $oldImageValidation) {
+                if (!in_array($oldImageValidation, $arrExistedImage)) {
+                    DB::rollBack();
+                    return back()->with($this->responseBladeMessage("Invalid Integrity data!", false));
                 }
             }
-        }
-        if (sizeof($arrNewContent) > 0) {
-            $models = $publishData->publish_content()->saveMany($arrNewContent);
-            if (!$models || sizeof($models) == 0) {
-                DB::rollback();
-                return back()->with($this->responseBladeMessage("Cannot save the content of the publish document", false));
+        $arrDeletedImage = [];
+        if ($publishData->publish_image)
+            foreach ($publishData->publish_image as $key => $image) {
+                if (!in_array($image->image_path, $listImage)) {
+                    if ($image->delete()) {
+                        array_push($arrDeletedImage, $image);
+                    } else {
+                        DB::rollBack();
+                        return back()->with($this->responseBladeMessage("Cannot delete old data", false));
+                    }
+                }
             }
+        $arrNewImage = [];
+        if ($listNewImage)
+            foreach ($listNewImage as $key => $img) {
+                try {
+                    $newImage = new PublishImage([
+                        "image_path" => StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $img)["file"],
+                        "image_ext" => FILE_EXT_INDEX[$img->getClientOriginalExtension()],
+                        "description" => "N/D"
+                    ]);
+                    array_push($arrNewImage, $newImage);
+                } catch (Exception $exception) {
+                    DB::rollBack();
+                    return back()->with($this->responseBladeMessage("Cannot save new data", false));
+                }
+            }
+        if (sizeof($arrNewImage) > 0) {
+            $resultSaved = $publishData->publish_image()->saveMany($arrNewImage);
+            if (sizeof($resultSaved) > 0) {
+                try {
+                    foreach ($arrDeletedImage as $file) {
+                        StorageHelper::deletePublishFile($facultySemester->id, $publishData->id, $file->image_path);
+                    }
+                    DB::commit();
+                    return redirect()->back()->with($this->responseBladeMessage("Success"));
+                } catch (Exception $exception) {
+                    DB::commit();
+                    return redirect()->back()->with($this->responseBladeMessage("Success but having some error in deleting physically"));
+                }
+            }
+            DB::rollBack();
+            return back()->with($this->responseBladeMessage("Cannot save new data", false));
         }
-        if (sizeof($listDescription) < sizeof($listPublishDataDetail)) {
-            $deletedCount = sizeof($listPublishDataDetail) - sizeof($listDescription);
-        }
-        if ($publishData->save()) {
-            DB::commit();
-            return back()->with($this->responseBladeMessage("Success", true));
-        }
-        DB::rollback();
-        return back()->with($this->responseBladeMessage("Cannot save the content of the publish document", false));
+        DB::commit();
+        return redirect()->back()->with($this->responseBladeMessage("Action Succeed"));
     }
 }

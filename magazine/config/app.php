@@ -38,6 +38,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
     ],
     'aliases' => [
         'App' => Illuminate\Support\Facades\App::class,
@@ -76,5 +77,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Carbon' => 'Carbon\Carbon',
+        'Image' => Intervention\Image\Facades\Image::class
     ],
 ];

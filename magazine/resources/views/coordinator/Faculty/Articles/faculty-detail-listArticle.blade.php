@@ -74,16 +74,18 @@
                                 <hr class="mt-2 mb-0">
                                 <div class="col-12 row m-0 p-0 pb-3">
                                     <div class="col p-0">
-                                        Submitted at: {{$article->created_at}}
+                                        Submitted at: {{\App\Helpers\DateTimeHelper::formatDateTime($article->created_at)}}
                                     </div>
                                     <div class="col p-0">
-                                        Last Update: {{\App\Helpers\DateTimeHelper::formatDateTime($article->updated_at)}}
+                                        Last Update:
+                                        {{\App\Helpers\DateTimeHelper::formatDateTime($article->updated_at)}}
                                     </div>
                                 </div>
                                 <div class="col-12 row m-0 p-0">
                                     @foreach($article->article_file as $file)
                                         <div class="col-12 col-md-6 p-2">
-                                            <a class="card text-black" href="#">
+                                            <a class="card text-black" href="{{route('coordinator.faculty.listArticle.download', [
+                                            $facultySemester->faculty_id, $facultySemester->semester_id, $file->id])}}">
                                                 <div class="card-body row m-0 p-3">
                                                     <div class="col-auto d-flex align-items-center">
                                                         <div
@@ -113,7 +115,7 @@
                                     {{$article->grade}}
                                 </h1>
                                 <div class="d-flex flex-column justify-content-around p-0 m-0">
-                                    <a href="{{route("coordinator.faculty.article.publish", [$facultySemester->faculty_id, $facultySemester->semester_id, $article->id])}}"
+                                    <a href="{{route('coordinator.faculty.article', [$facultySemester->faculty_id, $facultySemester->semester_id, $article->id])}}"
                                        class="btn btn-primary m-0 mb-1">
                                         Discuss
                                     </a>

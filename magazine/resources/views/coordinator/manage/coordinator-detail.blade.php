@@ -1,13 +1,13 @@
-@extends("layout.Student.student-layout")
-@section('title', 'Update Information Student')
+@extends("layout.Coordinator.coordinator-layout")
+@section('title', 'Update Information Coordinator')
 @push("custom-css")
 @endpush
 @section('breadcrumb')
     <div class="container">
-        {{ Breadcrumbs::render('dashboard.profile', route('student.dashboard'), route('student.manageAccount',[$student->id])) }}
+        {{ Breadcrumbs::render('dashboard.profile', route('coordinator.dashboard'), route('coordinator.manageAccount',[$coordinator->id])) }}
     </div>
 @endsection
-@section("student-content")
+@section("coordinator-content")
     <div class="container row col-md-12">
         <br>
         <div class="col-sm-2">
@@ -26,14 +26,14 @@
             <hr>
             <div class="col-xl-12" style=" margin-top: 2vw">
                 <p class="col-xl-12" style="text-align: center; font-weight: bold ">
-                    {{$student->last_name}} {{$student->first_name}}
+                    {{$coordinator->last_name}} {{$coordinator->first_name}}
                 </p>
                 <p class="col-xl-12" style="text-align: center">Gender:
-                    @if($student->gender == 1)Male
+                    @if($coordinator->gender == 1)Male
                     @else Female
                     @endif
                 </p>
-                <p class="col-xl-12" style="text-align: center">Date of birth: {{$student->dateOfBirth}}</p>
+                <p class="col-xl-12" style="text-align: center">Date of birth: {{$coordinator->dateOfBirth}}</p>
             </div>
         </div>
         <div class="col-sm-5 p-4">
@@ -57,19 +57,19 @@
                     <div class="card-body">{{$errors->first('new_password')}}</div>
                 </div>
             @endif
-            <h2>Information of Student</h2>
+            <h2>Information of Coordinator</h2>
             <hr>
-            <form method="post" action="{{route('student.manageAccount_post', [$student->id])}}">
+            <form method="post" action="{{route('coordinator.manageAccount_post', [$coordinator->id])}}">
                 {{csrf_field()}}
                 <div class="form-group mt-3">
                     <p>First Name</p>
-                    <input name='first_name' class="form-control" type="text" placeholder="{{$student->first_name}}"
-                           value="{{$student->first_name}}">
+                    <input name='first_name' class="form-control" type="text" placeholder="{{$coordinator->first_name}}"
+                           value="{{$coordinator->first_name}}">
                 </div>
                 <div class="form-group mt-3">
                     <p>Last Name</p>
-                    <input name="last_name" class="form-control" type="text" placeholder="{{$student->last_name}}"
-                           value="{{$student->last_name}}">
+                    <input name="last_name" class="form-control" type="text" placeholder="{{$coordinator->last_name}}"
+                           value="{{$coordinator->last_name}}">
                 </div>
                 <p class="text-muted mt-3 pb-0 mb-1">Date of Birth</p>
                 <div class="input-group input-group-alternative mt-3">
@@ -77,12 +77,12 @@
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                     </div>
                     <input class="form-control datepicker" id="dateOfBirth" name="dateOfBirth"
-                           value="{{$student->dateOfBirth}}" placeholder="Date of Birth"
+                           value="{{$coordinator->dateOfBirth}}" placeholder="Date of Birth"
                            type="text">
                 </div>
                 <p class="text-muted mt-3 pb-0 mb-1">Gender</p>
                 <div class="row col-12" style="margin-top: 2vw; margin-right: -1vw">
-                    @if($student->gender == GENDER['MALE'])
+                    @if($coordinator->gender == GENDER['MALE'])
                         <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
                             <input name="gender" value="{{GENDER['MALE']}}" checked class="custom-control-input"
                                    id="genderMale"
@@ -111,8 +111,8 @@
                 </div>
                 <div style="margin-top: 2vw">
                     <p>Email</p>
-                    <input class="form-control" type="text" placeholder="{{$student->email}}"
-                           value="{{$student->email}}" readonly>
+                    <input class="form-control" type="text" placeholder="{{$coordinator->email}}"
+                           value="{{$coordinator->email}}" readonly>
                 </div>
                 @if($errors->has('new_password'))
                     <div class="card bg-danger text-white">
