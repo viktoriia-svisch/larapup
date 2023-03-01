@@ -4,6 +4,12 @@ Route::get('/', function () {
     return redirect(\route('student.login'));
 });
 Route::group([
+    'middleware' => ['authorized']
+], function ($router) {
+    Route::get('publishes', 'GeneralController@listPublished');
+    Route::get('publishing/{id_publish}', 'GeneralController@published');
+});
+Route::group([
     'prefix' => 'guest',
     'namespace' => 'Guest'
 ], function ($router) {
