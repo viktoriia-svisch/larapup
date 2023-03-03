@@ -41,33 +41,23 @@
         </div>
     </div>
     <hr>
-    @if (Session::has('action_response') || sizeof($errors->all()) > 0)
-        @if (Session::get('action_response')['status_ok'])
-            <div class="col-12 m-0 p-0">
+    @if (\Session::has('action_response'))
+        @if (\Session::get('action_response')['status_ok'])
+            <div class="col-12 m-auto">
                 <div class="card bg-success text-white">
                     <div class="card-body" style="padding: 1rem;">
-                        {{Session::get('action_response')['status_message']}}
+                        {{\Session::get('action_response')['status_message']}}
                     </div>
                 </div>
             </div>
         @else
-            @if ($errors->first())
-                <div class="col-12 m-0 p-0">
-                    <div class="card bg-danger text-white">
-                        <div class="card-body" style="padding: 1rem;">
-                            {{$errors->first()}}
-                        </div>
+            <div class="col-12 m-auto">
+                <div class="card bg-danger text-white">
+                    <div class="card-body" style="padding: 1rem;">
+                        {{\Session::get('action_response')['status_message']}}
                     </div>
                 </div>
-            @else
-                <div class="col-12 m-0 p-0">
-                    <div class="card bg-danger text-white">
-                        <div class="card-body" style="padding: 1rem;">
-                            {{Session::get('action_response')['status_message']}}
-                        </div>
-                    </div>
-                </div>
-            @endif
+            </div>
         @endif
         <br>
     @endif

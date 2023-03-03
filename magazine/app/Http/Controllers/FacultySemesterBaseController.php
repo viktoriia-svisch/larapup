@@ -67,11 +67,9 @@ class FacultySemesterBaseController extends Controller
     public function retrieveCommentAll($faculty_id, $semester_id, $guardStudent = STUDENT_GUARD, $guardCoordinator = COORDINATOR_GUARD)
     {
         $commentStudent = $this->retrieveCommentStudent($faculty_id, $semester_id, $guardStudent);
-        $commentCoordinator = $this->retrieveCommentCoordinator($faculty_id, $semester_id, $guardCoordinator);
-        $arrCombined = $commentStudent->concat($commentCoordinator)->sortByDesc(function ($comment, $key) {
-            return $comment['created_at'];
-        });
-        return $arrCombined;
+        $commentCoordinator = $this->retrieveCommentCoordinator($faculty_id, $semester_id, $guardCoordinator)
+            ->merge($commentStudent)->sortByDesc("created_at");
+        return $commentCoordinator;
     }
     public function retrieveCommentStudent($faculty_id, $semester_id, $guard = STUDENT_GUARD)
     {

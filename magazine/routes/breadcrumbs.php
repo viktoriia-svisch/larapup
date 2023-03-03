@@ -54,10 +54,6 @@ Breadcrumbs::for('dashboard.faculty.detail.newPublish', function ($trail, $paren
     $trail->parent('dashboard.faculty.detail', $parentRoute, $parentRoute2, $parentRoute3);
     $trail->push("New Publish", $routeActive);
 });
-Breadcrumbs::for('dashboard.faculty.detail.discussion', function ($trail, $parentRoute, $parentRoute2, $parentRoute3, $article, $routeActive) {
-    $trail->parent('dashboard.faculty.detail', $parentRoute, $parentRoute2, $parentRoute3);
-    $trail->push("Discussion - " . $article->student->first_name. ' '. $article->student->last_name, $routeActive);
-});
 Breadcrumbs::for('dashboard.faculty.create', function ($trail, $parentRoute, $parent2Route, $routeActive) {
     $trail->parent('dashboard.faculty', $parentRoute, $parent2Route);
     $trail->push("Create new", $routeActive);

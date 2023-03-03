@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Middleware;
+use App\Models\Coordinator;
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class RedirectIfAuthenticated
 {
@@ -9,7 +9,7 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
             $redirect = route('guest.dashboard');
-            switch ($guard) {
+            switch ($guard){
                 case STUDENT_GUARD:
                     $redirect = route('student.dashboard');
                     break;
