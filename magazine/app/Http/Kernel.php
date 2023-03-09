@@ -1,5 +1,6 @@
 <?php
 namespace App\Http;
+use App\Http\Middleware\AuthorizedMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel
 {
@@ -28,6 +29,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'coordinator.master' => \App\Http\Middleware\CoordinatorMaster::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'authorized' => AuthorizedMiddleware::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
