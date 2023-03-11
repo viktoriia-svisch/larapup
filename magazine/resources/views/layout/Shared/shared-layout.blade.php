@@ -12,90 +12,23 @@
                 class="pt-5 pb-5 border-bottom text-center d-flex flex-column align-items-center justify-content-center">
                 <h2 class="text-white mb-0">Publications</h2>
                 <small class="text-muted">of</small>
-                <h1 class="text-white mt-0">Faculty Math</h1>
+                <h1 class="text-white mt-0">{{$viewFaculty->name}}</h1>
             </section>
             <section class="semester-title">
                 <h2 class="mt-3 mb-3 text-white text-center">Semester</h2>
             </section>
             <section class="menu-sidebar">
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items active">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
-                <div class="items">
-                    Fall 2017
-                </div>
+                @foreach($viewFaculty->faculty_semester as $fac)
+                    <a href="{{route('shared.listPublishes', [$fac->faculty_id, $fac->semester_id])}}"
+                       class="items @if ($semester_id == $fac->semester->id) active @endif">
+                        {{$fac->semester->name}}
+                        <br>
+                        <small class="text-muted">
+                            {{\App\Helpers\DateTimeHelper::formatDate($fac->semester->start_date)}}
+                            {{\App\Helpers\DateTimeHelper::formatDate($fac->semester->end_date)}}
+                        </small>
+                    </a>
+                @endforeach
             </section>
             <section class="return-dashboard">
                 <div class="d-flex justify-content-center align-items-center">
@@ -103,7 +36,21 @@
                          style="object-fit: cover; object-position: center; width: 60px; height: 60px; overflow: hidden;">
                 </div>
                 <div class="user-name text-white d-flex align-items-center">
-                    Lorem ipsum dolor sit.
+                    @php
+                        use Illuminate\Support\Facades\Auth;if (Auth::guard(ADMIN_GUARD)->check())
+                        {
+                        $user = Auth::guard(ADMIN_GUARD)->user();
+                        }elseif(Auth::guard(COORDINATOR_GUARD)->check())
+                        {
+                        $user = Auth::guard(COORDINATOR_GUARD)->user();
+                        }elseif (Auth::guard(STUDENT_GUARD)->check())
+                        {
+                        $user = Auth::guard(STUDENT_GUARD)->user();
+                        }else{
+                        $user = Auth::guard(GUEST_GUARD)->user();
+                        }
+                    @endphp
+                    {{$user->first_name . ' ' . $user->last_name}}
                 </div>
             </section>
         </div>
@@ -176,7 +123,7 @@
         .menu-sidebar .items:hover {
             background: #4c59f5;
         }
-        .menu-sidebar .items.active{
+        .menu-sidebar .items.active {
             background: #4e5bff;
         }
         .return-dashboard {

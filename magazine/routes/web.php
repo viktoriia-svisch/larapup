@@ -6,8 +6,8 @@ Route::get('/', function () {
 Route::group([
     'middleware' => ['authorized']
 ], function ($router) {
-    Route::get('publishes', 'GeneralController@listPublished')->name('shared.listPublishes');
-    Route::get('publishing/{id_publish}', 'GeneralController@published')->name('shared.publish');
+    Route::get('publishes/{faculty_id}/semester/{semester_id}', 'GeneralController@listPublished')->name('shared.listPublishes');
+    Route::get('publishes/{faculty_id}/semester/{semester_id}/article/{id_publish}', 'GeneralController@published')->name('shared.publish');
 });
 Route::group([
     'prefix' => 'guest',
