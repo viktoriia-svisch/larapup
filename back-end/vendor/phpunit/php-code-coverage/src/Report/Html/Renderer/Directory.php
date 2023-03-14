@@ -1,0 +1,68 @@
+<?php
+namespace SebastianBergmann\CodeCoverage\Report\Html;
+use SebastianBergmann\CodeCoverage\Node\AbstractNode as Node;
+use SebastianBergmann\CodeCoverage\Node\Directory as DirectoryNode;
+final class Directory extends Renderer
+{
+    public function render(DirectoryNode $node, string $file): void
+    {
+        $template = new \Text_Template($this->templatePath . 'directory.html', '{{', '}}');
+        $this->setCommonTemplateVariables($template, $node);
+        $items = $this->renderItem($node, true);
+        foreach ($node->getDirectories() as $item) {
+            $items .= $this->renderItem($item);
+        }
+        foreach ($node->getFiles() as $item) {
+            $items .= $this->renderItem($item);
+        }
+        $template->setVar(
+            [
+                'id'    => $node->getId(),
+                'items' => $items,
+            ]
+        );
+        $template->renderTo($file);
+    }
+    protected function renderItem(Node $node, bool $total = false): string
+    {
+        $data = [
+            'numClasses'                   => $node->getNumClassesAndTraits(),
+            'numTestedClasses'             => $node->getNumTestedClassesAndTraits(),
+            'numMethods'                   => $node->getNumFunctionsAndMethods(),
+            'numTestedMethods'             => $node->getNumTestedFunctionsAndMethods(),
+            'linesExecutedPercent'         => $node->getLineExecutedPercent(false),
+            'linesExecutedPercentAsString' => $node->getLineExecutedPercent(),
+            'numExecutedLines'             => $node->getNumExecutedLines(),
+            'numExecutableLines'           => $node->getNumExecutableLines(),
+            'testedMethodsPercent'         => $node->getTestedFunctionsAndMethodsPercent(false),
+            'testedMethodsPercentAsString' => $node->getTestedFunctionsAndMethodsPercent(),
+            'testedClassesPercent'         => $node->getTestedClassesAndTraitsPercent(false),
+            'testedClassesPercentAsString' => $node->getTestedClassesAndTraitsPercent(),
+        ];
+        if ($total) {
+            $data['name'] = 'Total';
+        } else {
+            if ($node instanceof DirectoryNode) {
+                $data['name'] = \sprintf(
+                    '<a href="%s/index.html">%s</a>',
+                    $node->getName(),
+                    $node->getName()
+                );
+                $up = \str_repeat('../', \count($node->getPathAsArray()) - 2);
+                $data['icon'] = \sprintf('<img src="%s.icons/file-directory.svg" class="octicon" />', $up);
+            } else {
+                $data['name'] = \sprintf(
+                    '<a href="%s.html">%s</a>',
+                    $node->getName(),
+                    $node->getName()
+                );
+                $up = \str_repeat('../', \count($node->getPathAsArray()) - 2);
+                $data['icon'] = \sprintf('<img src="%s.icons/file-code.svg" class="octicon" />', $up);
+            }
+        }
+        return $this->renderItemTemplate(
+            new \Text_Template($this->templatePath . 'directory_item.html', '{{', '}}'),
+            $data
+        );
+    }
+}
