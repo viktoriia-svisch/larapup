@@ -1,10 +1,8 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
-use App\Helpers\DateTimeHelper;
 use App\Helpers\StorageHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
 use App\Http\Requests\PublishRequest;
-use App\Http\Requests\UpdateFacultySemester;
 use App\Models\Article;
 use App\Models\FacultySemester;
 use App\Models\Publish;
@@ -84,19 +82,7 @@ class FacultyController extends FacultySemesterBaseController
     }
     public function facultyDetailSettings($faculty_id, $semester_id)
     {
-            $facultyUpdate = FacultySemester::Where('semester_id', $semester_id)->Where('faculty_id', $faculty_id)->first();
-        return view('coordinator.update-faculty', [
-            'facultyUpdate' => $facultyUpdate
-        ]);
-    }
-    public function facultyDetailSettingPost(UpdateFacultySemester $request, $faculty_id, $semester_id)
-    {
-        $facultyUpdate = FacultySemester::Where('semester_id', $semester_id)->Where('faculty_id', $faculty_id)->first();
-        $facultyUpdate->first_deadline = Carbon::parse($request->get('first_deadline')) ?? $facultyUpdate->first_deadline;
-        $facultyUpdate->second_deadline = Carbon::parse($request->get('second_deadline')) ?? $facultyUpdate->second_deadline;
-        $facultyUpdate->description = $request->get('description') ?? $facultyUpdate->description;
-        $facultyUpdate->save();
-        return redirect()->back()->withInput();
+        return 1;
     }
     public function facultyDetailListArticle(Request $request, $faculty_id, $semester_id)
     {
