@@ -9,7 +9,7 @@ class GeneralController extends FacultySemesterBaseController
 {
     public function published(Request $request, $faculty_id, $semester_id, $id_publish)
     {
-        $retrievePublish = Publish::with("publish_content")
+        $retrievePublish = Publish::with("publish_image")
             ->where("id", $id_publish)
             ->whereHas("article.faculty_semester", function (Builder $builder) use ($faculty_id, $semester_id) {
                 $builder->where("semester_id", $semester_id)->where("faculty_id", $faculty_id);

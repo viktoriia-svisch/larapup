@@ -1,9 +1,15 @@
 @extends("layout.master")
 @section("content")
     <div class="container-fluid position-relative" style="min-height: 100vh;" id="container-wrapper">
+        <section class="w-100 d-flex flex-column position-fixed top-0 left-0 right-0"
+                 style="padding-top: 0.5rem; z-index: 1030; background-color: #f8f9fe;">
+            <div class="container-fluid breadcrumb-section" id="breadcrumbs-section">
+                @yield('shared-breadcrumb')
+            </div>
+        </section>
         @yield('shared-content')
     </div>
-    <div class="sidebar-container position-fixed top-0 bottom-0 bg-default active" id="sidebar-container">
+    <div class="sidebar-container position-fixed top-0 bottom-0 bg-default" id="sidebar-container">
         <button class="btn-sidebar-toggle btn btn-default btn-icon-only" id="sidebar-toggle-btn">
             <i class="fas fa-bars"></i>
         </button>
@@ -137,17 +143,35 @@
             justify-content: center;
             align-content: center;
         }
+        .breadcrumb-section.active {
+            /*padding-left: calc(40px + 1.5rem) !important;*/
+        }
+        @media only screen and (max-width: 580px) {
+            .breadcrumb-section {
+                max-width: none;
+                padding-right: 0.5rem !important;
+            }
+        }
+        .breadcrumb-section {
+            padding-left: calc(40px + 1.5rem) !important;
+        }
     </style>
 @endpush
 @push("custom-js")
     <script>
         $(document).ready(function () {
             let sidebarBtn = $('#sidebar-container');
+            let breadcrums = $("#breadcrumbs-section");
             $('#sidebar-toggle-btn').on('click', function () {
                 if (sidebarBtn.hasClass('active')) {
                     sidebarBtn.removeClass('active');
                 } else {
                     sidebarBtn.addClass('active');
+                }
+                if (breadcrums.hasClass('active')) {
+                    breadcrums.removeClass('active');
+                } else {
+                    breadcrums.addClass('active');
                 }
             });
             $('#container-wrapper').on('click', function () {

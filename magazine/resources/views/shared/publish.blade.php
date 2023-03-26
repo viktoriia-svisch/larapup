@@ -1,66 +1,44 @@
 @extends("layout.Shared.shared-layout")
+@section('shared-breadcrumb')
+    {{ Breadcrumbs::render('publishes.publication',
+    route('shared.listPublishes', [$viewFaculty->id, $semester_id]),
+    route("shared.publish", [$viewFaculty->id, $semester_id, $publication->id]),
+    $publication)}}
+@endsection
 @section("shared-content")
-    <section class="w-100 d-flex flex-column position-fixed top-0 left-0 right-0"
-             style="padding-top: 0.5rem; z-index: 1030; background-color: #f8f9fe;">
-        <div class="container-fluid">
-            {{ Breadcrumbs::render('publishes.publication',
-            route('shared.listPublishes', [$faculty->id, $semester_id]),
-            route("shared.publish", [$faculty->id, $semester_id, $publication->id]),
-            $publication)}}
-        </div>
-    </section>
     <section class="list-publish" style="padding-top: 100px">
-        <div class="container">
-            @if (sizeof($publishes) == 0)
-                <h2 class="text-muted font-weight-thin text-center">
-                    No article found :D
-                </h2>
-            @endif
-            @foreach($publishes as $published)
-                <div class="card mb-5">
-                    <div class="row no-gutters">
-                        @if (sizeof($published->publish_image) > 0)
-                            <a href="{{route('shared.publish', [
-                                $published->article->faculty_semester->faculty_id,
-                                $published->article->faculty_semester->semester_id,
-                                $published->id])}}" class="col-md-8 col-sm-12">
-                                <img
-                                    src="{{asset('storage/'. \App\Helpers\StorageHelper::getPublishFilePath($published->article->faculty_semester->id, $published->id, $published->publish_image[0]->image_path, true))}}"
-                                    class="card-img img-fluid"
-                                    style="width: 100%; height: 100%; max-height: 450px; object-fit: cover; object-position: center"
-                                    alt="...">
-                            </a>
-                        @endif
-                        <div class="col-md-4 col-sm-12">
-                            <div class="card-body">
-                                <h1 class="card-title mb-2">{{$published->title}}</h1>
-                                <p class="card-text">
-                                    <small class="text-muted">
-                                        Uploaded at
-                                        {{\App\Helpers\DateTimeHelper::formatDateTime($published->created_at)}}
-                                        @if ($published->updated_at && $published->updated_at !== $published->created_at)
-                                            <br>
-                                            Last updated at
-                                            {{\App\Helpers\DateTimeHelper::formatDateTime($published->updated_at)}}
-                                        @endif
-                                    </small>
-                                    <br>
-                                    {{\Illuminate\Support\Str::limit($published->content, 100)}}
-                                </p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="{{route('shared.publish', [
-                                $published->article->faculty_semester->faculty_id,
-                                $published->article->faculty_semester->semester_id,
-                                $published->id])}}" class="btn btn-primary">
-                                    Read now
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+        <h1 class="text-black text-center font-weight-light pl-3 pr-3" style="font-size: 2.5rem">
+            {{nl2br(htmlentities($publication->title))}}
+        </h1>
+        <hr class="w-50 text-center">
+        @if (sizeof($publication->publish_image) > 0)
+            <div class="container rounded overflow-hidden mb-4">
+                <img
+                    src="{{asset('storage/'. \App\Helpers\StorageHelper::getPublishFilePath($publication->article->faculty_semester->id, $publication->id, $publication->publish_image[0]->image_path, true))}}"
+                    class="card-img img-fluid"
+                    style="width: 100%; height: 100%; object-fit: cover; object-position: center"
+                    alt="...">
+            </div>
+        @endif
+        <p class="container">
+            {!! nl2br(htmlentities($publication->content)) !!}
+        </p>
+        <hr class="w-50 text-center">
+        @if (sizeof($publication->publish_image) > 0)
+            <h1 class="text-black text-center font-weight-light" style="font-size: 1.5rem">
+                Image within this post
+            </h1>
+            <div class="container text-center">
+                @foreach($publication->publish_image as $image)
+                    <img
+                        src="{{asset('storage/'. \App\Helpers\StorageHelper::getPublishFilePath($publication->article->faculty_semester->id, $publication->id, $image->image_path, true))}}"
+                        class="img-fluid rounded overflow-hidden mb-4"
+                        style="min-width: 200px;"
+                        alt="...">
+                    <br>
+                @endforeach
+            </div>
+        @endif
     </section>
 @endsection
 @section('title', 'Publishes')

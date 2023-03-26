@@ -1,25 +1,22 @@
 @extends("layout.Shared.shared-layout")
-@section("shared-content")
-    <section class="w-100 d-flex flex-column position-fixed top-0 left-0 right-0"
-             style="padding-top: 0.5rem; z-index: 1030; background-color: #f8f9fe;">
-        <div class="container-fluid">
-            {{ Breadcrumbs::render('publishes', route('shared.listPublishes', [$faculty->id, $semester_id]))}}
-        </div>
-        <form class="form-searching col-12 m-0 p-0 m-auto">
-            <div class="form-group">
-                <div class="input-group input-group-alternative">
-                    <div class="input-group-prepend">
+@section('shared-breadcrumb')
+    {{ Breadcrumbs::render('publishes', route('shared.listPublishes', [$viewFaculty->id, $semester_id]))}}
+    <form class="form-searching col-12 m-0 p-0 m-auto">
+        <div class="form-group">
+            <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
                     <span class="input-group-text">
                         <i class="fas fa-search"></i>
                     </span>
-                    </div>
-                    <input class="form-control form-control-alternative" name="search"
-                           placeholder="Search title or student" type="text">
                 </div>
-                <small class="text-muted m-auto">Press enter to start searching</small>
+                <input class="form-control form-control-alternative" name="search"
+                       placeholder="Search title or student" type="text">
             </div>
-        </form>
-    </section>
+            <small class="text-muted m-auto">Press enter to start searching</small>
+        </div>
+    </form>
+@endsection
+@section("shared-content")
     <section class="list-publish" style="padding-top: 100px">
         <div class="container">
             @if (sizeof($publishes) == 0)
@@ -71,6 +68,10 @@
                     </div>
                 </div>
             @endforeach
+            <hr>
+            <div class="col-12 d-flex justify-content-center">
+                {{ $publishes->links() }}
+            </div>
         </div>
     </section>
 @endsection
