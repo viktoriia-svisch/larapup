@@ -39,6 +39,19 @@
                 @endforeach
             </div>
         @endif
+        <div class="container">
+            <p class="float-right font-weight-bold">
+                <small class="text-muted font-weight-light">
+                    Written by
+                </small>
+                {{$publication->coordinator->first_name . ' ' . $publication->coordinator->last_name}}
+                <br>
+                <small class="text-muted font-weight-light">
+                    based on
+                </small>
+                {{$publication->article->student->first_name. ' ' . $publication->article->student->last_name}}
+            </p>
+        </div>
     </section>
 @endsection
 @section('title', 'Publishes')
