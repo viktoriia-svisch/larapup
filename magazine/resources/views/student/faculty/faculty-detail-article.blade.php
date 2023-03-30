@@ -78,7 +78,8 @@
                     <span class="text-muted">Grated</span>
                     <h1>{{$article->grade}}</h1>
                     <br>
-                    <a href="" class="btn btn-success btn-icon">
+                    <a href="{{route('shared.publish', [$facultySemester->faculty_id, $facultySemester->semester->id, $article->publish->id])}}"
+                       class="btn btn-success btn-icon">
                         <i class="fas fa-thumbs-up"></i>
                         This Article was published
                     </a>
