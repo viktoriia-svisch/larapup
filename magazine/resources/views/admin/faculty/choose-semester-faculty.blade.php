@@ -15,7 +15,7 @@
 @section('admin-content')
 <div class="container">
         <br>
-        <h1 class="heading-title">{{$semester->name}}  </h1>
+        <h1 class="heading-title">Semester: {{$semester->name}}  </h1>
         <span class="text-gray">
             You can add faculty to this semester in this section and add student to available faculty
         </span>
