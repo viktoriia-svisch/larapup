@@ -58,23 +58,6 @@ class FacultyController extends Controller
                 return back()->with($this->responseBladeMessage(__('message.create_faculty_success')));
             }
     }
-    public function updateFaculty(Request $request)
-    {
-        $faculty= Faculty::find($request->faculty_id);
-        $faculty->name= $request->fname;
-        $DuplicateFaculty = Faculty::where('name','=',$request->fname)->first();
-        $request->validate([
-            'fname' => 'required|regex:/^[a-zA-Z\s]*$/'
-        ]);
-        if(!empty($DuplicateFaculty))
-          {
-            return back()->with($this->responseBladeMessage(__('message.create_faculty_duplicate'), false));
-          }
-        if ($faculty->save())
-            {
-                return back()->with($this->responseBladeMessage(__('message.create_faculty_success')));
-            }
-    }
     public function chooseSemester(Request $request)
     {
         $searchTerms = $request->get('search_semester_input');

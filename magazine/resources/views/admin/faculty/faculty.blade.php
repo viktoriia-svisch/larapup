@@ -2,8 +2,6 @@
 @section('title', 'Create Faculty')
 @push("custom-css")
 @endpush
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 @section('breadcrumb')
     <div class="container">
         {{ Breadcrumbs::render('dashboard.faculty', route('admin.dashboard'), route('admin.faculty')) }}
@@ -11,21 +9,24 @@
 @endsection
 @section("admin-content")
     <div class="container">
-        <div class="row col-12 center">
-        <div class="col-sm-4">
+        <div class="row col-12">
+        <div class="col-sm-6">
+            <h1 class="text-primary">Add new faculty</h1>
             <div class="col-12 m-0 p-0">
-                <button class="btn btn-block m-0 btn-success" data-toggle="modal" data-target="#modal-form">Create new faculty
+                <button class="btn btn-block m-0 btn-success" data-toggle="modal" data-target="#modal-form">Create
                 </button>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
+            <h1 class="text-primary">Add student into faculty</h1>
             <div class="col-12 m-0 p-0">
-                <a class="btn btn-block m-0 btn-success" href="{{route('admin.chooseSemester')}}">Add student into faculty</a>
+                <a class="btn btn-block m-0 btn-success" href="{{route('admin.chooseSemester')}}">Add student</a>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
+            <h1 class="text-primary">Add coordinator into faculty</h1>
             <div class="col-12 m-0 p-0">
-                <a class="btn btn-block m-0 btn-success" href="{{route('admin.addCoorToFaculty')}}">Add coordinator into faculty</a>
+                <a class="btn btn-block m-0 btn-success" href="{{route('admin.addCoorToFaculty')}}">Add student</a>
             </div>
         </div>
         </div>
@@ -77,8 +78,8 @@
                     </div>
                 </div>
                 <div class="col-auto d-flex align-items-center">
-                <button class="btn btn-block m-0 btn-success" data-toggle="modal" data-id={{$faculty->id}}
-                        data-name="{{$faculty->name}}" data-target="#modal-form-edit">Edit
+                    <button class="btn btn-default">
+                        Setting
                     </button>
                 </div>
             </div>
@@ -120,47 +121,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4" id="modal">
-        <div class="modal fade" id="modal-form-edit" tabindex="-1" role="dialog" aria-labelledby="modal-form"
-             aria-hidden="true">
-            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <div class="card bg-secondary shadow border-0">
-                            <div class="card-body px-lg-5 py-lg-5">
-                                <form action="{{route('admin.updateFaculty')}}" method="post">
-                                    {{csrf_field()}}
-                                    <h2 class="text-primary">Edit Faculty Name</h2>
-                                        <input type="hidden" id="fac-id" name="faculty_id" value={{$faculty->id}}>
-                                        <input id="fname" type="text" title="Faculty name" placeholder="Faculty name"
-                                        class="form-control form-control-alternative" name="fname">
-                                    <div class="col-12 m-0 p-0">
-                                        <button class="btn btn-block m-0 btn-success" id="submit" type="submit"
-                                                data-toggle="modal" data-target="#modal-form-edit">Submit
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
-<script src="{{asset('js/app.js')}}"></script>
-<script>
-    $(function(){
-        $(document).on('show.bs.modal','#modal-form-edit', function(event){
-        var button = $(event.relatedTarget)
-        var facultyId = button.data('id')
-        var name = button.data('name')
-        var modal = $(this)
-        modal.find('.modal-body #fac-id').val(facultyId);
-        modal.find('.modal-body #fname').val(name);
-        });
-    });
-</script>
 @push("custom-js")
     <script>
         function resetSearch() {
