@@ -15,7 +15,7 @@ class Publish extends Model
     public function coordinator(){
         return $this->belongsTo(Coordinator::class);
     }
-    public function publish_image(){
-        return $this->hasMany(PublishImage::class);
+    public function publish_content(){
+        return $this->hasMany(PublishContent::class);
     }
 }

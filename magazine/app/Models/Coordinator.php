@@ -21,12 +21,6 @@ class Coordinator extends Authenticate
         $date = DateTime::createFromFormat('d/m/Y', $value)->format('Y-m-d');
         $this->attributes['dateOfBirth'] = $date;
     }
-    public function getDateOfBirthAttribute()
-    {
-        $input = $this->attributes['dateOfBirth'];
-        $date = DateTime::createFromFormat('Y-m-d', $input)->format('d/m/Y');
-        return $date;
-    }
     public function setPasswordAttribute($value)
     {
         return $this->attributes['password'] = Hash::make($value);
