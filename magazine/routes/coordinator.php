@@ -37,4 +37,6 @@ Route::group([
         ->name('coordinator.faculty.article.publishPost');
     Route::get('faculty/{faculty_id}/{semester_id}/settings','FacultyController@facultyDetailSettings')
         ->name('coordinator.faculty.settings');
+    Route::post('faculty/{faculty_id}/{semester_id}/settings', 'FacultyController@facultyDetailSettingPost')
+        ->name('coordinator.faculty.settingPost');
 });
