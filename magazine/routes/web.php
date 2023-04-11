@@ -1,14 +1,35 @@
 <?php
+use App\Helpers\StorageHelper;
+use App\Models\PublishImage;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect(\route('student.login'));
 });
-Route::group([
-    'middleware' => ['authorized']
-], function ($router) {
-    Route::get('publishes/{faculty_id}/semester/{semester_id}', 'GeneralController@listPublished')->name('shared.listPublishes');
-    Route::get('publishes/{faculty_id}/semester/{semester_id}/article/{id_publish}', 'GeneralController@published')->name('shared.publish');
-});
+Route::get('resources/publish/{idFacultySemester}/{idPublish}/{filename}',
+    function ($idFacultySemester, $idPublish, $filename) {
+        $publish = PublishImage::with("publish")
+            ->whereHas("publish", function (Builder $builder) use ($idPublish, $idFacultySemester) {
+                $builder->where("id", $idPublish)->whereHas("article.faculty_semester", function (Builder $builder) use ($idFacultySemester) {
+                    $builder->where("id", $idFacultySemester);
+                });
+            })
+            ->where("image_path", $filename)->first();
+        if (!$publish) {
+            abort(404);
+        }
+        try {
+            $file = StorageHelper::getPublishFile($idFacultySemester, $idPublish, $filename);
+            $mime = FILE_MIMES[$publish->image_ext];
+            $response = Response::make($file, 200);
+            $response->header("Content-Type", $mime);
+            return $response;
+        } catch (Exception $exception) {
+            abort(404);
+        }
+        return;
+    })->name("resources.publishes");
 Route::group([
     'prefix' => 'guest',
     'namespace' => 'Guest'

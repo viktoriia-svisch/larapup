@@ -41,57 +41,41 @@
         </div>
     </div>
     <hr>
-    @if (Session::has('action_response') || sizeof($errors->all()) > 0)
-        @if (Session::get('action_response')['status_ok'])
-            <div class="col-12 m-0 p-0">
+    @if (\Session::has('action_response'))
+        @if (\Session::get('action_response')['status_ok'])
+            <div class="col-12 m-auto">
                 <div class="card bg-success text-white">
                     <div class="card-body" style="padding: 1rem;">
-                        {{Session::get('action_response')['status_message']}}
+                        {{\Session::get('action_response')['status_message']}}
                     </div>
                 </div>
             </div>
         @else
-            @if ($errors->first())
-                <div class="col-12 m-0 p-0">
-                    <div class="card bg-danger text-white">
-                        <div class="card-body" style="padding: 1rem;">
-                            {{$errors->first()}}
-                        </div>
+            <div class="col-12 m-auto">
+                <div class="card bg-danger text-white">
+                    <div class="card-body" style="padding: 1rem;">
+                        {{\Session::get('action_response')['status_message']}}
                     </div>
                 </div>
-            @else
-                <div class="col-12 m-0 p-0">
-                    <div class="card bg-danger text-white">
-                        <div class="card-body" style="padding: 1rem;">
-                            {{Session::get('action_response')['status_message']}}
-                        </div>
-                    </div>
-                </div>
-            @endif
+            </div>
         @endif
         <br>
     @endif
-    <div class="container-fluid row m-0 p-0">
-        <div class="col-12 col-md-4 m-0 p-0 pr-4 border-right d-flex justify-content-center align-items-center">
-            @if ($article && count($article->publish) > 0)
-                <div class="col-12 p-0 m-0 mb-5 mt-2 d-flex flex-column justify-content-center align-items-center">
-                    <span class="text-muted">Grated</span>
-                    <h1>{{$article->grade}}</h1>
-                    <br>
-                    <a href="{{route('shared.publish', [$facultySemester->faculty_id, $facultySemester->semester->id, $article->publish->id])}}"
-                       class="btn btn-success btn-icon">
-                        <i class="fas fa-thumbs-up"></i>
-                        This Article was published
-                    </a>
-                    <small class="text-muted mt-3">
-                        By: {{$article->publish[0]->coordinator->first_name .' '.$article->publish[0]->coordinator->last_name}}
-                        <br>
-                        at {{\App\Helpers\DateTimeHelper::formatDateTime($article->publish[0]->created_at)}}
-                    </small>
-                </div>
-            @endif
+    @if ($article && count($article->publish) > 0)
+        <div class="col-12 p-0 m-0 mb-5 mt-2 d-flex flex-column justify-content-center align-items-center">
+            <a href="" class="btn btn-success btn-icon">
+                <i class="fas fa-thumbs-up"></i>
+                This Article was published
+            </a>
+            <small class="text-muted mt-3">
+                By: {{$article->publish[0]->coordinator->first_name .' '.$article->publish[0]->coordinator->last_name}}
+                <br>
+                at {{\App\Helpers\DateTimeHelper::formatDateTime($article->publish[0]->created_at)}}
+            </small>
         </div>
-        <div class="col-12 col-md-8 m-0 p-0 pl-4">
+    @endif
+    <div class="container-fluid row m-0 p-0">
+        <div class="col-12 col-md-6 m-0 p-0 pr-4 border-right">
             <div class="col-12 row m-0 p-0 mb-4">
                 <div class="h2 col p-0 m-0">
                     File Submission
@@ -99,8 +83,10 @@
                 <div class="col-auto d-flex align-item-center p-0">
                     @if (!\App\Helpers\DateTimeHelper::isNowPassedDate($facultySemester->second_deadline))
                         <button class="btn btn-icon"
-                                @if (($article && count($article->article_file) > 3) || ($article && $article->publish == null))
-                                disabled @else onclick="uploadFilePopup()" @endif>
+                                @if ($article && count($article->article_file) > 3)
+                                disabled
+                                @endif
+                                onclick="uploadFilePopup()">
                             <i class="fas fa-upload"></i>
                             Upload new
                         </button>
@@ -140,9 +126,7 @@
                                         </a>
                                     </div>
                                     <div class="col-auto d-flex align-items-center p-0 pl-1 pr-1">
-                                        <button @if ($article->publish == null)
-                                                onclick="confirmDeletePopup({{$file->id}})"
-                                                @else disabled @endif class="btn btn-danger p-0"
+                                        <button onclick="confirmDeletePopup({{$file->id}})" class="btn btn-danger p-0"
                                                 style="width: 3rem; height: 3rem; font-size: 1.5rem">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
@@ -163,10 +147,54 @@
                 (.docx) or image (.png, .jpeg, .gif)
             </h3>
         </div>
+        <div class="col-12 col-md-6 m-0 p-0 pl-4">
+            <h2 class="col-12 row m-0 p-0 mb-4">
+                <div class="h2 col p-0 m-0">
+                    Article Preview
+                </div>
+                @if ($article)
+                    <div class="col-auto d-flex align-item-center p-0">
+                        <button class="btn btn-default btn-icon">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                    </div>
+                    <h3 class="text-center">
+                        @if ($article && $article->title)
+                            {{$article->title}}
+                        @else
+                            <span class="text-muted">Empty title</span>
+                        @endif
+                    </h3>
+                    <br>
+                    <div class="col-12 p-0 rounded card-lift--hover" style="max-height: 200px; overflow: hidden;">
+                        <img src="https://i.ytimg.com/vi/YxC0qXPaOq0/maxresdefault.jpg" alt="attachment image"
+                             class="img-fluid img-center rounded cursor"
+                             onclick="previewFullScreen(this)">
+                    </div>
+                    <small class="float-right text-muted">
+                        Click the image to view in image preview mode.
+                    </small>
+                    <br>
+                    <p class="text-justify">
+                        @if ($article && $article->description)
+                            {{nl2br($article->description)}}
+                        @else
+                            <span class="text-muted">Empty description</span>
+                        @endif
+                    </p>
+                @else
+                    <h4 class="text-muted text-center">
+                        You haven't submitted any article yet. Upload files first then
+                        you can adding preview to your article
+                    </h4>
+                @endif
+            </h2>
+        </div>
     </div>
 @endsection
 @section('modal')
-    @if (($article && count($article->article_file) >= 0 && count($article->article_file) < 4 && $article->publish == null) || !$article)
+    @if (($article && count($article->article_file) >= 0 && count($article->article_file) < 4) || !$article)
         <div class="modal fade" id="articleModal" tabindex="-1" role="dialog" aria-labelledby="articleModal"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -210,14 +238,12 @@
             </div>
         </div>
     @endif
-    @if ($article && count($article->article_file) > 0  && $article->publish == null)
+    @if ($article && count($article->article_file) > 0)
         <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDelete"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <form
-                    action="{{route("student.faculty.articleFiles_delete", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
-                    class="modal-content" id="deleteForm" method="POST">
-                    @csrf
+                <form method="post" class="modal-content" id="deleteForm"
+                      action="{{route("student.faculty.articleFiles_delete", [$facultySemester->faculty_id, $facultySemester->semester_id])}}">
                     <h2 class="modal-header">
                         Are you sure you want to delete this file?
                     </h2>

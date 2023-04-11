@@ -1,13 +1,12 @@
 <?php
 namespace App\Http\Controllers\Coordinator;
-use App\Helpers\DateTimeHelper;
 use App\Helpers\StorageHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
 use App\Http\Requests\PublishRequest;
-use App\Http\Requests\UpdateFacultySemester;
 use App\Models\Article;
 use App\Models\FacultySemester;
 use App\Models\Publish;
+use App\Models\PublishContent;
 use App\Models\PublishImage;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -71,6 +70,11 @@ class FacultyController extends FacultySemesterBaseController
             'currentFaculty' => $currentFaculty
         ]);
     }
+    public function facultyDetailArticle($faculty_id, $semester_id)
+    {
+        $article = $this->retrieveDetailArticleByStudent($faculty_id, $semester_id, Auth::guard(COORDINATOR_GUARD)->user()->id);
+        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-article', "article", ["article" => $article], COORDINATOR_GUARD);
+    }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
         $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, COORDINATOR_GUARD, null);
@@ -84,19 +88,7 @@ class FacultyController extends FacultySemesterBaseController
     }
     public function facultyDetailSettings($faculty_id, $semester_id)
     {
-            $facultyUpdate = FacultySemester::Where('semester_id', $semester_id)->Where('faculty_id', $faculty_id)->first();
-        return view('coordinator.update-faculty', [
-            'facultyUpdate' => $facultyUpdate
-        ]);
-    }
-    public function facultyDetailSettingPost(UpdateFacultySemester $request, $faculty_id, $semester_id)
-    {
-        $facultyUpdate = FacultySemester::Where('semester_id', $semester_id)->Where('faculty_id', $faculty_id)->first();
-        $facultyUpdate->first_deadline = Carbon::parse($request->get('first_deadline')) ?? $facultyUpdate->first_deadline;
-        $facultyUpdate->second_deadline = Carbon::parse($request->get('second_deadline')) ?? $facultyUpdate->second_deadline;
-        $facultyUpdate->description = $request->get('description') ?? $facultyUpdate->description;
-        $facultyUpdate->save();
-        return redirect()->back()->withInput();
+        return 1;
     }
     public function facultyDetailListArticle(Request $request, $faculty_id, $semester_id)
     {
@@ -146,8 +138,8 @@ class FacultyController extends FacultySemesterBaseController
     {
         $title = $request->get("title");
         $listDescription = $request->get("description");
-        $listImage = $request->get("old_image");
-        $listNewImage = $request->file("image");
+        $listImage = $request->get("old_image") ?? [];
+        $listNewImage = $request->file("image") ?? [];
         $facultySemester = FacultySemester::with("semester")
             ->where("faculty_id", $faculty_id)->where("semester_id", $semester_id)
             ->whereHas("faculty_semester_coordinator", function (Builder $builder) {
@@ -170,44 +162,37 @@ class FacultyController extends FacultySemesterBaseController
             DB::rollback();
             return back()->with($this->responseBladeMessage("Cannot begin to publish", false));
         }
-        $arrExistedImage = [];
-        foreach ($publishData->publish_image as $imgOb){
-            array_push($arrExistedImage, $imgOb->image_path);
+        foreach ($listImage as $oldImageValidation) {
+            if (!in_array($oldImageValidation, $publishData->publish_image)) {
+                DB::rollBack();
+                return back()->with($this->responseBladeMessage("Invalid Integrity data!", false));
+            }
         }
-        if ($listImage)
-            foreach ($listImage as $oldImageValidation) {
-                if (!in_array($oldImageValidation, $arrExistedImage)) {
-                    DB::rollBack();
-                    return back()->with($this->responseBladeMessage("Invalid Integrity data!", false));
-                }
-            }
         $arrDeletedImage = [];
-        if ($publishData->publish_image)
-            foreach ($publishData->publish_image as $key => $image) {
-                if (!in_array($image->image_path, $listImage)) {
-                    if ($image->delete()) {
-                        array_push($arrDeletedImage, $image);
-                    } else {
-                        DB::rollBack();
-                        return back()->with($this->responseBladeMessage("Cannot delete old data", false));
-                    }
-                }
-            }
-        $arrNewImage = [];
-        if ($listNewImage)
-            foreach ($listNewImage as $key => $img) {
-                try {
-                    $newImage = new PublishImage([
-                        "image_path" => StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $img)["file"],
-                        "image_ext" => FILE_EXT_INDEX[$img->getClientOriginalExtension()],
-                        "description" => "N/D"
-                    ]);
-                    array_push($arrNewImage, $newImage);
-                } catch (Exception $exception) {
+        foreach ($publishData->publish_image as $key => $image) {
+            if (!in_array($image->image_path, $listImage)) {
+                if ($image->delete()) {
+                    array_push($arrDeletedImage, $image);
+                } else {
                     DB::rollBack();
-                    return back()->with($this->responseBladeMessage("Cannot save new data", false));
+                    return back()->with($this->responseBladeMessage("Cannot delete old data", false));
                 }
             }
+        }
+        $arrNewImage = [];
+        foreach ($listNewImage as $key => $newImage) {
+            try {
+                $newImage = new PublishImage([
+                    "image_path" => StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $newImage),
+                    "image_ext" => FILE_EXT_INDEX[$newImage->getClientOriginalExtension()],
+                    "description" => "N/D"
+                ]);
+                array_push($arrNewImage, $newImage);
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return back()->with($this->responseBladeMessage("Cannot save new data", false));
+            }
+        }
         if (sizeof($arrNewImage) > 0) {
             $resultSaved = $publishData->publish_image()->saveMany($arrNewImage);
             if (sizeof($resultSaved) > 0) {

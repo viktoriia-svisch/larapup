@@ -13,7 +13,7 @@
     <link type="text/css" href="{{asset("css/app.css")}}" rel="stylesheet">
     @stack('custom-css')
 </head>
-<body class="position-relative">
+<body>
 @yield("content")
 @yield("modal")
 <script src="{{asset("js/popper.min.js")}}"></script>

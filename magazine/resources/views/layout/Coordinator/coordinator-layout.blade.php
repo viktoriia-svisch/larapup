@@ -42,7 +42,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">
+                        <a class="nav-link"
+                           href="{{route('coordinator.manageSemester')}}">
                             <i class="fas fa-graduation-cap"></i>
                             Semesters
                         </a>
