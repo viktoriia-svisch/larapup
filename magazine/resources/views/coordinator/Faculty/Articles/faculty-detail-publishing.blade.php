@@ -151,51 +151,42 @@
                 </div>
             </div>
             <div class="card card-Placeholder">
-                <div class="card-body row m-0 d-flex flex-wrap align-items-center" id="imagePreviewSection">
-                    @if ($published && sizeof($published->publish_image) < 11)
-                        <label class="m-0 btn btn-primary d-flex justify-content-center align-items-center"
-                               style="height: 100px;" id="addImageBtn">
-                            <i class="fa fa-plus"></i>
-                            Add image
-                            <input type="file" name="image[]" accept="image/jpeg, image/png" hidden
-                                   class="form-control">
-                        </label>
-                    @endif
-                    <div class="img-preview position-relative">
-                        <button class="btn btn-danger btn-img-preview" type="button">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                        <a href="" target="_blank">
-                            <img alt="" class="img-thumbnail rounded ml-1 mr-1"
-                                 src="https://www.rightstufanime.com/images/productImages/850527003226_anime-Bakemonogatari-Blu-ray-Complete-Set-S-Limited-Edition-primary.jpg"
-                                 style="max-width: 250px; max-height: 100px; overflow: hidden; min-width: 150px; object-position: center; object-fit: cover">
-                        </a>
-                    </div>
-                    @if ($published && sizeof($published->publish_image) > 0)
+                @if ($published && sizeof($published->publish_image) > 0)
+                    <div class="row m-0 p-2">
                         @foreach($published->publish_image  as $image)
-                            <div class="img-preview position-relative">
-                                <button class="btn btn-danger btn-img-preview" type="button">
+                            <div class="m-1 img-preview position-relative">
+                                <button class="btn btn-danger btn-img-preview" onclick="deleteExistedImage(this)"
+                                        type="button">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 <img alt="" class="img-thumbnail rounded ml-1 mr-1 img-prev-tag"
-                                     src="{{route("resources.publishes", [$facultySemester->id, $published->id, $image->image_path])}}">
+                                     src="{{asset('storage/'. \App\Helpers\StorageHelper::getPublishFilePath($facultySemester->id, $published->id, $image->image_path, true))}}">
                                 <input type="hidden" name="old_image[]" value="{{$image->image_path}}">
                             </div>
                         @endforeach
-                    @endif
-                    <div class="d-flex justify-content-center align-items-center" style="width: 200px; height: 100px;">
-                        <span class="text-muted">Maximum 10 images</span>
                     </div>
+                    <hr class="mt-2 mb-2">
+                @endif
+                <div class="card-body row m-0 d-flex flex-wrap align-items-center" id="imagePreviewSection">
+                    <label class="m-1 btn btn-primary d-flex justify-content-center align-items-center"
+                           style="height: 100px;" id="addImageBtn">
+                        <i class="fa fa-plus"></i>
+                        Add image
+                        <input type="file" name="image[]" multiple accept="image/jpeg, image/png" class="form-control"
+                               @if (!($published && sizeof($published->publish_image) < 11)) disabled @endif hidden
+                               onchange="listUploadImage(this)" id="uploadFileInput">
+                    </label>
                 </div>
             </div>
         </section>
+        <span class="text-muted">Maximum 10 images and each must not larger than 5MB</span>
         <hr>
         <div class="row m-0 p-0">
             <div class="col-auto pl-0">
                 <button type="button" class="btn btn-danger">Cancel</button>
             </div>
             <div class="col pr-0">
-                <button type="submit" class="btn btn-block btn-success">Publish</button>
+                <button type="submit" class="btn btn-block btn-success" id="submitFormBtn">Publish</button>
             </div>
         </div>
     </form>
@@ -203,15 +194,52 @@
 @push("custom-js")
     <script>
         let SectionAppendImage = $("#imagePreviewSection");
+        let uploadFileInput = $("#uploadFileInput");
+        let publishFormBtn = $("#submitFormBtn");
         function createPreviewDom(blobImage, file) {
-            let imgPreviewContainer = $("<div/>").addClass("position-relative");
-            let button = $("<button/>").addClass("btn btn-danger btn-img-preview").attr("type", "button");
-            let contentButton = $("<i/>").addClass("fa fa-trash");
+            let imgPreviewContainer = $("<div/>").addClass("m-1 img-preview img-preview-blob position-relative");
             let img = $("<img/>").attr("alt", "prev-img").attr("src", blobImage).addClass("img-thumbnail rounded ml-1 mr-1 img-prev-tag");
-            let imgInput = $("<input/>").attr("type", "file").attr("name", "old_image[]").attr("hidden").val(file);
-            button.append(contentButton);
-            imgPreviewContainer.append(button).append(img).append(imgInput);
+            imgPreviewContainer.append(img);
             SectionAppendImage.append(imgPreviewContainer);
+        }
+        function listUploadImage(event) {
+            let fileList = event.files;
+            // Delete old BlobFiles
+            SectionAppendImage.find(".img-preview-blob").remove();
+            let fileLarger = false;
+            if (fileList.length > 0) {
+                Array.from(fileList).forEach(file => {
+                    if (typeof file.name == 'string') {
+                        let fileReader = new FileReader();
+                        fileReader.onload = function (e) {
+                            createPreviewDom(e.target.result, file);
+                            if (file.size > {{FILE_MAXSIZE / 2}}) {
+                                flashMessage("There was a file that larger than 5MB", true, 10000);
+                                publishFormBtn.prop('disabled', true);
+                                fileLarger = true;
+                            } else {
+                                publishFormBtn.prop('disabled', false);
+                            }
+                        };
+                        fileReader.readAsDataURL(file);
+                    }
+                })
+            }
+            @if($published)
+            if (fileList.length + +"{{sizeof($published->publish_image)}}" > 10) {
+                flashMessage("Can only accept 10 images (included existed images) for one publishing", true, 5000);
+                publishFormBtn.prop('disabled', true);
+            } else if (!fileLarger) {
+                publishFormBtn.prop('disabled', false);
+            }
+            @else
+            if (fileList.length > 10) {
+                flashMessage("Can only accept 10 images for one publishing", true, 5000);
+                publishFormBtn.prop('disabled', true);
+            } else if (!fileLarger) {
+                publishFormBtn.prop('disabled', false);
+            }
+            @endif
         }
         function cloneWriteSection() {
             let checkDomSection = document.getElementsByClassName("cloning-section");
@@ -232,6 +260,10 @@
                     document.getElementById("formEntering").removeChild(domSection);
                 }
             });
+        }
+        function deleteExistedImage(target) {
+            let domParent = target.parentElement;
+            domParent.parentElement.removeChild(domParent);
         }
     </script>
 @endpush
