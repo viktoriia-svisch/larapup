@@ -109,7 +109,8 @@ class SemesterController extends Controller
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
             ->join('faculties', 'faculty_semesters.faculty_id', '=', 'faculties.id')
             ->join('students', 'articles.student_id', '=', 'students.id')
-            ->select('articles.grade', 'faculties.name as faculties_name', 'students.last_name as students_name','articles.status')
+            ->select('articles.grade', 'faculties.name as faculties_name', 'students.last_name as students_lname','articles.status',
+                'articles.created_at', 'students.first_name as students_fname')
             ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
             ->get();
         $student_count = DB::table('articles')->distinct('student_id')->count('student_id');
