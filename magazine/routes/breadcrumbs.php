@@ -1,5 +1,7 @@
 <?php
+use App\Models\Publish;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
+use Illuminate\Support\Str;
 Breadcrumbs::for('dashboard', function ($trail, $routeActive) {
     $trail->push('Dashboard', $routeActive);
 });
@@ -54,6 +56,10 @@ Breadcrumbs::for('dashboard.faculty.detail.newPublish', function ($trail, $paren
     $trail->parent('dashboard.faculty.detail', $parentRoute, $parentRoute2, $parentRoute3);
     $trail->push("New Publish", $routeActive);
 });
+Breadcrumbs::for('dashboard.faculty.detail.discussion', function ($trail, $parentRoute, $parentRoute2, $parentRoute3, $article, $routeActive) {
+    $trail->parent('dashboard.faculty.detail', $parentRoute, $parentRoute2, $parentRoute3);
+    $trail->push("Discussion - " . $article->student->first_name . ' ' . $article->student->last_name, $routeActive);
+});
 Breadcrumbs::for('dashboard.faculty.create', function ($trail, $parentRoute, $parent2Route, $routeActive) {
     $trail->parent('dashboard.faculty', $parentRoute, $parent2Route);
     $trail->push("Create new", $routeActive);
@@ -61,4 +67,11 @@ Breadcrumbs::for('dashboard.faculty.create', function ($trail, $parentRoute, $pa
 Breadcrumbs::for('dashboard.profile', function ($trail, $parentRoute, $routeActive) {
     $trail->parent('dashboard', $parentRoute);
     $trail->push('Profile', $routeActive);
+});
+Breadcrumbs::for('publishes', function ($trail, $routeActive) {
+    $trail->push('Publications', $routeActive);
+});
+Breadcrumbs::for('publishes.publication', function ($trail, $parentRoute, $routeActive, Publish $publish) {
+    $trail->parent('publishes', $parentRoute);
+    $trail->push(Str::limit($publish->title, 50), $routeActive);
 });
