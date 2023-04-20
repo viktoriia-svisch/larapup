@@ -40,7 +40,7 @@
                 </div>
             </div>
         @endforeach
-                <h1 class="text-primary">Student list</h1>
+                <h1 class="text-primary">Student list</h2>
             @if (count($StudentList) == 0)
                 <h2 class="text-center text-muted">No record found</h2>
             @endif

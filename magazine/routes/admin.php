@@ -15,7 +15,6 @@ Route::group([
     Route::get('semester', 'SemesterController@semester')->name('admin.semester');
     Route::get('semester/create', 'SemesterController@createSemester')->name('admin.createSemester');
     Route::post('semester/create', 'SemesterController@createSemester_post')->name('admin.createSemester_post');
-    Route::get('semester/{activeSemester}', 'SemesterController@chooseSemester')->name('admin.infoSemester');
     Route::get('faculty', 'FacultyController@faculty')->name('admin.faculty');
     Route::post('faculty/create', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
     Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');

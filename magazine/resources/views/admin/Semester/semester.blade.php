@@ -78,9 +78,6 @@
                             <button class="btn btn-icon btn-default" type="button">
                                 <i class="fas fa-cog top-0"></i>
                             </button>
-                            <a class="btn btn-icon btn-success" href="{{route('admin.infoSemester', [$activeSemester->id])}}">
-                                <i class="fas fa-info top-0"></i>
-                            </a>
                         </div>
                     </div>
                 </div>
