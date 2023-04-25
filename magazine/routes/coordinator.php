@@ -10,6 +10,11 @@ Route::group([
     Route::get('cor','CoordinatorController@index');
     Route::get('get/{id}','CoordinatorController@show');
     Route::post('new-coordinator','CoordinatorController@store');
+    Route::get('semester', 'CoordinatorController@CoordinatorSemester')->name('coordinator.manageSemester');
+    Route::get('coordinator-semester-faculty','CoordinatorController@CoordinatorSemesterFaculty') ->name('coordinator.manageFaculty');
+    Route::get('coordinator-semester-faculty/{semester}', 'CoordinatorController@chooseSemesterFaculty')->name('coordinator.chooseSemesterFaculty');
+    Route::get('coordinator-semester-faculty/add-student/{facultysemester}', 'CoordinatorController@addStudentFaculty')->name('coordinator.addStudentFaculty');
+    Route::post('coordinator-semester-faculty/add-student/{facultysemester}/{student}', 'CoordinatorController@addStudentFaculty_post')->name('coordinator.addStudentFaculty_post');
     Route::post('new-faculty','CoordinatorController@storeFaculty');
     Route::get('coordinator', 'CoordinatorController@Coordinator')->name('coordinator.coordinator');
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
@@ -37,6 +42,4 @@ Route::group([
         ->name('coordinator.faculty.article.publishPost');
     Route::get('faculty/{faculty_id}/{semester_id}/settings','FacultyController@facultyDetailSettings')
         ->name('coordinator.faculty.settings');
-    Route::post('faculty/{faculty_id}/{semester_id}/settings', 'FacultyController@facultyDetailSettingPost')
-        ->name('coordinator.faculty.settingPost');
 });
