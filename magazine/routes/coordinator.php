@@ -10,11 +10,6 @@ Route::group([
     Route::get('cor','CoordinatorController@index');
     Route::get('get/{id}','CoordinatorController@show');
     Route::post('new-coordinator','CoordinatorController@store');
-    Route::get('semester', 'CoordinatorController@CoordinatorSemester')->name('coordinator.manageSemester');
-    Route::get('coordinator-semester-faculty','CoordinatorController@CoordinatorSemesterFaculty') ->name('coordinator.manageFaculty');
-    Route::get('coordinator-semester-faculty/{semester}', 'CoordinatorController@chooseSemesterFaculty')->name('coordinator.chooseSemesterFaculty');
-    Route::get('coordinator-semester-faculty/add-student/{facultysemester}', 'CoordinatorController@addStudentFaculty')->name('coordinator.addStudentFaculty');
-    Route::post('coordinator-semester-faculty/add-student/{facultysemester}/{student}', 'CoordinatorController@addStudentFaculty_post')->name('coordinator.addStudentFaculty_post');
     Route::post('new-faculty','CoordinatorController@storeFaculty');
     Route::get('coordinator', 'CoordinatorController@Coordinator')->name('coordinator.coordinator');
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
@@ -42,4 +37,8 @@ Route::group([
         ->name('coordinator.faculty.article.publishPost');
     Route::get('faculty/{faculty_id}/{semester_id}/settings','FacultyController@facultyDetailSettings')
         ->name('coordinator.faculty.settings');
+    Route::get('faculty/add-coordinator', 'CoordinatorController@addToFaculty_index')->name('coordinator.faculty.addCoorToFaculty');
+    Route::get('faculty/add-coordinator/coordinator/{coordinator}/faculty/{faculty}/semester/{semester}', 'CoordinatorController@addToFaculty')->name('coordinator.faculty.addToFaculty.addCoorToFaculty_post');
+    Route::post('faculty/add-coordinator/fetch', 'CoordinatorController@fetch')->name('coordinator.faculty.addToFaculty.fetch');
+    Route::post('faculty/add-coordinator/fetchCoor', 'CoordinatorController@fetchCoor')->name('coordinator.faculty.addToFaculty.fetchCoor');
 });

@@ -89,6 +89,29 @@
                         </div>
                     @endif
                 </div>
+                <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
+                    <h6 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw;">Account Status</h6>
+                    <div class="custom-control custom-radio col-3 d-flex justify-content-center align-items-center">
+                        <input name="status" value="{{STUDENT_STATUS['STANDBY']}}" class="custom-control-input" id="statusStandby"
+                               checked="" type="radio">
+                        <label class="custom-control-label" for="statusStandby">Standby</label>
+                    </div>
+                    <div class="custom-control custom-radio col-3 d-flex justify-content-center align-items-center">
+                        <input name="status" value="{{STUDENT_STATUS['ONGOING']}}" class="custom-control-input" id="statusOngoing"
+                               type="radio">
+                        <label class="custom-control-label" for="statusOngoing">Ongoing</label>
+                    </div>
+                    <div class="custom-control custom-radio col-3 d-flex justify-content-center align-items-center">
+                        <input name="status" value="{{STUDENT_STATUS['FINISHED']}}" class="custom-control-input" id="statusFinished"
+                               checked="" type="radio">
+                        <label class="custom-control-label" for="statusFinished">Finish</label>
+                    </div>
+                    <div class="custom-control custom-radio col-3 d-flex justify-content-center align-items-center">
+                        <input name="status" value="{{STUDENT_STATUS['LEFT']}}" class="custom-control-input" id="statusLeft"
+                               type="radio">
+                        <label class="custom-control-label" for="statusLeft">Left</label>
+                    </div>
+                </div>
                 <div style="margin-top: 2vw">
                     <label style="color: #0b1011">Email</label>
                     <input class="form-control" type="text" placeholder="{{$student->email}}"
@@ -112,6 +135,8 @@
                 // endDate: "today",
                 // endDate: "today",
             });
+            var status = {{$student->status}};
+            $("input[name=status][value=" + status + "]").prop('checked', true);
         })
     </script>
 @endpush

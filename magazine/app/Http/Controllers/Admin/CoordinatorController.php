@@ -15,10 +15,19 @@ use Illuminate\Support\Facades\Input;
 class CoordinatorController extends Controller
 {
     public function coordinator(Request $request){
-        $coordinators = Coordinator::where('first_name', 'LIKE', '%' . $request->get('search_coordinator_input') . '%')
-            ->orWhere('last_name', 'like', '%' . $request->get('search_coordinator_input') . '%')
-            ->paginate(PER_PAGE);
-        return view('admin.Coordinator.coordinator', ['coordinators' => $coordinators]);
+        $searchTerms = $request->get('search_student_input');
+        $searchType = $request->get('type');
+        $coordinatorList = Coordinator::with('faculty_semester_coordinator');
+        if ($searchType != -1 && $searchType != null) {
+            $coordinatorList->where('status', $request->get('type'));
+        }
+        if ($searchTerms != null){
+            $coordinatorList->where(function ($query) use ($searchTerms) {
+                $query->where('first_name', 'like', '%' . $searchTerms . '%')
+                    ->orwhere('last_name', 'like', '%' . $searchTerms . '%');
+            });
+        }
+        return view('admin.Coordinator.coordinator', ['coordinators' => $coordinatorList->paginate(PER_PAGE)]);
     }
     public function addToFaculty_index(){
         $faculty = Faculty::get();
@@ -86,6 +95,40 @@ class CoordinatorController extends Controller
         }
         return redirect()->back()->with([
             'success' => false
+        ]);
+    }
+    public function updateCoordinator($id)
+    {
+        $coordinator = Coordinator::find($id);
+        return view('admin.Coordinator.update-coordinator', [
+            'coordinator' => $coordinator
+        ]);
+    }
+    public function updateCoordinatorPost(Request $request, $id)
+    {
+        $coordinator = Coordinator::find($id);
+        if (!$coordinator) return redirect()->back();
+        $coordinator->first_name = $request->get('first_name') ?? $coordinator->first_name;
+        $coordinator->last_name = $request->get('last_name') ?? $coordinator->last_name;
+        $coordinator->dateOfBirth = $request->get('dateOfBirth') ?? $coordinator->dateOfBirth;
+        $coordinator->gender = $request->get('gender') ?? $coordinator->gender;
+        $coordinator->status = $request->get('status') ?? $coordinator->status;
+        if ($request->get('old_password')){
+            if(Hash::check($request->get('old_password'),$coordinator->password)) {
+                $coordinator->password =  $request->get('new_password');
+            } else {
+                return back()->with([
+                    'updateStatus' => false
+                ]);
+            }
+        }
+        if ($coordinator->save()) {
+            return back()->with([
+                'updateStatus' => true
+            ]);
+        }
+        return back()->with([
+            'updateStatus' => false
         ]);
     }
 }
