@@ -1,6 +1,0 @@
-{
-  "name": "staabm/xhprof.io",
-  "autoload": {
-    "classmap": ["xhprof/classes"]
-  }
-}
