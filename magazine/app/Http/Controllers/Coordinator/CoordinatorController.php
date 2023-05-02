@@ -117,8 +117,8 @@ class CoordinatorController extends Controller
         $output = '';
         $facultySemester = FacultySemester::where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
         if($facultySemester != null){
-            $notAvailableCoor = FacultySemesterCoordinator::where('faculty_semester_id', '=', $facultySemester->id)->get('coordinator_id');
-            $coors = Coordinator::whereNotIn('id', $notAvailableCoor)->get();
+            $coors = Coordinator::whereNotHas("faculty_semester_coordinator",
+                function (Builder $builder) use ($facultySemester) { $builder->where('faculty_semester_id', $facultySemester->id);});
             foreach ($coors as $coor){
                 $output .='<div class="col-xl-12 align-items-center" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">'
                     .'<img  class="img-thumbnail col-xl-2" style="width: 53px"src="https:
