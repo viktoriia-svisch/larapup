@@ -1,5 +1,5 @@
 @extends("layout.Admin.admin-layout")
-@section('title', 'Add Coordinator to Faculty')
+@section('title', 'Create Faculty')
 @push("custom-css")
 @endpush
 @section('breadcrumb')
@@ -8,8 +8,8 @@
     </div>
 @endsection
 @section("admin-content")
-    <div class="container" style="margin-bottom: 10vw">
-        <div class="row col-md-12 m-auto">
+    <div class="container row col-12" style="margin-bottom: 10vw">
+        <div class="row col-md-9 m-auto">
             <div class="row col-12">
                 <div class="col-sm-6">
                     <select style="margin-top: 1vw" class="form-control" id="faculty" data-dependent="semester">

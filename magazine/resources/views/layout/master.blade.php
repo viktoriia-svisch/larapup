@@ -22,6 +22,22 @@
 <script src="{{asset("js/argon.js")}}"></script>
 <script src="{{asset('vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{asset("js/app.js")}}"></script>
+<script src="{{asset("js/request-util.js")}}"></script>
 @stack('custom-js')
+<div class="custom-spinnerPage" id="loadingScreen">
+    <div class="lds-dual-ring"></div>
+</div>
+<script>
+    function loadingAnimation(isOn) {
+        let domLoad = $("#loadingScreen");
+        // Prefix display
+        domLoad.css("display", "flex").hide();
+        if (isOn) {
+            domLoad.fadeIn();
+        } else {
+            domLoad.fadeOut();
+        }
+    }
+</script>
 </body>
 </html>
