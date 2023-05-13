@@ -29,6 +29,12 @@
                     </div>
                 </div>
                 <ul class="navbar-nav ml-lg-auto">
+                        <li class="nav-item">
+                                <a class="nav-link" href="{{route('coordinator.statistics')}}">
+                                    <i class="fas fa-list"></i>
+                                    Statistics
+                                </a>
+                            </li>
                     <li class="nav-item">
                         <a class="nav-link">
                             <i class="fas fa-search"></i>

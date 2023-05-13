@@ -17,6 +17,7 @@ Route::group([
     Route::post('semester/create', 'SemesterController@createSemester_post')->name('admin.createSemester_post');
     Route::get('faculty', 'FacultyController@faculty')->name('admin.faculty');
     Route::post('faculty/create', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
+    Route::post('faculty/edit', 'FacultyController@updateFaculty')->name('admin.updateFaculty');
     Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');
     Route::get('faculty/choose-semester', 'FacultyController@chooseSemester')->name('admin.chooseSemester');
     Route::get('faculty/choose-semester/{semester}', 'FacultyController@chooseSemesterFaculty')->name('admin.chooseSemesterFaculty');
@@ -30,8 +31,9 @@ Route::group([
     Route::get('coordinator', 'CoordinatorController@coordinator')->name('admin.coordinator');
     Route::get('coordinator/create', 'CoordinatorController@create')->name('admin.createCoordinator');
     Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
-    Route::get('coordinator/profile/{id}', 'CoordinatorController@updateCoordinator')->name('admin.updateCoordinator');
-    Route::post('coordinator/profile/{id}', 'CoordinatorController@updateCoordinatorPost')->name('admin.updateCoordinator_post');
+    Route::get('coordinator', 'CoordinatorController@coordinator')->name('admin.coordinator');
+    Route::get('coordinator/create', 'CoordinatorController@createCoordinator')->name('admin.createCoordinator');
+    Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
     Route::get('coordinator/addToFaculty', 'CoordinatorController@addToFaculty_index')->name('admin.addToFaculty');
     Route::post('coordinator/addToFaculty/fetch', 'CoordinatorController@fetch')->name('admin.addToFaculty.fetch');
     Route::post('coordinator/addToFaculty/add', 'CoordinatorController@addToFaculty')->name('admin.addToFaculty_post');

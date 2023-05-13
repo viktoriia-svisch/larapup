@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+dir=$(cd "${0%[/\\]*}" > /dev/null; cd "../symfony/var-dumper/Resources/bin" && pwd)
+if [ -d /proc/cygdrive ]; then
+    case $(which php) in
+        $(readlink -n /proc/cygdrive)/*)
+            dir=$(cygpath -m "$dir");
+            ;;
+    esac
+fi
+"${dir}/var-dump-server" "$@"
