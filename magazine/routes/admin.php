@@ -31,9 +31,8 @@ Route::group([
     Route::get('coordinator', 'CoordinatorController@coordinator')->name('admin.coordinator');
     Route::get('coordinator/create', 'CoordinatorController@create')->name('admin.createCoordinator');
     Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
-    Route::get('coordinator', 'CoordinatorController@coordinator')->name('admin.coordinator');
-    Route::get('coordinator/create', 'CoordinatorController@createCoordinator')->name('admin.createCoordinator');
-    Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
+    Route::get('coordinator/profile/{id}', 'CoordinatorController@updateCoordinator')->name('admin.updateCoordinator');
+    Route::post('coordinator/profile/{id}', 'CoordinatorController@updateCoordinatorPost')->name('admin.updateCoordinator_post');
     Route::get('coordinator/addToFaculty', 'CoordinatorController@addToFaculty_index')->name('admin.addToFaculty');
     Route::post('coordinator/addToFaculty/fetch', 'CoordinatorController@fetch')->name('admin.addToFaculty.fetch');
     Route::post('coordinator/addToFaculty/add', 'CoordinatorController@addToFaculty')->name('admin.addToFaculty_post');
