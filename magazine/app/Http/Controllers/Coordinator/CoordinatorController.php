@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 class CoordinatorController extends Controller
 {
@@ -87,20 +86,6 @@ class CoordinatorController extends Controller
         return back()->with([
             'updateStatus' => false
         ]);
-    }
-    public function statistics(){
-        $faculties = Faculty::all();
-        return view('coordinator.statistics', compact('faculties'));
-    }
-    public function facultySemester(){
-        $faculty_id = Input::get('faculty_id');
-        $Fsemesters = FacultySemester::where('faculty_id', '=', $faculty_id)->get();
-        $semesters = DB::table('faculty_semesters')
-            ->join('semesters', 'faculty_semesters.semester_id', '=', 'semesters.id')
-            ->select('faculty_semesters.id', 'semesters.name')
-            ->where('faculty_semesters.faculty_id','=',$faculty_id)
-            ->get();
-        return response()->json($semesters);
     }
     public function dashboard()
     {

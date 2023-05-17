@@ -9,7 +9,7 @@
 @endsection
 @section("admin-content")
     <div class="container">
-        <h1 class="text-primary">Please choose the semester first</h1>
+        <h1 class="text-primary">Choosing semester</h1>
         <p class="text-muted">After choosing semester, you will then input information of new faculty</p>
         <hr>
         @foreach($futureSemester as $semester)
