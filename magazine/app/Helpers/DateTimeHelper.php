@@ -54,6 +54,14 @@ class DateTimeHelper
         $date = strtotime($value);
         return date('d/m/Y', $date);
     }
+    public static function formatDateInput($value)
+    {
+        if (empty($value)) {
+            return '';
+        }
+        $date = strtotime($value);
+        return date('Y-m-d', $date);
+    }
 	public static function formatDateTime($value)
 	{
 		if (empty($value)) {

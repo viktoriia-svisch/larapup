@@ -1,4 +1,4 @@
-@extends("layout.Admin.admin-layout")
+@extends("layout.Coordinator.coordinator-layout")
 @section('title', 'Add Coordinator to Faculty')
 @push("custom-css")
 @endpush
@@ -7,7 +7,7 @@
         {{ Breadcrumbs::render('dashboard.faculty', route('admin.dashboard'), route('admin.faculty')) }}
     </div>
 @endsection
-@section("admin-content")
+@section("coordinator-content")
     <div class="container" style="margin-bottom: 10vw">
         <div class="row col-md-12 m-auto">
             <div class="row col-12">

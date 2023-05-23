@@ -42,4 +42,10 @@ Route::group([
         ->name('coordinator.faculty.article.publishPost');
     Route::get('faculty/{faculty_id}/{semester_id}/settings','FacultyController@facultyDetailSettings')
         ->name('coordinator.faculty.settings');
+    Route::post('faculty/{faculty_id}/{semester_id}/settings', 'FacultyController@facultyDetailSettingPost')
+        ->name('coordinator.faculty.settingPost');
+    Route::get('faculty/add-coordinator', 'CoordinatorController@addToFaculty_index')->name('coordinator.faculty.addCoorToFaculty');
+    Route::get('faculty/add-coordinator/coordinator/{coordinator}/faculty/{faculty}/semester/{semester}', 'CoordinatorController@addToFaculty')->name('coordinator.faculty.addToFaculty.addCoorToFaculty_post');
+    Route::post('faculty/add-coordinator/fetch', 'CoordinatorController@fetch')->name('coordinator.faculty.addToFaculty.fetch');
+    Route::post('faculty/add-coordinator/fetchCoor', 'CoordinatorController@fetchCoor')->name('coordinator.faculty.addToFaculty.fetchCoor');
 });
