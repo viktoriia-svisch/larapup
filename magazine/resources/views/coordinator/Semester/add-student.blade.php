@@ -1,13 +1,8 @@
-@extends("layout.Admin.admin-layout")
+@extends("layout.Coordinator.coordinator-layout")
 @section('title', 'Create Faculty')
 @push("custom-css")
 @endpush
-@section('breadcrumb')
-    <div class="container">
-        {{ Breadcrumbs::render('dashboard.faculty', route('admin.dashboard'), route('admin.faculty'),route('admin.chooseSemester')) }}
-    </div>
-@endsection
-@section("admin-content")
+@section("coordinator-content")
 <div class="container">
         <br>
         @foreach($semester as $sem)
@@ -40,12 +35,12 @@
                 </div>
             </div>
         @endforeach
-        <h1 class="text-primary">Student list</h1>
+            <h1 class="text-primary">Student list</h1>
             @if (count($StudentList) == 0)
                 <h2 class="text-center text-muted">No record found</h2>
             @endif
             @foreach($StudentList as $student)
-            <form action="{{route('admin.addStudentFaculty_post', [$FacultySemester->id, $student->id])}}" method="post" >
+            <form action="{{route('coordinator.addStudentFaculty_post', [$FacultySemester->id, $student->id])}}" method="post" >
                 @csrf
                 <div class="card mb-2">
                     <div class="card-body row">
@@ -55,7 +50,7 @@
                             </div>
                         </div>
                         <div class="col-auto d-flex align-items-center">
-                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit">
+                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit" >
                                 Add student
                             </button>
                         </div>
