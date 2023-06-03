@@ -27,7 +27,6 @@
                 </a>
             </a>
         @endforeach
-    </div>
 @endsection
 @push("custom-js")
 @endpush
