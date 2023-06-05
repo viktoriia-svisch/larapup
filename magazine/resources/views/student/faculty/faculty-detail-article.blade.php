@@ -41,36 +41,7 @@
         </div>
     </div>
     <hr>
-    @if (Session::has('action_response') || sizeof($errors->all()) > 0)
-        @if (Session::get('action_response')['status_ok'])
-            <div class="col-12 m-0 p-0">
-                <div class="card bg-success text-white">
-                    <div class="card-body" style="padding: 1rem;">
-                        {{Session::get('action_response')['status_message']}}
-                    </div>
-                </div>
-            </div>
-        @else
-            @if ($errors->first())
-                <div class="col-12 m-0 p-0">
-                    <div class="card bg-danger text-white">
-                        <div class="card-body" style="padding: 1rem;">
-                            {{$errors->first()}}
-                        </div>
-                    </div>
-                </div>
-            @else
-                <div class="col-12 m-0 p-0">
-                    <div class="card bg-danger text-white">
-                        <div class="card-body" style="padding: 1rem;">
-                            {{Session::get('action_response')['status_message']}}
-                        </div>
-                    </div>
-                </div>
-            @endif
-        @endif
-        <br>
-    @endif
+    @include("layout.response.responseMessage")
     <div class="container-fluid row m-0 p-0">
         <div class="col-12 col-md-4 m-0 p-0 pr-4 border-right d-flex justify-content-center align-items-center">
             @if ($article && count($article->publish) > 0)
@@ -78,7 +49,7 @@
                     <span class="text-muted">Grated</span>
                     <h1>{{$article->grade}}</h1>
                     <br>
-                    <a href="{{route('shared.publish', [$facultySemester->faculty_id, $facultySemester->semester->id, $article->publish->id])}}"
+                    <a href="{{route('shared.publish', [$facultySemester->faculty_id, $facultySemester->semester->id, $article->publish[0]->id])}}"
                        class="btn btn-success btn-icon">
                         <i class="fas fa-thumbs-up"></i>
                         This Article was published

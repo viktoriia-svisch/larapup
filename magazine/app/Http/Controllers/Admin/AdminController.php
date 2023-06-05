@@ -1,16 +1,9 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateSemester;
-use App\Http\Requests\CreateFaculty;
-use App\Models\Semester;
-use App\Models\Faculty;
-use App\Models\Student;
 use App\Models\FacultySemester;
+use App\Models\Semester;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
 class AdminController extends Controller
 {
@@ -39,7 +32,7 @@ class AdminController extends Controller
     }
     public function searchFaculty($semester, $request)
     {
-        $search = FacultySemester::where('name', 'LIKE', '%' . $request . '%')
+        $search = FacultySemester::with('faculty')->where('name', 'LIKE', '%' . $request . '%')
             ->where('semester_id', 'like', '%' . $semester . '%')
             ->get();
         return response()->json($search);

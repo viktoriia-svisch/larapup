@@ -3,25 +3,15 @@ namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCoordinatorAccount;
 use App\Http\Resources\Coordinator as CoordinatorResource;
-use App\Http\Resources\Faculty as FacultyResource;
 use App\Models\Coordinator;
 use App\Models\Faculty;
-use App\Models\Semester;
 use App\Models\FacultySemester;
-use App\Models\Student;
-use Illuminate\Http\Request;
+use App\Models\Semester;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
-use Carbon\Carbon;
 class CoordinatorController extends Controller
 {
-    public function index()
-    {
-        $coordinators = Coordinator::paginate(PER_PAGE);
-        return CoordinatorResource::collection($coordinators);
-    }
     public function Coordinator()
     {
         $currentSemester = Semester::with('faculty_semester')
@@ -44,21 +34,20 @@ class CoordinatorController extends Controller
             ->whereHas('faculty_semester_coordinator.coordinator', function ($query) {
                 $query->where('id', Auth::guard(COORDINATOR_GUARD)->user()->id);
             })
-            ->whereHas('semester', function ($query) {
+            ->whereHas('semester', function ($query){
                 $query->where('start_date', '<=', Carbon::now()->toDateTimeString())
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
             ->orderBy('second_deadline')->first();
-        return view('coordinator.manage-coordinator', [
+        return view('coordinator.manage-coordinator',[
             'activeData' => $currentActiveData,
             'activeSemester' => null,
             'activeFaculty' => null
         ]);
     }
-    public function updateCoordinator($id)
-    {
+    public function updateCoordinator($id){
         $coordinator = Coordinator::find($id);
-        return view('coordinator.manage.coordinator-detail', [
+        return view('coordinator.manage.coordinator-detail',[
             'coordinator' => $coordinator]);
     }
     public function updateCoordinatorPost(UpdateCoordinatorAccount $request, $id)
@@ -87,69 +76,12 @@ class CoordinatorController extends Controller
             'updateStatus' => false
         ]);
     }
-    public function dashboard()
-    {
+    public function dashboard(){
         return view('coordinator.dashboard');
     }
     public function show($id)
     {
         $coordinator = Coordinator::find($id);
         return new CoordinatorResource($coordinator);
-    }
-    public function addToFaculty_index()
-    {
-        $faculty = Faculty::get();
-        return view('coordinator.Faculty.add-coordinator',
-            ['faculties' => $faculty]);
-    }
-    public function fetch(Request $request)
-    {
-        $value = $request->get('value');
-        $output = '<option value="0">Select a semester</option>';
-        $faculty_semester = FacultySemester::with('semester')->where('faculty_id', '=', $value)->get();
-        foreach ($faculty_semester as $row) {
-            $data = Semester::where('id', "=", $row->semester_id)->where('end_date', '>=', Carbon::now())->first();
-            if ($data != null) {
-                $output .= '<option value="' . $data->id . '">' . $data->name . '</option>';
-            }
-        }
-        return $output;
-    }
-    public function fetchCoor(Request $request)
-    {
-        $semester = $request->get('semester');
-        $faculty = $request->get('faculty');
-        $output = '';
-        $facultySemester = FacultySemester::where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
-        if ($facultySemester != null) {
-            $coors = Coordinator::whereDoesntHave("faculty_semester_coordinator",
-                function (Builder $builder) use ($facultySemester) {
-                    $builder->where('faculty_semester_id', $facultySemester->id);
-                })->get();
-            foreach ($coors as $coor) {
-                $output .= '<div class="col-xl-12 align-items-center" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">'
-                    . '<img  class="img-thumbnail col-xl-2" style="width: 53px"src="https:
-                    . '<label class="col-xl-6">' . $coor->first_name . ' ' . $coor->last_name . '</label>'
-                    . '<a href="' . route('coordinator.addToFaculty.addCoorToFaculty_post', ['faculty' => $faculty, 'semester' => $semester, 'coordinator' => $coor->id])
-                    . '" class="col-xl-4 submit-coordinator">Add Coordinator</a>'
-                    . '</div>';
-            }
-        }
-        return $output;
-    }
-    public function addToFaculty($coordinator, $faculty, $semester)
-    {
-        $faculty_semester = FacultySemester::where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
-        $ad = new FacultySemesterCoordinator();
-        $ad->faculty_semester_id = $faculty_semester->id;
-        $ad->coordinator_id = $coordinator;
-        if ($ad->save()) {
-            return redirect()->back()->with([
-                'success' => true
-            ]);
-        }
-        return redirect()->back()->with([
-            'success' => false
-        ]);
     }
 }

@@ -1,4 +1,4 @@
-@extends("layout.Admin.admin-layout")
+@extends("layout.Coordinator.coordinator-layout")
 @section('title', 'Dashboard')
 @push("custom-css")
 @endpush
@@ -7,7 +7,7 @@
         {{ Breadcrumbs::render('dashboard.coordinator.create', route('admin.dashboard'), route('admin.coordinator'), route('admin.createCoordinator')) }}
     </div>
 @endsection
-@section("admin-content")
+@section("coordinator-content")
 <div class="container row col-md-12" style="margin-bottom: 10vw">
     <div class="col-sm-5 m-auto">
         <h1 class="title">Create Coordinator</h1>
@@ -54,8 +54,8 @@
                 </p>
             @endif
             <p class="text-muted mt-3 pb-0 mb-1">Gender</p>
-            <div class="row m-0 mb-3">
-                <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
+            <div class="row col-12" style="margin-top: 2vw;">
+                <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center" >
                     <input name="gender" value="{{GENDER['MALE']}}" class="custom-control-input" id="genderMale"
                            type="radio">
                     <label class="custom-control-label" for="genderMale">Male</label>

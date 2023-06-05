@@ -4,7 +4,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudent;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 class StudentController extends Controller
 {
@@ -59,7 +58,6 @@ class StudentController extends Controller
         $student->last_name = $request->get('last_name') ?? $student->last_name;
         $student->dateOfBirth = $request->get('dateOfBirth') ?? $student->dateOfBirth;
         $student->gender = $request->get('gender') ?? $student->gender;
-        $student->status = $request->get('status') ?? $student->status;
         if ($request->get('old_password')){
             if(Hash::check($request->get('old_password'),$student->password)) {
                 $student->password =  $request->get('new_password');

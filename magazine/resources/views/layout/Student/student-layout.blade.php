@@ -34,6 +34,14 @@
                             Faculty
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <i class="fas fa-graduation-cap"></i>
+                            Semesters
+                        </a>
+                    </li>
+                    <div class="nav-link disabled">
+                    </div>
                     </li>
                     <li class="nav-item">
                     <li class="nav-item dropdown">

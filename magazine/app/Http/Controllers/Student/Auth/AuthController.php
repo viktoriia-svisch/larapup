@@ -1,10 +1,8 @@
 <?php
 namespace App\Http\Controllers\Student\Auth;
-use App\Models\Admin;
-use App\Models\Student;
+use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
