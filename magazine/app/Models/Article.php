@@ -4,32 +4,26 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     protected $table = 'articles';
-    protected $fillable = [
+    protected $fillable =[
         "student_id",
         "faculty_semester_id"
     ];
-    public function article_file()
-    {
+    public function article_file(){
         return $this->hasMany(ArticleFile::class);
     }
-    public function student()
-    {
+    public function student(){
         return $this->belongsTo(Student::class);
     }
-    public function faculty_semester()
-    {
+    public function faculty_semester(){
         return $this->belongsTo(FacultySemester::class);
     }
-    public function comment_coordinator()
-    {
+    public function comment_coordinator(){
         return $this->hasMany(CommentCoordinator::class);
     }
-    public function comment_student()
-    {
+    public function comment_student(){
         return $this->hasMany(CommentStudent::class);
     }
-    public function publish()
-    {
+    public function publish(){
         return $this->hasMany(Publish::class);
     }
 }

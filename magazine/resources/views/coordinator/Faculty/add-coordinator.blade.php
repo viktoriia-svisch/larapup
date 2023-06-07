@@ -1,4 +1,4 @@
-@extends("layout.Admin.admin-layout")
+@extends("layout.Coordinator.coordinator-layout")
 @section('title', 'Add Coordinator to Faculty')
 @push("custom-css")
 @endpush
@@ -7,7 +7,7 @@
         {{ Breadcrumbs::render('dashboard.faculty', route('admin.dashboard'), route('admin.faculty')) }}
     </div>
 @endsection
-@section("admin-content")
+@section("coordinator-content")
     <div class="container" style="margin-bottom: 10vw">
         @if (Session::has('action_response') || sizeof($errors->all()) > 0)
             @if (Session::get('action_response')['status_ok'])
@@ -43,7 +43,7 @@
             <div class="row col-12">
                 <div class="col-sm-6">
                     <select style="margin-top: 1vw" class="form-control" id="faculty" data-dependent="semester">
-                        <option value="0">Select a faculty</option>
+                        <option value="-1">Select a faculty</option>
                         @foreach($faculties as $faculty)
                             <option value="{{$faculty->id}}">{{$faculty->name}}</option>
                         @endforeach
@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-sm-6">
                     <select style="margin-top: 1vw" class="form-control" id="semester" data-dependent="faculty">
-                        <option value="0">Select a semester</option>
+                        <option value="-1">Select a semester</option>
                     </select>
                 </div>
                 {{csrf_field()}}
@@ -84,7 +84,7 @@
                     var value = $(this).val();
                     var _token = $('input[name="_token"]').val();
                     $.ajax({
-                        url: "{{route('admin.addToFaculty.fetch')}}",
+                        url: "{{route('coordinator.faculty.addToFaculty.fetch')}}",
                         method: "POST",
                         data:{value: value, _token:_token},
                         success: function (results) {
@@ -102,7 +102,7 @@
                     var faculty = $('#faculty').val()
                     var _token = $('input[name="_token"]').val();
                     $.ajax({
-                        url: "{{route('admin.addToFaculty.fetchCoor')}}",
+                        url: "{{route('coordinator.faculty.addToFaculty.fetchCoor')}}",
                         method: "POST",
                         data:{semester: semester, faculty:faculty, _token:_token},
                         success: function (results) {

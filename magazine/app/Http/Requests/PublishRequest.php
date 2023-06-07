@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Requests;
+use App\Rules\PublishDescriptionRule;
 use App\Rules\PublishImageRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
