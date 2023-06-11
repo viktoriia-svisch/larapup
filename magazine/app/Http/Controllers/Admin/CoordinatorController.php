@@ -6,12 +6,10 @@ use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
 use App\Models\FacultySemesterCoordinator;
-use App\Models\FacultySemesterStudent;
 use App\Models\Semester;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Input;
 class CoordinatorController extends Controller
 {
     public function coordinator(Request $request)
@@ -53,21 +51,50 @@ class CoordinatorController extends Controller
     {
         $semester = $request->get('semester');
         $faculty = $request->get('faculty');
-        $output = '';
+        $availableCoor = '';
+        $unavailableCoor = '';
         $facultySemester = FacultySemester::where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
         if ($facultySemester != null) {
             $coors = Coordinator::whereDoesntHave("faculty_semester_coordinator",
                 function (Builder $builder) use ($facultySemester) {
                     $builder->where('faculty_semester_id', $facultySemester->id);
                 })->get();
+            $unavailableCoors = Coordinator::whereHas('faculty_semester_coordinator', function (Builder $builder) use ($facultySemester) {
+                $builder->where('faculty_semester_id', '=', $facultySemester->id);
+            })->get();
             foreach ($coors as $coor) {
-                $output .= '<div class="col-xl-12 align-items-center" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">'
-                    . '<img  class="img-thumbnail col-xl-2" style="width: 53px"src="https:
-                    . '<label class="col-xl-6">' . $coor->first_name . ' ' . $coor->last_name . '</label>'
-                    . '<a href="' . route('admin.addToFaculty.addCoorToFaculty_post', ['faculty' => $faculty, 'semester' => $semester, 'coordinator' => $coor->id])
-                    . '" class="col-xl-4 submit-coordinator">Add Coordinator</a>'
-                    . '</div>';
+                $availableCoor .= '<div class="card mb-3" style="max-width: 540px;">
+                  <div class="row no-gutters">
+                    <div class="col-md-4">
+                      <img src="https:
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title">' . $coor->first_name . ' ' . $coor->last_name . '</h5>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <a href="' . route('admin.addToFaculty.addCoorToFaculty_post', ['faculty' => $faculty, 'semester' => $semester, 'coordinator' => $coor->id]) . '" class="col-xl-4 submit-coordinator">Remove</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>';
             }
+            foreach ($unavailableCoors as $coor) {
+                $unavailableCoor .= '<div class="card mb-3" style="max-width: 540px;">
+                  <div class="row no-gutters">
+                    <div class="col-md-4">
+                      <img src="https:
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title">' . $coor->first_name . ' ' . $coor->last_name . '</h5>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <a href="' . route('admin.addToFaculty.removeCoorFromFaculty_post', ['faculty' => $faculty, 'semester' => $semester, 'coordinator' => $coor->id]) . '" class="col-xl-4 submit-coordinator">Remove</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>';
+            }
+            $output = ['availableCoor' => $availableCoor, 'unavailableCoor' => $unavailableCoor];
         }
         return $output;
     }
@@ -93,17 +120,32 @@ class CoordinatorController extends Controller
     public function addToFaculty($coordinator, $faculty, $semester)
     {
         $faculty_semester = FacultySemester::where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
+        $coor = Coordinator::where('id', '=', $coordinator);
         $ad = new FacultySemesterCoordinator();
         $ad->faculty_semester_id = $faculty_semester->id;
         $ad->coordinator_id = $coordinator;
-        if ($ad->save()) {
-            return redirect()->back()->with([
-                'success' => true
-            ]);
+        if(!$faculty_semester || !$coor){
+            return redirect()->back()->with($this->responseBladeMessage("add coordinator fail! - coordinator does not exist!",false));
         }
-        return redirect()->back()->with([
-            'success' => false
-        ]);
+        if ($ad->save()) {
+            return redirect()->back()->with($this->responseBladeMessage("add coordinator success!",true));
+        }
+        return redirect()->back()->with($this->responseBladeMessage("add coordinator fail!",false));
+    }
+    public function removeToFaculty($coordinator, $faculty, $semester)
+    {
+        $faculty_semester_coordinator = FacultySemesterCoordinator::where('coordinator_id', '=', $coordinator)
+            ->whereHas("faculty_semester", function (Builder $builder) use($faculty, $semester){
+                $builder->where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester);
+            })
+            ->first();
+        if(!$faculty_semester_coordinator){
+            return redirect()->back()->with($this->responseBladeMessage("remove coordinator fail! - coordinator does not exist!",false));
+        }
+        if ($faculty_semester_coordinator->delete()) {
+            return redirect()->back()->with($this->responseBladeMessage("remove coordinator success!",true));
+        }
+        return redirect()->back()->with($this->responseBladeMessage("remove coordinator fail!",false));
     }
     public function updateCoordinator($id)
     {

@@ -9,11 +9,41 @@
 @endsection
 @section("coordinator-content")
     <div class="container" style="margin-bottom: 10vw">
+        @if (Session::has('action_response') || sizeof($errors->all()) > 0)
+            @if (Session::get('action_response')['status_ok'])
+                <div class="col-12 m-0 p-0">
+                    <div class="card bg-success text-white">
+                        <div class="card-body" style="padding: 1rem;">
+                            {{Session::get('action_response')['status_message']}}
+                        </div>
+                    </div>
+                </div>
+            @else
+                @if ($errors->first())
+                    <div class="col-12 m-0 p-0">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body" style="padding: 1rem;">
+                                {{$errors->first()}}
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="col-12 m-0 p-0">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body" style="padding: 1rem;">
+                                {{Session::get('action_response')['status_message']}}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endif
+            <br>
+        @endif
         <div class="row col-md-12 m-auto">
             <div class="row col-12">
                 <div class="col-sm-6">
                     <select style="margin-top: 1vw" class="form-control" id="faculty" data-dependent="semester">
-                        <option value="0">Select a faculty</option>
+                        <option value="-1">Select a faculty</option>
                         @foreach($faculties as $faculty)
                             <option value="{{$faculty->id}}">{{$faculty->name}}</option>
                         @endforeach
@@ -21,18 +51,25 @@
                 </div>
                 <div class="col-sm-6">
                     <select style="margin-top: 1vw" class="form-control" id="semester" data-dependent="faculty">
-                        <option value="0">Select a semester</option>
+                        <option value="-1">Select a semester</option>
                     </select>
                 </div>
                 {{csrf_field()}}
             </div>
             <hr>
             <div class="row col-12">
-                <div class="col-sm-8 m-auto">
+                <div class="col-sm-6">
                     <h4 style="text-align: center">List coordinator</h4>
                     <input style="margin-top: 1vw" class="form-control" type="text" placeholder="search">
                     <hr>
                     <div class="col-12" id="coordinator-available">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <h4 style="text-align: center">List coordinator</h4>
+                    <input style="margin-top: 1vw" class="form-control" type="text" placeholder="search">
+                    <hr>
+                    <div class="col-12" id="coordinator-in-faculty">
                     </div>
                 </div>
             </div>
@@ -47,7 +84,7 @@
                     var value = $(this).val();
                     var _token = $('input[name="_token"]').val();
                     $.ajax({
-                        url: "{{route('admin.addToFaculty.fetch')}}",
+                        url: "{{route('coordinator.faculty.addToFaculty.fetch')}}",
                         method: "POST",
                         data:{value: value, _token:_token},
                         success: function (results) {
@@ -65,11 +102,12 @@
                     var faculty = $('#faculty').val()
                     var _token = $('input[name="_token"]').val();
                     $.ajax({
-                        url: "{{route('admin.addToFaculty.fetchCoor')}}",
+                        url: "{{route('coordinator.faculty.addToFaculty.fetchCoor')}}",
                         method: "POST",
                         data:{semester: semester, faculty:faculty, _token:_token},
                         success: function (results) {
-                            $('#coordinator-available').html(results);
+                            $('#coordinator-available').html(results['availableCoor']);
+                            $('#coordinator-in-faculty').html(results['unavailableCoor']);
                         },
                         fail:function (results) {
                             console.log(results);
