@@ -20,16 +20,12 @@
         <div class="d-flex justify-content-center align-items-center">
             <a href="{{route('coordinator.faculty.dashboard',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
                class="btn text-white @if($site == "dashboard") btn-primary @else bg-gradient-gray @endif">Dashboard</a>
-            <a href="{{route('coordinator.faculty.listPublished',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
+            <a href="{{route('shared.listPublishes',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
                class="btn text-white @if($site == "published") btn-primary @else bg-gradient-gray @endif">Publishes</a>
             <a href="{{route('coordinator.faculty.listArticle',[$facultySemester->faculty->id, $facultySemester->semester_id, ])}}"
                class="btn text-white @if($site == "articles") btn-primary @else bg-gradient-gray @endif">Articles</a>
             <a href="{{route('coordinator.faculty.students',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
                class="btn text-white @if($site == "members") btn-primary @else bg-gradient-gray @endif">Students</a>
-            @if(\Illuminate\Support\Facades\Auth::guard(COORDINATOR_GUARD)->user()->type == COORDINATOR_LEVEL['MASTER'])
-                <a href="{{route('coordinator.faculty.addCoorToFaculty')}}"
-                   class="btn text-white @if($site == "coordinators") btn-primary @else bg-gradient-gray @endif">Coordinators</a>
-            @endif
             <a href="{{route('coordinator.faculty.settings',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
                class="btn text-white @if($site == "settings") btn-primary @else bg-gradient-gray @endif">Settings</a>
         </div>

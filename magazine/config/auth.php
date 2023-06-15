@@ -1,4 +1,8 @@
 <?php
+use App\Models\Admin;
+use App\Models\Coordinator;
+use App\Models\Guest;
+use App\Models\Student;
 return [
     'defaults' => [
         'guard' => 'api',
@@ -34,19 +38,19 @@ return [
     'providers' => [
         'guest' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Guest::class,
+            'model' => Guest::class,
         ],
         'student' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Student::class,
+            'model' => Student::class,
         ],
         'coordinator' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Coordinator::class,
+            'model' => Coordinator::class,
         ],
         'admin' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Admin::class,
+            'model' => Admin::class,
         ]
     ],
     'passwords' => [
