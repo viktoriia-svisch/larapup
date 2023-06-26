@@ -43,8 +43,7 @@
                 </div>
                 <div class="user-name text-white d-flex align-items-center">
                     @php
-                        use Illuminate\Support\Facades\Auth;
-                        if (Auth::guard(ADMIN_GUARD)->check())
+                        use Illuminate\Support\Facades\Auth;if (Auth::guard(ADMIN_GUARD)->check())
                         {
                         $user = Auth::guard(ADMIN_GUARD)->user();
                         }elseif(Auth::guard(COORDINATOR_GUARD)->check())

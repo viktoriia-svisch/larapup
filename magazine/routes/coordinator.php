@@ -22,6 +22,10 @@ Route::group([
     Route::post('manage/{id}', 'CoordinatorController@updateCoordinatorPost')->name('coordinator.manageAccount_post');
     Route::get('faculty/{faculty_id}/{semester_id}/dashboard','FacultyController@facultyDetailDashboard')
         ->name('coordinator.faculty.dashboard');
+    Route::get('faculty/{faculty_id}/{semester_id}/published','FacultyController@facultyDetailListPublished')
+        ->name('coordinator.faculty.listPublished');
+    Route::get('faculty/{faculty_id}/{semester_id}/published/{published_id}','FacultyController@facultyDetailPublished')
+        ->name('coordinator.faculty.published');
     Route::get('faculty/{faculty_id}/{semester_id}/students','FacultyController@facultyDetailStudents')
         ->name('coordinator.faculty.students');
     Route::get('faculty/{faculty_id}/{semester_id}/articles','FacultyController@facultyDetailListArticle')
@@ -40,8 +44,14 @@ Route::group([
         ->name('coordinator.faculty.settings');
     Route::post('faculty/{faculty_id}/{semester_id}/settings', 'FacultyController@facultyDetailSettingPost')
         ->name('coordinator.faculty.settingPost');
-    Route::get('faculty/add-coordinator', 'CoordinatorController@addToFaculty_index')->name('coordinator.faculty.addCoorToFaculty');
-    Route::get('faculty/add-coordinator/coordinator/{coordinator}/faculty/{faculty}/semester/{semester}', 'CoordinatorController@addToFaculty')->name('coordinator.faculty.addToFaculty.addCoorToFaculty_post');
-    Route::post('faculty/add-coordinator/fetch', 'CoordinatorController@fetch')->name('coordinator.faculty.addToFaculty.fetch');
-    Route::post('faculty/add-coordinator/fetchCoor', 'CoordinatorController@fetchCoor')->name('coordinator.faculty.addToFaculty.fetchCoor');
+    Route::get('faculty/add-coordinator', 'CoordinatorController@addToFaculty_index')
+        ->name('coordinator.faculty.addCoorToFaculty');
+    Route::get('faculty/add-coordinator/coordinator/{coordinator}/faculty/{faculty}/semester/{semester}', 'CoordinatorController@addToFaculty')
+        ->name('coordinator.faculty.addToFaculty.addCoorToFaculty_post');
+    Route::get('faculty/remove-coordinator/coordinator/{coordinator}/faculty/{faculty}/semester/{semester}', 'CoordinatorController@removeToFaculty')
+        ->name('coordinator.addToFaculty.removeCoorFromFaculty_post');
+    Route::post('faculty/add-coordinator/fetch', 'CoordinatorController@fetch')
+        ->name('coordinator.faculty.addToFaculty.fetch');
+    Route::post('faculty/add-coordinator/fetchCoor', 'CoordinatorController@fetchCoor')
+        ->name('coordinator.faculty.addToFaculty.fetchCoor');
 });
