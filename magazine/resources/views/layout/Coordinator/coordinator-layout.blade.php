@@ -30,12 +30,6 @@
                 </div>
                 <ul class="navbar-nav ml-lg-auto">
                     <li class="nav-item">
-                        <a class="nav-link">
-                            <i class="fas fa-search"></i>
-                            Search
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{route('coordinator.faculty')}}">
                             <i class="fas fa-search"></i>
                             Faculty

@@ -10,18 +10,19 @@ use App\Models\Semester;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 class CoordinatorController extends Controller
 {
     public function coordinator(Request $request)
     {
-        $searchTerms = $request->get('search_student_input');
+        $searchTerms = $request->get('search_coordinator_input');
         $searchType = $request->get('type');
         $coordinatorList = Coordinator::with('faculty_semester_coordinator');
         if ($searchType != -1 && $searchType != null) {
             $coordinatorList->where('status', $request->get('type'));
         }
         if ($searchTerms != null) {
-            $coordinatorList->where(function ($query) use ($searchTerms) {
+            $coordinatorList->where(function (Builder $query) use ($searchTerms) {
                 $query->where('first_name', 'like', '%' . $searchTerms . '%')
                     ->orwhere('last_name', 'like', '%' . $searchTerms . '%');
             });
@@ -30,7 +31,7 @@ class CoordinatorController extends Controller
     }
     public function addToFaculty_index()
     {
-        $faculty = Faculty::get();
+        $faculty = Faculty::with("faculty_semester")->get();
         return view('admin.faculty.add-coordinator',
             ['faculties' => $faculty]);
     }
@@ -40,7 +41,10 @@ class CoordinatorController extends Controller
         $output = '<option value="0">Select a semester</option>';
         $faculty_semester = FacultySemester::with('semester')->where('faculty_id', '=', $value)->get();
         foreach ($faculty_semester as $row) {
-            $data = Semester::where('id', "=", $row->semester_id)->where('end_date', '>=', Carbon::now())->first();
+            $data = Semester::with("faculty_semester")
+                ->where('id', "=", $row->semester_id)
+                ->where('end_date', '>=', Carbon::now())
+                ->first();
             if ($data != null) {
                 $output .= '<option value="' . $data->id . '">' . $data->name . '</option>';
             }
@@ -149,15 +153,18 @@ class CoordinatorController extends Controller
     }
     public function updateCoordinator($id)
     {
-        $coordinator = Coordinator::find($id);
+        $coordinator = Coordinator::with("faculty_semester_coordinator")->find($id);
+        if ($coordinator)
         return view('admin.Coordinator.update-coordinator', [
             'coordinator' => $coordinator
         ]);
+        return redirect()->back()->with($this->responseBladeMessage("Unable to find the coordinator", false));
     }
     public function updateCoordinatorPost(Request $request, $id)
     {
-        $coordinator = Coordinator::find($id);
-        if (!$coordinator) return redirect()->back();
+        $coordinator = Coordinator::with("faculty_semester_coordinator")->find($id);
+        if (!$coordinator)
+            return redirect()->back()->with($this->responseBladeMessage("Unable to find the coordinator", false));
         $coordinator->first_name = $request->get('first_name') ?? $coordinator->first_name;
         $coordinator->last_name = $request->get('last_name') ?? $coordinator->last_name;
         $coordinator->dateOfBirth = $request->get('dateOfBirth') ?? $coordinator->dateOfBirth;

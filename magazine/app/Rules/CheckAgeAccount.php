@@ -1,7 +1,6 @@
 <?php
 namespace App\Rules;
 use App\Helpers\DateTimeHelper;
-use App\Models\Student;
 use Illuminate\Contracts\Validation\Rule;
 class CheckAgeAccount implements Rule
 {
