@@ -219,7 +219,7 @@
             })
         });
         function uploadFilePopup() {
-            @if(sizeof($article->publish) > 0)
+            @if($article && sizeof($article->publish) > 0)
             flashMessage("This article is already published, any modification is not allowed!", true, 6000);
             @else
             @if(!(($article && count($article->article_file) > 2) || !$article))

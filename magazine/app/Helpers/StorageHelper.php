@@ -120,7 +120,7 @@ class StorageHelper
         $fileName = $file->getClientOriginalName();
         $filePath = self::getCommentCoordinatorPath($idCoordinator, $idArticle);
         self::save($file, $filePath, $fileName);
-        return $filePath . $fileName;
+        return $fileName;
     }
     public static function getCommentCoordinatorPath($idCoordinator, $idArticle, $path = '')
     {

@@ -4,6 +4,7 @@ use App\Helpers\StorageHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
 use App\Models\ArticleFile;
 use App\Models\CommentCoordinator;
+use App\Models\CommentStudent;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -90,5 +91,33 @@ class ArticleController extends FacultySemesterBaseController
         return back()->with(
             $this->responseBladeMessage("Unable to save your comment. Try again later", false)
         );
+    }
+    public function downloadAttachmentComment($faculty_id, $semester_id, $comment_id, $type)
+    {
+        if ($type == COORDINATOR_GUARD) {
+            $comment = CommentCoordinator::with("article")
+                ->where("id", $comment_id)
+                ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
+                    $query->where("faculty_id", $faculty_id)
+                        ->where("semester_id", $semester_id);
+                })->where("coordinator_id", Auth::id())->first();
+            $pathRaw = StorageHelper::getCommentCoordinatorPath(Auth::id(), $comment->article_id, $comment->image_path);
+        } else {
+            $comment = CommentStudent::with("article")
+                ->where("id", $comment_id)
+                ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
+                    $query->where("faculty_id", $faculty_id)
+                        ->where("semester_id", $semester_id);
+                })
+                ->whereHas("article.comment_coordinator", function (Builder $query) use ($faculty_id, $semester_id) {
+                    $query->where("coordinator_id", Auth::id());
+                })->first();
+            $pathRaw = StorageHelper::getCommentStudentPath($comment->coordinator_id, $comment->article_id, $comment->image_path);
+        }
+        if ($comment) {
+            $path = StorageHelper::locatePath($pathRaw);
+            return Response::download($path, $comment->image_path);
+        }
+        return back()->with($this->responseBladeMessage("Cannot find the file to download", false));
     }
 }
