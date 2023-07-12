@@ -41,7 +41,36 @@
         </div>
     </div>
     <hr>
-    @include("layout.response.responseMessage")
+    @if (Session::has('action_response') || sizeof($errors->all()) > 0)
+        @if (Session::get('action_response')['status_ok'])
+            <div class="col-12 m-0 p-0">
+                <div class="card bg-success text-white">
+                    <div class="card-body" style="padding: 1rem;">
+                        {{Session::get('action_response')['status_message']}}
+                    </div>
+                </div>
+            </div>
+        @else
+            @if ($errors->first())
+                <div class="col-12 m-0 p-0">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body" style="padding: 1rem;">
+                            {{$errors->first()}}
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="col-12 m-0 p-0">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body" style="padding: 1rem;">
+                            {{Session::get('action_response')['status_message']}}
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endif
+        <br>
+    @endif
     <div class="container-fluid row m-0 p-0">
         <div class="col-12 col-md-4 m-0 p-0 pr-4 border-right d-flex justify-content-center align-items-center">
             @if ($article && count($article->publish) > 0)
@@ -49,7 +78,7 @@
                     <span class="text-muted">Grated</span>
                     <h1>{{$article->grade}}</h1>
                     <br>
-                    <a href="{{route('shared.publish', [$facultySemester->faculty_id, $facultySemester->semester->id, $article->publish[0]->id])}}"
+                    <a href="{{route('shared.publish', [$facultySemester->faculty_id, $facultySemester->semester->id, $article->publish->id])}}"
                        class="btn btn-success btn-icon">
                         <i class="fas fa-thumbs-up"></i>
                         This Article was published
@@ -219,12 +248,10 @@
             })
         });
         function uploadFilePopup() {
-            @if($article && sizeof($article->publish) > 0)
-            flashMessage("This article is already published, any modification is not allowed!", true, 6000);
+            @if(($article && count($article->article_file) > 2) || !$article)
+                return;
             @else
-            @if(!(($article && count($article->article_file) > 2) || !$article))
             articleModal.modal('show');
-            @endif
             @endif
         }
         function listenCheckboxTerms(event) {
@@ -338,6 +365,14 @@
             errorSection.html(null);
             isValidFileSubmissionUpload = false;
             fileJQUERY.replaceWith(fileJQUERY.val('').clone(true));
+        }
+        /**
+         * For full viewing the image
+         * @param target
+         */
+        function previewFullScreen(target) {
+            console.log(target);
+            console.dir(target);
         }
     </script>
 @endpush

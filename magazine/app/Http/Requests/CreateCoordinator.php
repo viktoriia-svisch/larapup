@@ -14,10 +14,9 @@ class CreateCoordinator extends FormRequest
         return [
             'email' => ['required', 'email', new CheckCoordinatorEmail(), 'bail'],
             'password' => 'required|min:3|bail',
-            'first_name' => 'required|min:2|max:40|bail',
-            'last_name' => 'required|min:2|max:80|bail',
-            'gender' => 'required|integer',
-            'dateOfBirth' => 'required', 'date_format:d/m/Y'
+            'first_name' => 'required|min:2|bail',
+            'last_name' => 'required|min:2|bail',
+            'gender' => 'required|integer'
         ];
     }
 }

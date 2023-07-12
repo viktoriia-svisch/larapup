@@ -2,21 +2,27 @@
 namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCoordinatorAccount;
+use App\Http\Resources\Coordinator as CoordinatorResource;
+use App\Http\Resources\Faculty as FacultyResource;
 use App\Models\Coordinator;
 use App\Models\Faculty;
-use App\Models\FacultySemester;
-use App\Models\FacultySemesterCoordinator;
-use App\Models\FacultySemesterStudent;
 use App\Models\Semester;
+use App\Models\FacultySemester;
 use App\Models\Student;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Input;
+use Carbon\Carbon;
 class CoordinatorController extends Controller
 {
+    public function index()
+    {
+        $coordinators = Coordinator::paginate(PER_PAGE);
+        return CoordinatorResource::collection($coordinators);
+    }
     public function Coordinator()
     {
         $currentSemester = Semester::with('faculty_semester')
@@ -39,7 +45,7 @@ class CoordinatorController extends Controller
             ->whereHas('faculty_semester_coordinator.coordinator', function ($query) {
                 $query->where('id', Auth::guard(COORDINATOR_GUARD)->user()->id);
             })
-            ->whereHas('semester', function (Builder $query){
+            ->whereHas('semester', function ($query) {
                 $query->where('start_date', '<=', Carbon::now()->toDateTimeString())
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
@@ -52,13 +58,13 @@ class CoordinatorController extends Controller
     }
     public function updateCoordinator($id)
     {
-        $coordinator = Coordinator::with("faculty_semester_coordinator")->find($id);
+        $coordinator = Coordinator::find($id);
         return view('coordinator.manage.coordinator-detail', [
             'coordinator' => $coordinator]);
     }
     public function updateCoordinatorPost(UpdateCoordinatorAccount $request, $id)
     {
-        $coordinator = Coordinator::with("faculty_semester_coordinator")->find($id);
+        $coordinator = Coordinator::find($id);
         if (!$coordinator) return redirect()->back()->withInput();
         $coordinator->first_name = $request->get('first_name') ?? $coordinator->first_name;
         $coordinator->last_name = $request->get('last_name') ?? $coordinator->last_name;
@@ -82,75 +88,32 @@ class CoordinatorController extends Controller
             'updateStatus' => false
         ]);
     }
+    public function statistics(){
+        $faculties = Faculty::all();
+        return view('coordinator.statistics', compact('faculties'));
+    }
+    public function facultySemester(){
+        $faculty_id = Input::get('faculty_id');
+        $Fsemesters = FacultySemester::where('faculty_id', '=', $faculty_id)->get();
+        $semesters = DB::table('faculty_semesters')
+            ->join('semesters', 'faculty_semesters.semester_id', '=', 'semesters.id')
+            ->select('faculty_semesters.id', 'semesters.name')
+            ->where('faculty_semesters.faculty_id','=',$faculty_id)
+            ->get();
+        return response()->json($semesters);
+    }
     public function dashboard()
     {
         return view('coordinator.dashboard');
     }
-    public function CoordinatorSemester()
+    public function show($id)
     {
-        $facultySemesterCoordinator = FacultySemesterCoordinator::with("faculty_semester")
-            ->where('coordinator_id', Auth::guard(COORDINATOR_GUARD)->user()->id)
-            ->whereHas("faculty_semester.semester")
-            ->first();
-        return view('coordinator.Semester.semester', [
-            'facSemesterCoordinator' => $facultySemesterCoordinator]);
-    }
-    public function chooseSemesterFaculty($semester)
-    {
-        $semester = Semester::with("faculty_semester")->find($semester);
-        $faculty = FacultySemesterCoordinator::with("faculty_semester")
-            ->where('coordinator_id', Auth::guard(COORDINATOR_GUARD)->user()->id)
-            ->whereHas("faculty_semester.faculty")->get();
-        $StudentList = Student::all();
-        $FacultySemester = DB::table('faculty_semesters')
-            ->join('faculties', 'faculty_semesters.faculty_id', '=', 'faculties.id')
-            ->join('faculty_semester_coordinators', 'faculty_semesters.id', '=', 'faculty_semester_coordinators.faculty_semester_id')
-            ->select('faculties.name', 'faculty_semesters.id')
-            ->where('faculty_semesters.semester_id', '=', $semester->id)
-            ->where('faculty_semester_coordinators.coordinator_id', '=', Auth::guard(COORDINATOR_GUARD)->user()->id)
-            ->get();
-        return view('coordinator.Semester.choose-semester-faculty')
-            ->with('semester', $semester)
-            ->with('faculties', $faculty)
-            ->with('StudentList', $StudentList)
-            ->with('FacultySemester', $FacultySemester);
-    }
-    public function addStudentFaculty($facultysemester)
-    {
-        $FacultySemester = FacultySemester::with("faculty")->find($facultysemester);
-        $semester = Semester::with("faculty_semester")->where('id', '=', $FacultySemester->semester_id)->get();
-        $faculty = Faculty::with("faculty_semester")->where('id', '=', $FacultySemester->faculty_id)->get();
-        $StudentList = Student::all();
-        $AvailableStudent = DB::table('faculty_semester_students')
-            ->join('students', 'faculty_semester_students.student_id', '=', 'students.id')
-            ->select('students.first_name', 'students.last_name')
-            ->where('faculty_semester_students.faculty_semester_id', '=', $FacultySemester->id)
-            ->get();
-        return view('coordinator.Semester.add-student')
-            ->with('semester', $semester)
-            ->with('faculty', $faculty)
-            ->with('StudentList', $StudentList)
-            ->with('AvailableStudent', $AvailableStudent)
-            ->with('FacultySemester', $FacultySemester);
-    }
-    public function addStudentFaculty_post($FacultySemester, $student)
-    {
-        $student = Student::with("faculty_semester_student")->find($student);
-        $FacultySemester = Faculty::with("faculty_semester")->find($FacultySemester);
-        $FacuSemeStudent = new FacultySemesterStudent;
-        $FacuSemeStudent->faculty_semester_id = $FacultySemester->id;
-        $FacuSemeStudent->student_id = $student->id;
-        $HasFaculty = FacultySemesterStudent::with("faculty_semester")->where('student_id', '=', $student->id)->first();
-        if (!empty($HasFaculty)) {
-            return back()->with($this->responseBladeMessage(__('message.create_faculty_duplicate'), false));
-        }
-        if ($FacuSemeStudent->save()) {
-            return back()->with($this->responseBladeMessage(__('message.create_faculty_success')));
-        }
+        $coordinator = Coordinator::find($id);
+        return new CoordinatorResource($coordinator);
     }
     public function addToFaculty_index()
     {
-        $faculty = Faculty::with("faculty_semester")->get();
+        $faculty = Faculty::get();
         return view('coordinator.Faculty.add-coordinator',
             ['faculties' => $faculty]);
     }
@@ -160,10 +123,7 @@ class CoordinatorController extends Controller
         $output = '<option value="0">Select a semester</option>';
         $faculty_semester = FacultySemester::with('semester')->where('faculty_id', '=', $value)->get();
         foreach ($faculty_semester as $row) {
-            $data = Semester::with("faculty_semester")
-                ->where('id', "=", $row->semester_id)
-                ->where('end_date', '>=', Carbon::now())
-                ->first();
+            $data = Semester::where('id', "=", $row->semester_id)->where('end_date', '>=', Carbon::now())->first();
             if ($data != null) {
                 $output .= '<option value="' . $data->id . '">' . $data->name . '</option>';
             }
@@ -175,17 +135,15 @@ class CoordinatorController extends Controller
         $semester = $request->get('semester');
         $faculty = $request->get('faculty');
         $output = '';
-        $facultySemester = FacultySemester::with("faculty")
-            ->where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
+        $facultySemester = FacultySemester::where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester)->first();
         if ($facultySemester != null) {
-            $coors = Coordinator::with("faculty_semester_coordinator")
-                ->whereDoesntHave("faculty_semester_coordinator",
+            $coors = Coordinator::whereDoesntHave("faculty_semester_coordinator",
                 function (Builder $builder) use ($facultySemester) {
                     $builder->where('faculty_semester_id', $facultySemester->id);
                 })->get();
             foreach ($coors as $coor) {
                 $output .= '<div class="col-xl-12 align-items-center" style="background-color: lavender; height: 3vw; border-radius: 8px; margin-top: 2vw">'
-                    . '<img  class="img-thumbnail col-xl-2" style="width: 53px" src="https:
+                    . '<img  class="img-thumbnail col-xl-2" style="width: 53px"src="https:
                     . '<label class="col-xl-6">' . $coor->first_name . ' ' . $coor->last_name . '</label>'
                     . '<a href="' . route('coordinator.addToFaculty.addCoorToFaculty_post', ['faculty' => $faculty, 'semester' => $semester, 'coordinator' => $coor->id])
                     . '" class="col-xl-4 submit-coordinator">Add Coordinator</a>'

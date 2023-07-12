@@ -4,7 +4,6 @@ use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 class StorageHelper
 {
@@ -14,15 +13,13 @@ class StorageHelper
         'PROFILE' => 3,
         'PUBLISH' => 4,
         'AVATAR' => 5,
-        "BACKUP" => 6
     ];
     const TYPE_NAMES = [
         1 => 'articles',
         2 => 'comments',
         3 => 'profiles',
         4 => 'publishes',
-        5 => 'avatar',
-        6 => 'backup',
+        5 => 'avatar'
     ];
     public static function savePublishFileSubmission($idFacultySemester, $idPublish, UploadedFile $file, &$filePath = null)
     {
@@ -39,7 +36,7 @@ class StorageHelper
         $folderPath = self::getTypeFolder(self::TYPES['PUBLISH'], $strict) . $idPublish . '/fs/' . $idFacultySemester . '/';
         return $folderPath . $path;
     }
-    public static function getTypeFolder($type, $strict = true)
+    private static function getTypeFolder($type, $strict = true)
     {
         if (!isset(self::TYPE_NAMES[$type]))
             throw new Exception('type is undefined');
@@ -58,16 +55,6 @@ class StorageHelper
     private static function disk()
     {
         return Storage::disk('local');
-    }
-    public static function getTemporaryBackupFacultySemesterPath($faculty_id, $semester_id, $fileName = '', $strict = true)
-    {
-        $folderPath = self::getTypeFolder(self::TYPES['ARTICLE'], $strict) . 'backup/' . $faculty_id . '/' . $semester_id . '/';
-        return $folderPath . $fileName;
-    }
-    public static function getTemporaryBackupSemesterPath($semester_id, $fileName = '', $strict = true)
-    {
-        $folderPath = self::getTypeFolder(self::TYPES['BACKUP'], $strict) . 'semester/' . $semester_id . '/';
-        return $folderPath . $fileName;
     }
     public static function deletePublishFile($idFacultySemester, $idPublish, $fileDir)
     {
@@ -128,7 +115,7 @@ class StorageHelper
         $fileName = $file->getClientOriginalName();
         $filePath = self::getCommentCoordinatorPath($idCoordinator, $idArticle);
         self::save($file, $filePath, $fileName);
-        return $fileName;
+        return $filePath . $fileName;
     }
     public static function getCommentCoordinatorPath($idCoordinator, $idArticle, $path = '')
     {

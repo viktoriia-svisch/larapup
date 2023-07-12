@@ -1,0 +1,31 @@
+<?php
+namespace PHPUnit\Framework\Constraint;
+use PHPUnit\Framework\TestCase;
+class ExceptionMessageRegExpTest extends TestCase
+{
+    public function testRegexMessage(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageRegExp('/^A polymorphic \w+ message/');
+        throw new \Exception('A polymorphic exception message');
+    }
+    public function testRegexMessageExtreme(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageRegExp('/^a poly[a-z]+ [a-zA-Z0-9_]+ me(s){2}age$/i');
+        throw new \Exception('A polymorphic exception message');
+    }
+    public function testMessageXdebugScreamCompatibility(): void
+    {
+        \ini_set('xdebug.scream', '1');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageRegExp('#Screaming preg_match#');
+        throw new \Exception('Screaming preg_match');
+    }
+    public function testSimultaneousLiteralAndRegExpExceptionMessage(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageRegExp('/^A variadic \w+ message/');
+        throw new \Exception('A variadic exception message');
+    }
+}
