@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 class CoordinatorController extends Controller
 {
@@ -88,6 +87,7 @@ class CoordinatorController extends Controller
             'updateStatus' => false
         ]);
     }
+<<<<<<< HEAD
     public function statistics(){
         $faculties = Faculty::all();
         return view('coordinator.statistics', compact('faculties'));
@@ -104,6 +104,9 @@ class CoordinatorController extends Controller
     }
     public function dashboard()
     {
+=======
+    public function dashboard(){
+>>>>>>> parent of d8cfcd3... Add Statistics UI
         return view('coordinator.dashboard');
     }
     public function show($id)

@@ -13,8 +13,6 @@ Route::group([
     Route::post('new-faculty','CoordinatorController@storeFaculty');
     Route::get('coordinator', 'CoordinatorController@Coordinator')->name('coordinator.coordinator');
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
-    Route::get('statistics', 'CoordinatorController@statistics')->name('coordinator.statistics');
-    Route::get('statistics/json-semester', 'CoordinatorController@facultySemester')->name('coordinator.facultysemester');
     Route::get('manage/{id}', 'CoordinatorController@updateCoordinator')->name('coordinator.manageAccount');
     Route::post('manage/{id}', 'CoordinatorController@updateCoordinatorPost')->name('coordinator.manageAccount_post');
     Route::get('faculty/{faculty_id}/{semester_id}/dashboard','FacultyController@facultyDetailDashboard')
