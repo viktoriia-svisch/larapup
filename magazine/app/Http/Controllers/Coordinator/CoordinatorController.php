@@ -88,6 +88,7 @@ class CoordinatorController extends Controller
         ]);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     public function statistics(){
         $faculties = Faculty::all();
         return view('coordinator.statistics', compact('faculties'));
@@ -105,6 +106,8 @@ class CoordinatorController extends Controller
     public function dashboard()
     {
 =======
+=======
+>>>>>>> parent of d8cfcd3... Add Statistics UI
     public function dashboard(){
 >>>>>>> parent of d8cfcd3... Add Statistics UI
         return view('coordinator.dashboard');
