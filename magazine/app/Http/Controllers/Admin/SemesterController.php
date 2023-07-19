@@ -5,6 +5,7 @@ use App\Http\Requests\CreateSemester;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 class SemesterController extends Controller
 {
     public function semester(Request $request)
@@ -119,5 +120,51 @@ class SemesterController extends Controller
         return view('admin.Semester.create-semester', [
             'lastSemester' => $lastSem
         ]);
+    }
+    public function chooseSemester($activeSemester)
+    {
+        $activeSemester = Semester::find($activeSemester);
+        $articleInSemester = DB::table('articles')
+            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
+            ->join('faculties', 'faculty_semesters.faculty_id', '=', 'faculties.id')
+            ->join('students', 'articles.student_id', '=', 'students.id')
+            ->select('articles.grade', 'faculties.name as faculties_name', 'students.last_name as students_lname','articles.status',
+                'articles.created_at', 'students.first_name as students_fname')
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
+            ->paginate(PER_PAGE);
+        $student_count = DB::table('articles')->distinct('student_id')->count('student_id');
+        $grade_avg = DB::table('articles')
+            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
+            ->avg('grade');
+        $outOfDate = DB::table('articles')
+            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
+            ->whereColumn('articles.created_at', '>', 'faculty_semesters.first_deadline')
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
+            ->count();
+        $inTime = DB::table('articles')
+            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
+            ->whereColumn('articles.created_at', '<=', 'faculty_semesters.first_deadline')
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
+            ->count();
+        $maxgrade = DB::table('articles')
+            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
+            ->max('grade');
+        $mingrade = DB::table('articles')
+            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
+            ->min('grade');
+        return view('admin.Semester.static-information')
+            ->with([
+                'activeSemester' => $activeSemester,
+                'info' => $articleInSemester,
+                'countstudent' => $student_count,
+                'grade_avg' => $grade_avg,
+                'mingrade' => $mingrade,
+                'maxgrade' => $maxgrade,
+                'outOfDate' => $outOfDate,
+                'inTime'=>$inTime
+            ]);
     }
 }

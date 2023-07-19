@@ -74,8 +74,9 @@ class FacultyController extends FacultySemesterBaseController
             "comments" => $listComment
         ], STUDENT_GUARD);
     }
-    public function facultyDetailMember($faculty_id, $semester_id)
+    public function facultyDetailMember(Request $request, $faculty_id, $semester_id)
     {
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member", [], STUDENT_GUARD);
+        $arrData = $this->retrieveFacultySemesterMembers($request, $faculty_id, $semester_id);
+        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member", $arrData, STUDENT_GUARD);
     }
 }

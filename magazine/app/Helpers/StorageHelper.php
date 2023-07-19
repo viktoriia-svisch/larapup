@@ -36,7 +36,7 @@ class StorageHelper
         $folderPath = self::getTypeFolder(self::TYPES['PUBLISH'], $strict) . $idPublish . '/fs/' . $idFacultySemester . '/';
         return $folderPath . $path;
     }
-    private static function getTypeFolder($type, $strict = true)
+    public static function getTypeFolder($type, $strict = true)
     {
         if (!isset(self::TYPE_NAMES[$type]))
             throw new Exception('type is undefined');
@@ -55,6 +55,11 @@ class StorageHelper
     private static function disk()
     {
         return Storage::disk('local');
+    }
+    public static function getTemporaryBackupPath($faculty_id, $semester_id, $fileName = '', $strict = true)
+    {
+        $folderPath = self::getTypeFolder(self::TYPES['ARTICLE'], $strict) . 'backup/' . $faculty_id . '/' . $semester_id . '/';
+        return $folderPath . $fileName;
     }
     public static function deletePublishFile($idFacultySemester, $idPublish, $fileDir)
     {
@@ -115,7 +120,7 @@ class StorageHelper
         $fileName = $file->getClientOriginalName();
         $filePath = self::getCommentCoordinatorPath($idCoordinator, $idArticle);
         self::save($file, $filePath, $fileName);
-        return $filePath . $fileName;
+        return $fileName;
     }
     public static function getCommentCoordinatorPath($idCoordinator, $idArticle, $path = '')
     {

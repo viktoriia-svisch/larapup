@@ -8,39 +8,36 @@ use App\Models\FacultySemester;
 use App\Models\Semester;
 use App\Models\Student;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 class StudentController extends Controller
 {
-    public function index()
+    public function updateStudent($id)
     {
-        $students = Student::paginate(PER_PAGE);
-        dd($students);
-    }
-    public function updateStudent($id){
-        $student = Student::find($id);
-        return view('student.manage.student-detail',[
+        $student = Student::with("faculty_semester_student")->find($id);
+        return view('student.manage.student-detail', [
             'student' => $student]);
     }
-    public function updateStudentPost(UpdateStudentAccount $request, $id){
-        $student = Student::find($id);
+    public function updateStudentPost(UpdateStudentAccount $request, $id)
+    {
+        $student = Student::with("faculty_semester_student")->find($id);
         if (!$student) return redirect()->back()->withInput();
         $student->first_name = $request->get('first_name') ?? $student->first_name;
         $student->last_name = $request->get('last_name') ?? $student->last_name;
         $student->dateOfBirth = $request->get('dateOfBirth') ?? $student->dateOfBirth;
         $student->gender = $request->get('gender') ?? $student->gender;
-        if ($request->get('old_password')){
-            if(Hash::check($request->get('old_password'),$student->password))
-            {
-                $student->password =  $request->get('new_password');
+        if ($request->get('old_password')) {
+            if (Hash::check($request->get('old_password'), $student->password)) {
+                $student->password = $request->get('new_password');
             } else {
                 return back()->with([
                     'updateStatus' => false
                 ]);
             }
         }
-        if ($student->save()){
+        if ($student->save()) {
             return back()->with([
                 'updateStatus' => true
             ]);
@@ -57,30 +54,30 @@ class StudentController extends Controller
     {
         $currentSemester = Semester::with('faculty_semester')
             ->where('start_date', '<=', Carbon::now()->toDateTimeString())
-            ->whereHas('faculty_semester.faculty_semester_student.student', function ($q) {
+            ->whereHas('faculty_semester.faculty_semester_student.student', function (Builder $q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })
             ->where('end_date', '>', Carbon::now()->toDateTimeString())
             ->first();
         $currentFaculty = Faculty::with('faculty_semester.semester')
-            ->whereHas('faculty_semester.faculty_semester_student.student', function ($q) {
+            ->whereHas('faculty_semester.faculty_semester_student.student', function (Builder $q) {
                 $q->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })
-            ->whereHas('faculty_semester.semester', function ($q) {
+            ->whereHas('faculty_semester.semester', function (Builder $q) {
                 $q->where('start_date', '<=', Carbon::now()->toDateTimeString())
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
             ->first();
         $currentActiveData = FacultySemester::with(['faculty', 'semester'])
-            ->whereHas('faculty_semester_student.student', function ($query) {
+            ->whereHas('faculty_semester_student.student', function (Builder $query) {
                 $query->where('id', Auth::guard(STUDENT_GUARD)->user()->id);
             })
-            ->whereHas('semester', function ($query){
+            ->whereHas('semester', function (Builder $query) {
                 $query->where('start_date', '<=', Carbon::now()->toDateTimeString())
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
             ->orderBy('second_deadline')->first();
-        return view('student.dashboard',[
+        return view('student.dashboard', [
             'activeData' => $currentActiveData,
             'activeSemester' => null,
             'activeFaculty' => null
@@ -102,10 +99,5 @@ class StudentController extends Controller
                 $std
             );
         return $this->responseMessage('Create unsuccessfully', true);
-    }
-    public function show($id)
-    {
-        $student = Student::find($id);
-        dd($student);
     }
 }

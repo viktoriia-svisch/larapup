@@ -1,11 +1,20 @@
 <?php
 namespace App\Http\Controllers;
+use App\Helpers\StorageHelper;
 use App\Models\Article;
 use App\Models\CommentCoordinator;
 use App\Models\CommentStudent;
+use App\Models\Coordinator;
 use App\Models\FacultySemester;
+use App\Models\Student;
+use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use ZipArchive;
 class FacultySemesterBaseController extends Controller
 {
     public function facultyDetail($faculty_id, $semester_id, $view, $site = 'dashboard', $extData = [], $guard = COORDINATOR_GUARD, $redirectRoute = 'coordinator.faculty')
@@ -50,6 +59,36 @@ class FacultySemesterBaseController extends Controller
         }
         return $faculty->first();
     }
+    public function retrieveFacultySemesterMembers(Request $request, $faculty_id, $semester_id)
+    {
+        $search = $request->get("search");
+        $students = Student::with("faculty_semester_student")
+            ->whereHas("faculty_semester_student.faculty_semester", function (Builder $builder) use ($faculty_id, $semester_id) {
+                $builder->where("faculty_id", $faculty_id)->where("semester_id", $semester_id);
+            });
+        $coordinators = Coordinator::with("faculty_semester_coordinator")
+            ->whereHas("faculty_semester_coordinator.faculty_semester", function (Builder $builder) use ($faculty_id, $semester_id) {
+                $builder->where("faculty_id", $faculty_id)->where("semester_id", $semester_id);
+            });
+        if ($search) {
+            $students = $students->where(function (Builder $builder) use ($search) {
+                $builder->where("first_name", "like", "%$search%")
+                    ->orWhere("last_name", "like", "%$search%")
+                    ->orWhere("email", "like", "%$search%");
+            });
+            $coordinators = $coordinators->where(function (Builder $builder) use ($search) {
+                $builder->where("first_name", "like", "%$search%")
+                    ->orWhere("last_name", "like", "%$search%")
+                    ->orWhere("email", "like", "%$search%");
+            });
+        }
+        $arrData = [
+            "students" => $students->paginate(PER_PAGE),
+            "coordinators" => $coordinators->get(),
+            "search" => $search,
+        ];
+        return $arrData;
+    }
     public function retrieveDetailArticle($faculty_id, $semester_id, $article_id)
     {
         return Article::with("student")->whereHas("faculty_semester", function (Builder $builder) use ($faculty_id, $semester_id) {
@@ -68,7 +107,7 @@ class FacultySemesterBaseController extends Controller
     {
         $commentStudent = $this->retrieveCommentStudent($faculty_id, $semester_id, $guardStudent);
         $commentCoordinator = $this->retrieveCommentCoordinator($faculty_id, $semester_id, $guardCoordinator);
-        $arrCombined = $commentStudent->concat($commentCoordinator)->sortByDesc(function ($comment, $key) {
+        $arrCombined = $commentStudent->concat($commentCoordinator)->sortByDesc(function ($comment) {
             return $comment['created_at'];
         });
         return $arrCombined;
@@ -94,5 +133,27 @@ class FacultySemesterBaseController extends Controller
             $commentCoordinator = $commentCoordinator->where("coordinator_id", Auth::guard($guard)->user()->id);
         }
         return $commentCoordinator->get();
+    }
+    public function downloadArticleFaculty($faculty_id, $semester_id)
+    {
+        $listArticle = Article::with('student')
+            ->whereHas('faculty_semester', function (Builder $builder) use ($faculty_id, $semester_id) {
+                $builder->where('faculty_id', $faculty_id)->where('semester_id', $semester_id);
+            })->get();
+        $tempDir = StorageHelper::getTemporaryBackupPath($faculty_id, $semester_id, 'backups.zip');
+        $rawZipper = new ZipArchive();
+        $rawZipper->open($tempDir, ZipArchive::CREATE);
+        if ($rawZipper != true) {
+            return false;
+        }
+        foreach ($listArticle as $article) {
+            foreach ($article->article_file as $file) {
+                $dirFile = StorageHelper::locatePath(StorageHelper::getArticleFilePath($article->faculty_semester_id,
+                    $article->id, $file->title));
+                $rawZipper->addFile($dirFile, basename($dirFile));
+            }
+        }
+        $rawZipper->close();
+        return $tempDir;
     }
 }

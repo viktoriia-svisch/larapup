@@ -13,7 +13,7 @@ class Coordinator extends Authenticate
         'password', 'deleted_at'
     ];
     protected $fillable = [
-        'email', 'password', 'first_name', 'last_name',
+        'email', 'password', 'first_name', 'last_name', 'gender',
         'type', 'avatar_path', 'dateOfBirth'
     ];
     public function setDateOfBirthAttribute($value)

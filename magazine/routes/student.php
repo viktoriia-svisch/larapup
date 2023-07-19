@@ -16,7 +16,7 @@ Route::group([
     Route::post('faculty/{faculty_id}/{semester_id}/article_files/delete', 'ArticleController@articleFileDelete')->name('student.faculty.articleFiles_delete');
     Route::get('faculty/{faculty_id}/{semester_id}/article_files/download/{article_file_id}', 'ArticleController@articleFileDownload')->name('student.faculty.articleFiles_download');
     Route::post('faculty/{faculty_id}/{semester_id}/comment', 'CommentController@commentPost')->name('student.faculty.comment_post');
-    Route::get("faculty/{faculty_id}/{semester_id}/comment/{comment_id}/download/{type}", "commentController@downloadAttachment")
+    Route::get("faculty/{faculty_id}/{semester_id}/comment/{comment_id}/download/{type}", "CommentController@downloadAttachmentComment")
         ->name("student.faculty.comment_attachmentDownload");
     Route::get('article', 'StudentController@article')->name('student.article');
     Route::get('manage/{id}', 'StudentController@updateStudent')->name('student.manageAccount');
