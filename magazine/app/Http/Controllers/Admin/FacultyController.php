@@ -19,14 +19,14 @@ class FacultyController extends Controller
         if ($searchTerms) {
             $faculties = Faculty::with('faculty_semester')
                 ->where('name', 'LIKE', '%' . $searchTerms . '%')
-                ->paginate(10);
+                ->paginate(PER_PAGE);
             return view('admin.faculty.faculty', [
                 'faculties' => $faculties,
                 'searching' => $searchTerms
             ]);
         }
         $faculties = Faculty::with('faculty_semester')
-            ->paginate(10);
+            ->paginate(PER_PAGE);
         return view('admin.faculty.faculty', [
             'faculties' => $faculties,
             'searching' => false
@@ -57,27 +57,6 @@ class FacultyController extends Controller
         if ($coor->save()) {
             return back()->with($this->responseBladeMessage(__('message.create_faculty_success')));
         }
-    }
-    public function updateFaculty(Request $request)
-    {
-        $faculty= Faculty::find($request->faculty_id);
-        $faculty->name= $request->faculty_name;
-        $DuplicateFaculty = Faculty::where('name','=',$request->faculty_name)->first();
-        $request->validate([
-            'faculty_name' => 'required|regex:/^[a-zA-Z\s]*$/'
-        ]);
-        if(!empty($DuplicateFaculty))
-          {
-            return back()->with(
-                $this->responseBladeMessage('Faculty already exist. Please try again', false)
-            );
-          }
-       else if ($faculty->save())
-            {
-                return back()->with(
-                    $this->responseBladeMessage('Update faculty successfully.')
-                );
-            }
     }
     public function chooseSemester(Request $request)
     {
@@ -144,27 +123,28 @@ class FacultyController extends Controller
         }
         return back()->with($this->responseBladeMessage(__('message.create_faculty_failed'), false));
     }
-    public function addStudentFaculty($facultysemester){
-        $FacultySemester = FacultySemester::find($facultysemester);
-        $semester = Semester::where('id','=',$FacultySemester->semester_id)->get();
-        $faculty = Faculty::where('id','=',$FacultySemester->faculty_id)->get();
+    public function addStudentFaculty($facultysemester)
+    {
+        $FacultySemester = FacultySemester::with("faculty")->find($facultysemester);
+        $semester = Semester::with("faculty_semester")
+            ->where('id', '=', $FacultySemester->semester_id)
+            ->get();
+        $faculty = Faculty::with("faculty_semester")
+            ->where('id', '=', $FacultySemester->faculty_id)
+            ->get();
+        $StudentList = Student::all();
         $AvailableStudent = DB::table('faculty_semester_students')
             ->join('students', 'faculty_semester_students.student_id', '=', 'students.id')
-            ->select('students.first_name','students.last_name','students.id')
-            ->where('faculty_semester_students.faculty_semester_id','=',$FacultySemester->id)
+            ->select('students.first_name', 'students.last_name')
+            ->where('faculty_semester_students.faculty_semester_id', '=', $FacultySemester->id)
             ->get();
-            $StudentList = DB::table('students')
-            ->leftjoin('faculty_semester_students', 'faculty_semester_students.student_id', '=', 'students.id')
-            ->select('students.first_name','students.id','students.last_name')
-             ->whereNull('faculty_semester_students.student_id')
-            ->get();
-            return view('admin.faculty.add-student', [
-                'semester' => $semester,
-                'faculty' => $faculty,
-                'StudentList' => $StudentList,
-                'AvailableStudent' => $AvailableStudent,
-                'FacultySemester' => $FacultySemester,
-            ]);
+        return view('admin.faculty.add-student', [
+            'semester' => $semester,
+            'faculty' => $faculty,
+            'StudentList' => $StudentList,
+            'AvailableStudent' => $AvailableStudent,
+            'FacultySemester' => $FacultySemester,
+        ]);
     }
     public function addStudentFaculty_post($FacultySemester, $student)
     {
@@ -172,37 +152,13 @@ class FacultyController extends Controller
         $FacuSemeStudent = new FacultySemesterStudent;
         $FacuSemeStudent->faculty_semester_id = $FacultySemester;
         $FacuSemeStudent->student_id = $student->id;
-        if ($FacuSemeStudent->save())
-            {
-                return back()->with(
-                    $this->responseBladeMessage('Add new student successful')
-                );
-            }
-        return view('admin.faculty.add-student')
-        ->with('FacuSemeStudent',$FacuSemeStudent);
-    }
-    public function deleteStudentFaculty($studentId)
-    {
-        $FacuSemeStudent = FacultySemesterStudent::where('student_id','=',$studentId);
-        $FacuSemeStudent->delete();
-        return back()->with(
-            $this->responseBladeMessage('Delete successful')
-        );
-    }
-    public function deleteSemesterFaculty($facultySemesterId)
-    {
-        $hasStudent = FacultySemesterStudent::where('faculty_semester_id','=',$facultySemesterId)->first();
-        if(!empty($hasStudent)){
-            return back()->with(
-                $this->responseBladeMessage('Please remove all students first', false)
-            );
+        $HasFaculty = FacultySemesterStudent::with("faculty_semester")
+            ->where('student_id', '=', $student->id)->first();
+        if (!empty($HasFaculty)) {
+            return back()->with($this->responseBladeMessage(__('message.create_faculty_duplicate'), false));
         }
-        else{
-            $FacuSeme = FacultySemester::find($facultySemesterId);
-            $FacuSeme->delete();
-            return back()->with(
-                $this->responseBladeMessage('Delete successful')
-            );
+        if ($FacuSemeStudent->save()) {
+            return back()->with($this->responseBladeMessage(__('message.create_faculty_success')));
         }
     }
     public function searchFaculty($semester, $request)
