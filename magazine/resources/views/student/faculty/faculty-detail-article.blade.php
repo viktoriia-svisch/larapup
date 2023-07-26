@@ -137,7 +137,7 @@
     </div>
 @endsection
 @section('modal')
-    @if (($article && count($article->article_file) >= 0 && count($article->article_file) < 4 && $article->publish == null) || !$article)
+    @if (($article && sizeof($article->article_file) >= 0 && sizeof($article->article_file) < 4 && sizeof($article->publish) == 0) || !$article)
         <div class="modal fade" id="articleModal" tabindex="-1" role="dialog" aria-labelledby="articleModal"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -219,6 +219,7 @@
             })
         });
         function uploadFilePopup() {
+            console.log(articleModal);
             @if($article && sizeof($article->publish) > 0)
             flashMessage("This article is already published, any modification is not allowed!", true, 6000);
             @else
