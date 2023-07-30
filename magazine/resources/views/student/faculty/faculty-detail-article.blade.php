@@ -111,7 +111,7 @@
                                         </a>
                                     </div>
                                     <div class="col-auto d-flex align-items-center p-0 pl-1 pr-1">
-                                        <button @if ($article->publish == null)
+                                        <button @if (sizeof($article->publish) == 0)
                                                 onclick="confirmDeletePopup({{$file->id}})"
                                                 @else disabled @endif class="btn btn-danger p-0"
                                                 style="width: 3rem; height: 3rem; font-size: 1.5rem">
@@ -221,11 +221,14 @@
         function uploadFilePopup() {
             console.log(articleModal);
             @if($article && sizeof($article->publish) > 0)
-            flashMessage("This article is already published, any modification is not allowed!", true, 6000);
+            flashMessage("This article is already published, any modification is not allowed!", true, 8000);
             @else
-            @if(!(($article && count($article->article_file) > 2) || !$article))
+            @if(!(($article && count($article->article_file) > 2) || $article))
             articleModal.modal('show');
             @endif
+            @endif
+            @if($article && count($article->article_file) > 2)
+            flashMessage("This article is at max allowed file upload. Please delete existed file before upload again", true, 8000);
             @endif
         }
         function listenCheckboxTerms(event) {
