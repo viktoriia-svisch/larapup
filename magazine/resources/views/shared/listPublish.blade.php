@@ -17,7 +17,7 @@
     </form>
 @endsection
 @section("shared-content")
-    <section class="list-publish" style="padding-top: 100px">
+    <section class="list-publish" style="padding-top: 200px">
         <div class="container">
             @if (sizeof($publishes) == 0)
                 <h2 class="text-muted font-weight-thin text-center">
