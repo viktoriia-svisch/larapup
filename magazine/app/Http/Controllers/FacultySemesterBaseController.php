@@ -7,15 +7,12 @@ use App\Models\CommentStudent;
 use App\Models\Coordinator;
 use App\Models\FacultySemester;
 use App\Models\Student;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use ZipArchive;
 class FacultySemesterBaseController extends Controller
@@ -143,8 +140,7 @@ class FacultySemesterBaseController extends Controller
             ->whereHas('faculty_semester', function (Builder $builder) use ($faculty_id, $semester_id) {
                 $builder->where('faculty_id', $faculty_id)->where('semester_id', $semester_id);
             })->get();
-        $genName = str_replace(":", "", Str::random(4) . '-' . Carbon::now()->toDateTimeString());
-        $tempDir = StorageHelper::getTemporaryBackupFacultySemesterPath($faculty_id, $semester_id, $genName . '-backups.zip');
+        $tempDir = StorageHelper::getTemporaryBackupPath($faculty_id, $semester_id, 'backups.zip');
         $rawZipper = new ZipArchive();
         $rawZipper->open($tempDir, ZipArchive::CREATE);
         if ($rawZipper != true) {
@@ -159,38 +155,5 @@ class FacultySemesterBaseController extends Controller
         }
         $rawZipper->close();
         return $tempDir;
-    }
-    public function downloadArticleSemester($semester_id)
-    {
-        $listArticle = Article::with('student')
-            ->whereHas('faculty_semester', function (Builder $builder) use ($semester_id) {
-                $builder->where('semester_id', $semester_id);
-            })->get();
-        if (sizeof($listArticle) > 0) {
-            $genName = str_replace("-", "", $listArticle[0]->faculty_semester->semester->name . Carbon::now()->toDateString());
-            $genName = str_replace(" ", "", $genName);
-            $tempDir = storage_path("app/backups/semester/" . $listArticle[0]->faculty_semester->id);
-            if (!file_exists($tempDir))
-                File::makeDirectory($tempDir, 0777, true);
-            $rawZipper = new ZipArchive();
-            $tempDir = $tempDir . '/' . $genName . '.zip';
-            $rawZipper->open($tempDir, ZipArchive::CREATE);
-            if ($rawZipper != true) {
-                return false;
-            }
-            foreach ($listArticle as $article) {
-                foreach ($article->article_file as $file) {
-                    $dirFile = StorageHelper::locatePath(StorageHelper::getArticleFilePath($article->faculty_semester_id,
-                        $article->id, $file->title));
-                    $rawZipper->addFile($dirFile,
-                        'std' . $article->student_id . '-' .
-                        $article->student->first_name . '-' . $article->student->last_name . '-' .
-                        basename($dirFile));
-                }
-            }
-            $rawZipper->close();
-            return $tempDir;
-        }
-        return false;
     }
 }
