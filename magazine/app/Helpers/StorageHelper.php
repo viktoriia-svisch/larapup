@@ -4,6 +4,7 @@ use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 class StorageHelper
 {
@@ -13,13 +14,15 @@ class StorageHelper
         'PROFILE' => 3,
         'PUBLISH' => 4,
         'AVATAR' => 5,
+        "BACKUP" => 6
     ];
     const TYPE_NAMES = [
         1 => 'articles',
         2 => 'comments',
         3 => 'profiles',
         4 => 'publishes',
-        5 => 'avatar'
+        5 => 'avatar',
+        6 => 'backup',
     ];
     public static function savePublishFileSubmission($idFacultySemester, $idPublish, UploadedFile $file, &$filePath = null)
     {
@@ -56,9 +59,14 @@ class StorageHelper
     {
         return Storage::disk('local');
     }
-    public static function getTemporaryBackupPath($faculty_id, $semester_id, $fileName = '', $strict = true)
+    public static function getTemporaryBackupFacultySemesterPath($faculty_id, $semester_id, $fileName = '', $strict = true)
     {
         $folderPath = self::getTypeFolder(self::TYPES['ARTICLE'], $strict) . 'backup/' . $faculty_id . '/' . $semester_id . '/';
+        return $folderPath . $fileName;
+    }
+    public static function getTemporaryBackupSemesterPath($semester_id, $fileName = '', $strict = true)
+    {
+        $folderPath = self::getTypeFolder(self::TYPES['BACKUP'], $strict) . 'semester/' . $semester_id . '/';
         return $folderPath . $fileName;
     }
     public static function deletePublishFile($idFacultySemester, $idPublish, $fileDir)
