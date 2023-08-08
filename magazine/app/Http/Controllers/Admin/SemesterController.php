@@ -71,25 +71,6 @@ class SemesterController extends FacultySemesterBaseController
             'searching' => $searching
         ]);
     }
-    public function semesterSearch(Request $request)
-    {
-        $searchTerms = $request->get('search_semester_input');
-        if ($searchTerms) {
-            $futureSemester = Semester::with('faculty_semester')
-                ->where('name', 'LIKE', '%' . $searchTerms . '%')
-                ->paginate(PER_PAGE);
-            return view('admin.faculty.choose-semester', [
-                'futureSemester' => $futureSemester,
-                'searching' => $searchTerms
-            ]);
-        }
-        $futureSemester = Semester::with('faculty_semester')
-            ->paginate(PER_PAGE);
-        return view('admin.faculty.choose-semester', [
-            'futureSemester' => $futureSemester,
-            'searching' => false
-        ]);
-    }
     public function createSemester()
     {
         $lastSem = Semester::orderBy('end_date', 'desc')->first();
