@@ -80,8 +80,7 @@ class CoordinatorController extends Controller
             'updateStatus' => false
         ]);
     }
-    public function dashboard()
-    {
+    public function dashboard(){
         return view('coordinator.dashboard');
     }
     public function CoordinatorSemester()
