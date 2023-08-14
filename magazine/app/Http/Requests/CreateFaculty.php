@@ -10,7 +10,7 @@ class CreateFaculty extends FormRequest
     public function rules()
     {
          return [
-               'name' => 'required|regex:/^[a-zA-Z\s]*$/u|min:2|bail',
+               'name' => 'required|min:2|bail',
          ];
     }
     public function messages()

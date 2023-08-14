@@ -41,7 +41,7 @@
         </div>
     </div>
     <hr>
-    @include("layout.response.responseMessage")
+    @include("layout.response.errors")
     <div class="container-fluid row m-0 p-0">
         <div class="col-12 col-md-4 m-0 p-0 pr-4 border-right d-flex justify-content-center align-items-center">
             @if ($article && count($article->publish) > 0)
