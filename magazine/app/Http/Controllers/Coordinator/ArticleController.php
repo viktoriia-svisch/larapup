@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Coordinator;
 use App\Helpers\StorageHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
+use App\Http\Requests\CommentRequest;
 use App\Models\ArticleFile;
 use App\Models\CommentCoordinator;
 use App\Models\CommentStudent;
@@ -46,7 +47,7 @@ class ArticleController extends FacultySemesterBaseController
             ],
             COORDINATOR_GUARD);
     }
-    public function commentPost(Request $request, $faculty_id, $semester_id, $article_id)
+    public function commentPost(CommentRequest $request, $faculty_id, $semester_id, $article_id)
     {
         $facultySemester = $this->retrieveFacultySemester($faculty_id, $semester_id);
         $article = $this->retrieveDetailArticle($faculty_id, $semester_id, $article_id);
