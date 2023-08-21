@@ -223,7 +223,7 @@
             @if($article && sizeof($article->publish) > 0)
             flashMessage("This article is already published, any modification is not allowed!", true, 8000);
             @else
-            @if(!(($article && count($article->article_file) > 2) || $article))
+            @if(!(($article && count($article->article_file) > 2) || !$article))
             articleModal.modal('show');
             @endif
             @endif
