@@ -148,7 +148,7 @@ class FacultyController extends FacultySemesterBaseController
             );
             return Response::download($dirDownload, basename($dirDownload), $headers);
         }
-        return redirect()->back()->with($this->responseBladeMessage("Unable to create backup", true));
+        return redirect()->back()->with($this->responseBladeMessage("Unable to create backup or the backup is empty data", false));
     }
     public function facultyDetailMember(Request $request, $faculty_id, $semester_id)
     {
