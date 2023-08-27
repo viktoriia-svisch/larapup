@@ -143,13 +143,9 @@ class FacultySemesterBaseController extends Controller
             ->whereHas('faculty_semester', function (Builder $builder) use ($faculty_id, $semester_id) {
                 $builder->where('faculty_id', $faculty_id)->where('semester_id', $semester_id);
             })->get();
-        $genName = str_replace("-", "", $listArticle[0]->faculty_semester->semester->name . Carbon::now()->toDateString());
-        $genName = str_replace(" ", "", $genName);
-        $tempDir = storage_path("app/backups/faculty/" . $listArticle[0]->faculty_semester->id);
-        if (!file_exists($tempDir))
-            File::makeDirectory($tempDir, 0777, true);
+        $genName = str_replace(":", "", Str::random(4) . '-' . Carbon::now()->toDateTimeString());
+        $tempDir = StorageHelper::getTemporaryBackupFacultySemesterPath($faculty_id, $semester_id, $genName . '-backups.zip');
         $rawZipper = new ZipArchive();
-        $tempDir = $tempDir . '/' . $genName . '.zip';
         $rawZipper->open($tempDir, ZipArchive::CREATE);
         if ($rawZipper != true) {
             return false;
@@ -162,7 +158,6 @@ class FacultySemesterBaseController extends Controller
             }
         }
         $rawZipper->close();
-        if ($rawZipper->numFiles == 0 ) return false;
         return $tempDir;
     }
     public function downloadArticleSemester($semester_id)

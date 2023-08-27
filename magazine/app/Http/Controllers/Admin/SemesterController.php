@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\FacultySemesterBaseController;
 use App\Http\Requests\CreateSemester;
+use App\Http\Requests\UpdateSemester;
 use App\Models\Semester;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -69,25 +70,6 @@ class SemesterController extends FacultySemesterBaseController
             'futureSemester' => $semestersFuture,
             'pastSemester' => $semestersPast,
             'searching' => $searching
-        ]);
-    }
-    public function semesterSearch(Request $request)
-    {
-        $searchTerms = $request->get('search_semester_input');
-        if ($searchTerms) {
-            $futureSemester = Semester::with('faculty_semester')
-                ->where('name', 'LIKE', '%' . $searchTerms . '%')
-                ->paginate(PER_PAGE);
-            return view('admin.faculty.choose-semester', [
-                'futureSemester' => $futureSemester,
-                'searching' => $searchTerms
-            ]);
-        }
-        $futureSemester = Semester::with('faculty_semester')
-            ->paginate(PER_PAGE);
-        return view('admin.faculty.choose-semester', [
-            'futureSemester' => $futureSemester,
-            'searching' => false
         ]);
     }
     public function createSemester()
@@ -197,5 +179,32 @@ class SemesterController extends FacultySemesterBaseController
             return Response::download($dirDownload, basename($dirDownload), $headers);
         }
         return redirect()->back()->with($this->responseBladeMessage("Unable to create backup", true));
+    }
+    public function updateSemester($semester_id){
+        $viewSemester = Semester::with("faculty_semester")
+            ->where("id", $semester_id)->first();
+        if (!$viewSemester) {
+            return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
+        }
+        return view('admin.Semester.update-semester')
+            ->with([
+                'currentSemester' => $viewSemester
+            ]);
+    }
+    public function updateSemesterPost(UpdateSemester $request, $id){
+        $Semester = Semester::with("faculty_semester")->find($id);
+        if (!$Semester) return redirect()->back()->withInput();
+        $Semester->name = $request->get('name') ?? $Semester->name;
+        $Semester->description = $request->get('description') ?? $Semester->description;
+        $Semester->start_date = $request->get('start_date') ?? $Semester->start_date;
+        $Semester->end_date = $request->get('end_date') ?? $Semester->end_date;
+        if ($Semester->save()) {
+            return back()->with([
+                'updateStatus' => true
+            ]);
+        }
+        return back()->with([
+            'updateStatus' => false
+        ]);
     }
 }

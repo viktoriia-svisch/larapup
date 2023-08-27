@@ -39,7 +39,7 @@ class CoordinatorController extends Controller
             ->whereHas('faculty_semester_coordinator.coordinator', function ($query) {
                 $query->where('id', Auth::guard(COORDINATOR_GUARD)->user()->id);
             })
-            ->whereHas('semester', function (Builder $query) {
+            ->whereHas('semester', function (Builder $query){
                 $query->where('start_date', '<=', Carbon::now()->toDateTimeString())
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
@@ -82,7 +82,8 @@ class CoordinatorController extends Controller
             'updateStatus' => false
         ]);
     }
-    public function dashboard(){
+    public function dashboard()
+    {
         return view('coordinator.dashboard');
     }
     public function CoordinatorSemester()
@@ -136,7 +137,7 @@ class CoordinatorController extends Controller
     {
         $student = Student::with("faculty_semester_student")->find($student);
         $FacultySemester = Faculty::with("faculty_semester")->find($FacultySemester);
-        $FacuSemeStudent = new FacultySemesterStudent;
+        $FacuSemeStudent = new FacultySemesterStudent();
         $FacuSemeStudent->faculty_semester_id = $FacultySemester->id;
         $FacuSemeStudent->student_id = $student->id;
         $HasFaculty = FacultySemesterStudent::with("faculty_semester")->where('student_id', '=', $student->id)->first();
@@ -179,9 +180,9 @@ class CoordinatorController extends Controller
         if ($facultySemester != null) {
             $coors = Coordinator::with("faculty_semester_coordinator")
                 ->whereDoesntHave("faculty_semester_coordinator",
-                    function (Builder $builder) use ($facultySemester) {
-                        $builder->where('faculty_semester_id', $facultySemester->id);
-                    })->get();
+                function (Builder $builder) use ($facultySemester) {
+                    $builder->where('faculty_semester_id', $facultySemester->id);
+                })->get();
             $unavailableCoors = Coordinator::whereHas('faculty_semester_coordinator', function (Builder $builder) use ($facultySemester) {
                 $builder->where('faculty_semester_id', '=', $facultySemester->id);
             })->get();
