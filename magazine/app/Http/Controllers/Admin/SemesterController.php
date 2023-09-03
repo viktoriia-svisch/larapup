@@ -1,19 +1,12 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\FacultySemesterBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSemester;
-use App\Http\Requests\UpdateSemester;
 use App\Models\Semester;
-use Exception;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
-use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-class SemesterController extends FacultySemesterBaseController
+class SemesterController extends Controller
 {
     public function semester(Request $request)
     {
@@ -72,25 +65,6 @@ class SemesterController extends FacultySemesterBaseController
             'searching' => $searching
         ]);
     }
-    public function semesterSearch(Request $request)
-    {
-        $searchTerms = $request->get('search_semester_input');
-        if ($searchTerms) {
-            $futureSemester = Semester::with('faculty_semester')
-                ->where('name', 'LIKE', '%' . $searchTerms . '%')
-                ->paginate(PER_PAGE);
-            return view('admin.faculty.choose-semester', [
-                'futureSemester' => $futureSemester,
-                'searching' => $searchTerms
-            ]);
-        }
-        $futureSemester = Semester::with('faculty_semester')
-            ->paginate(PER_PAGE);
-        return view('admin.faculty.choose-semester', [
-            'futureSemester' => $futureSemester,
-            'searching' => false
-        ]);
-    }
     public function createSemester()
     {
         $lastSem = Semester::orderBy('end_date', 'desc')->first();
@@ -128,102 +102,50 @@ class SemesterController extends FacultySemesterBaseController
             'lastSemester' => $lastSem
         ]);
     }
-    public function chooseSemester($semester_id)
+    public function chooseSemester($activeSemester)
     {
-        $viewingSemester = Semester::with("faculty_semester")
-            ->where("id", $semester_id)->first();
-        if (!$viewingSemester) {
-            return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
-        }
+        $activeSemester = Semester::find($activeSemester);
         $articleInSemester = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
             ->join('faculties', 'faculty_semesters.faculty_id', '=', 'faculties.id')
             ->join('students', 'articles.student_id', '=', 'students.id')
-            ->select('articles.grade', 'faculties.name as faculties_name', 'students.last_name as students_lname', 'articles.status',
+            ->select('articles.grade', 'faculties.name as faculties_name', 'students.last_name as students_lname','articles.status',
                 'articles.created_at', 'students.first_name as students_fname')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
             ->paginate(PER_PAGE);
         $student_count = DB::table('articles')->distinct('student_id')->count('student_id');
         $grade_avg = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
             ->avg('grade');
         $outOfDate = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
             ->whereColumn('articles.created_at', '>', 'faculty_semesters.first_deadline')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
             ->count();
         $inTime = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
             ->whereColumn('articles.created_at', '<=', 'faculty_semesters.first_deadline')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
             ->count();
         $maxgrade = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
             ->max('grade');
         $mingrade = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
+            ->where('faculty_semesters.semester_id', '=', $activeSemester->id)
             ->min('grade');
         return view('admin.Semester.static-information')
             ->with([
-                'currentSemester' => $viewingSemester,
+                'activeSemester' => $activeSemester,
                 'info' => $articleInSemester,
                 'countstudent' => $student_count,
                 'grade_avg' => $grade_avg,
                 'mingrade' => $mingrade,
                 'maxgrade' => $maxgrade,
                 'outOfDate' => $outOfDate,
-                'inTime' => $inTime
+                'inTime'=>$inTime
             ]);
-    }
-    public function downloadBackups($semester_id)
-    {
-        $viewingSemester = Semester::with("faculty_semester")
-            ->where("id", $semester_id)->first();
-        if (!$viewingSemester) {
-            return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
-        }
-        $dirDownload = $this->downloadArticleSemester($semester_id);
-        if ($dirDownload) {
-            ob_end_clean();
-            $headers = array(
-                "Content-Type: application/octet-stream",
-                "Content-Description: File Transfer",
-                "Content-Transfer-Encoding: Binary",
-                "Content-Length: " . filesize($dirDownload),
-                "Content-Disposition: attachment; filename=\"" . basename($dirDownload) . "\"",
-            );
-            return Response::download($dirDownload, basename($dirDownload), $headers);
-        }
-        return redirect()->back()->with($this->responseBladeMessage("Unable to create backup", true));
-    }
-    public function updateSemester($semester_id){
-        $viewSemester = Semester::with("faculty_semester")
-            ->where("id", $semester_id)->first();
-        if (!$viewSemester) {
-            return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
-        }
-        return view('admin.Semester.update-semester')
-            ->with([
-                'currentSemester' => $viewSemester
-            ]);
-    }
-    public function updateSemesterPost(UpdateSemester $request, $id){
-        $Semester = Semester::with("faculty_semester")->find($id);
-        if (!$Semester) return redirect()->back()->withInput();
-        $Semester->name = $request->get('name') ?? $Semester->name;
-        $Semester->description = $request->get('description') ?? $Semester->description;
-        $Semester->start_date = $request->get('start_date') ?? $Semester->start_date;
-        $Semester->end_date = $request->get('end_date') ?? $Semester->end_date;
-        if ($Semester->save()) {
-            return back()->with([
-                'updateStatus' => true
-            ]);
-        }
-        return back()->with([
-            'updateStatus' => false
-        ]);
     }
 }

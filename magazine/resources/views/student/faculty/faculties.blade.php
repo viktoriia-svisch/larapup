@@ -31,8 +31,7 @@
                         </p>
                     </div>
                     <div class="col-12 col-sm-12 col-md-auto d-flex align-items-center">
-                        <a href="{{route('student.faculty.dashboard', [$currentFaculty->faculty->id, $currentFaculty->semester->id])}}"
-                           class="btn btn-secondary">
+                        <a href="{{route('student.faculty.dashboard', [$currentFaculty->faculty->id, $currentFaculty->semester->id])}}" class="btn btn-secondary">
                             Detail
                         </a>
                     </div>
@@ -101,20 +100,11 @@
         <div class="col-12">
             @if (count($semester_faculties) > 0)
                 @foreach($semester_faculties as $semester)
-                    <a class="card mb-2"
-                       href="{{route("student.faculty.dashboard", [$semester->faculty_id, $semester->semester_id])}}">
-                        <div class="card-body row">
-                            <div class="col">
-                                <h2>{{$semester->faculty->name}}</h2>
-                            </div>
-                            <div class="col-auto d-flex">
-                                Start: {{\App\Helpers\DateTimeHelper::formatDate($semester->semester->start_date)}}
-                            </div>
-                            <div class="col-auto d-flex">
-                                End: {{\App\Helpers\DateTimeHelper::formatDate($semester->semester->end_date)}}
-                            </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>{{$semester->faculty->name}}</h2>
                         </div>
-                    </a>
+                    </div>
                 @endforeach
             @else
                 <h2 class="text-muted m-auto">No record found</h2>

@@ -59,11 +59,6 @@
         </div>
         <br>
         <hr>
-        @if (sizeof($articles) == 0)
-            <h1 class="text-center text-muted">
-                No article was found
-            </h1>
-        @endif
         @foreach($articles as $article)
             <div class="card">
                 <div class="card-body">

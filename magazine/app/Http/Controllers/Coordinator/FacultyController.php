@@ -10,13 +10,10 @@ use App\Models\Publish;
 use App\Models\PublishImage;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class FacultyController extends FacultySemesterBaseController
 {
     public function faculty(Request $request)
@@ -75,99 +72,26 @@ class FacultyController extends FacultySemesterBaseController
     }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
-        $facultySemester = FacultySemester::with("semester")
-            ->where("semester_id", $semester_id)->where("faculty_id", $faculty_id)->first();
-        if (!$facultySemester) {
-            return redirect()->route("coordinator.dashboard");
-        }
-        $articleSubmission = $facultySemester->article()->paginate(PER_PAGE);
-        $articleTotal = $facultySemester->article()->count("id");
-        $studentTotal = $facultySemester->faculty_semester_student()->count();
-        $average_grade = DB::table('articles')
-            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->where('faculty_semesters.id', '=', $facultySemester->id)
-            ->avg('grade');
-        $submissionOutOfDate = DB::table('articles')
-            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->whereColumn('articles.created_at', '>', 'faculty_semesters.first_deadline')
-            ->where('faculty_semesters.id', '=', $facultySemester->id)
-            ->count();
-        $submissionOnTime = DB::table('articles')
-            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->whereColumn('articles.created_at', '<=', 'faculty_semesters.first_deadline')
-            ->where('faculty_semesters.id', '=', $facultySemester->id)
-            ->count();
-        $highestGrade = DB::table('articles')
-            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->where('faculty_semesters.id', '=', $facultySemester->id)
-            ->max('grade');
-        $lowestGrade = DB::table('articles')
-            ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->where('faculty_semesters.id', '=', $facultySemester->id)
-            ->min('grade');
-        $arrData = [
-            "submissions" => $articleSubmission,
-            "submissions_total" => $articleTotal,
-            "submissions_late" => $submissionOutOfDate,
-            "submissions_onTime" => $submissionOnTime,
-            "student_total" => $studentTotal,
-            "grade_average" => $average_grade,
-            "grade_highest" => $highestGrade,
-            "grade_lowest" => $lowestGrade,
-        ];
-        return $this->facultyDetail(
-            $faculty_id,
-            $semester_id,
-            'coordinator.Faculty.faculty-detail-dashboard',
-            "dashboard",
-            $arrData,
-            COORDINATOR_GUARD);
+        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, COORDINATOR_GUARD, null);
+        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-dashboard', "dashboard", [
+            "comments" => $listComment
+        ], COORDINATOR_GUARD);
     }
-    public function facultyBackupsDownload($faculty_id, $semester_id)
+    public function facultyDetailMember($faculty_id, $semester_id)
     {
-        $viewingFac = FacultySemester::with("semester")
-            ->where("semester_id", $semester_id)
-            ->where("faculty_id", $faculty_id)
-            ->first();
-        if (!$viewingFac) {
-            return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
-        }
-        if ($viewingFac->article()->count() == 0) {
-            return redirect()->route("coordinator.faculty.dashboard", [$faculty_id, $semester_id])
-                ->with($this->responseBladeMessage("This semester does not have any data", false));
-        }
-        $dirDownload = $this->downloadArticleFaculty($faculty_id, $semester_id);
-        if ($dirDownload) {
-            ob_end_clean();
-            $headers = array(
-                "Content-Type: application/octet-stream",
-                "Content-Description: File Transfer",
-                "Content-Transfer-Encoding: Binary",
-                "Content-Length: " . filesize($dirDownload),
-                "Content-Disposition: attachment; filename=\"" . basename($dirDownload) . "\"",
-            );
-            return Response::download($dirDownload, basename($dirDownload), $headers);
-        }
-        return redirect()->back()->with($this->responseBladeMessage("Unable to create backup or the backup is empty data", false));
-    }
-    public function facultyDetailMember(Request $request, $faculty_id, $semester_id)
-    {
-        $arrData = $this->retrieveFacultySemesterMembers($request, $faculty_id, $semester_id);
-        return $this->facultyDetail(
-            $faculty_id,
-            $semester_id,
-            'coordinator.Faculty.faculty-detail-member',
-            "member", $arrData,
-            COORDINATOR_GUARD);
+        return $this->facultyDetail($faculty_id, $semester_id, 'coordinator.Faculty.faculty-detail-member', "member", [], COORDINATOR_GUARD);
     }
     public function facultyDetailSettings($faculty_id, $semester_id)
     {
-        return $this->facultyDetail(
-            $faculty_id,
-            $semester_id,
-            'coordinator.Faculty.faculty-detail-settings',
-            "settings", [],
-            COORDINATOR_GUARD);
+        $facultyUpdate = FacultySemester::with("semester")
+            ->where('semester_id', $semester_id)
+            ->where('faculty_id', $faculty_id)
+            ->first();
+        if ($facultyUpdate)
+            return view('coordinator.update-faculty', [
+                'facultyUpdate' => $facultyUpdate
+            ]);
+        return redirect()->route('coordinator.faculty');
     }
     public function facultyDetailSettingPost(UpdateFacultySemester $request, $faculty_id, $semester_id)
     {

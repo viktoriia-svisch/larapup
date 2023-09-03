@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 class FacultyController extends FacultySemesterBaseController
 {
     public function faculty(Request $request)
@@ -74,9 +75,8 @@ class FacultyController extends FacultySemesterBaseController
             "comments" => $listComment
         ], STUDENT_GUARD);
     }
-    public function facultyDetailMember(Request $request, $faculty_id, $semester_id)
+    public function facultyDetailMember($faculty_id, $semester_id)
     {
-        $arrData = $this->retrieveFacultySemesterMembers($request, $faculty_id, $semester_id);
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member", $arrData, STUDENT_GUARD);
+        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-member', "member", [], STUDENT_GUARD);
     }
 }
