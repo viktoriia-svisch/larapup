@@ -41,7 +41,7 @@
         </div>
     </div>
     <hr>
-    @include("layout.response.responseMessage")
+    @include("layout.response.errors")
     <div class="container-fluid row m-0 p-0">
         <div class="col-12 col-md-4 m-0 p-0 pr-4 border-right d-flex justify-content-center align-items-center">
             @if ($article && count($article->publish) > 0)
@@ -111,7 +111,7 @@
                                         </a>
                                     </div>
                                     <div class="col-auto d-flex align-items-center p-0 pl-1 pr-1">
-                                        <button @if ($article->publish == null)
+                                        <button @if (sizeof($article->publish) == 0)
                                                 onclick="confirmDeletePopup({{$file->id}})"
                                                 @else disabled @endif class="btn btn-danger p-0"
                                                 style="width: 3rem; height: 3rem; font-size: 1.5rem">
@@ -137,7 +137,7 @@
     </div>
 @endsection
 @section('modal')
-    @if (($article && count($article->article_file) >= 0 && count($article->article_file) < 4 && $article->publish == null) || !$article)
+    @if (($article && sizeof($article->article_file) >= 0 && sizeof($article->article_file) < 4 && sizeof($article->publish) == 0) || !$article)
         <div class="modal fade" id="articleModal" tabindex="-1" role="dialog" aria-labelledby="articleModal"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -219,12 +219,16 @@
             })
         });
         function uploadFilePopup() {
-            @if(sizeof($article->publish) > 0)
-            flashMessage("This article is already published, any modification is not allowed!", true, 6000);
+            console.log(articleModal);
+            @if($article && sizeof($article->publish) > 0)
+            flashMessage("This article is already published, any modification is not allowed!", true, 8000);
             @else
             @if(!(($article && count($article->article_file) > 2) || !$article))
             articleModal.modal('show');
             @endif
+            @endif
+            @if($article && count($article->article_file) > 2)
+            flashMessage("This article is at max allowed file upload. Please delete existed file before upload again", true, 8000);
             @endif
         }
         function listenCheckboxTerms(event) {

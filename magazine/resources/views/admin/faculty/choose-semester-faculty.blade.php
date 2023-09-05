@@ -15,14 +15,38 @@
 @section('admin-content')
 <div class="container">
         <br>
-        <h1 class="heading-title">{{$semester->name}}  </h1>
+        <h1 class="heading-title">Semester: {{$semester->name}}  </h1>
         <span class="text-gray">
             You can add faculty to this semester in this section and add student to available faculty
         </span>
+        <hr>
         <h1 class="text-primary">Current Faculties</h1>
         <p class="text-muted">Display all the faculty within the semester.</p>
+        <div class="col-12">
+            @if (\Session::has('action_response'))
+                @if (\Session::get('action_response')['status_ok'])
+                    <div class="col-md-6 col-12 m-auto">
+                        <div class="card bg-success text-white">
+                            <div class="card-body" style="padding: 1rem;">
+                                {{\Session::get('action_response')['status_message']}}
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="col-md-6 col-12 m-auto">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body" style="padding: 1rem;">
+                                {{\Session::get('action_response')['status_message']}}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <br>
+            @endif
+            <br>
+        </div>
         @if (count($FacultySemester) == 0)
-        <h2 class="text-center text-muted">No record found</h2>
+        <h2 class="text-center text-muted">No available faculty</h2>
         @endif
         @foreach($FacultySemester as $FacuSeme)
             @csrf
@@ -35,8 +59,16 @@
                     </div>
                     <div class="col-auto d-flex align-items-center">
                         <a class="btn btn-block m-0 btn-success" type="button" href="{{route('admin.addStudentFaculty', [$FacuSeme->id])}}">
-                            Add student
+                            Student list
                         </a>
+                        &nbsp;
+                        &nbsp;
+                        <form action="{{route('admin.deleteSemesterFaculty', [$FacuSeme->id])}}" method="post" >
+                            {{ csrf_field() }}
+                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit">
+                                Remove faculty
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -45,7 +77,7 @@
         <h1 class="text-primary">Faculties</h1>
         <p class="text-muted">Display all the faculty within the system.</p>
             @if (count($faculty) == 0)
-                <h2 class="text-center text-muted">No record found</h2>
+                <h2 class="text-center text-muted">No available faculty</h2>
             @endif
             @foreach($faculty as $Faculty)
             <form action="{{route('admin.addSemesterFaculty', [$semester->id, $Faculty->id])}}" method="post" >

@@ -1,9 +1,9 @@
-@extends("student.faculty.faculty-detail")
+@extends("coordinator.Faculty.faculty-detail")
 @section('title', 'Faculty '.$facultySemester->faculty->name.' - Members')
 @push("custom-css")
 @endpush
 @section('faculty-detail')
-    <form action="{{route("student.faculty.members", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+    <form action="{{route("coordinator.faculty.students", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
           class="col-12 row">
         <div class="col">
             <div class="form-group">
@@ -18,7 +18,7 @@
             </button>
         </div>
         <div class="col-auto pl-0">
-            <a href="{{route("student.faculty.members", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+            <a href="{{route("coordinator.faculty.students", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
                class="btn btn-icon btn-danger" style="border-radius: 0 .375rem .375rem 0">
                 <i class="fa fa-times"></i>
             </a>

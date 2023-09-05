@@ -59,6 +59,29 @@
                     @endphp
                     {{$user->first_name . ' ' . $user->last_name}}
                 </div>
+                @if (Illuminate\Support\Facades\Auth::guard(GUEST_GUARD)->check())
+                    <a href="{{route("guest.logout")}}"
+                       class="bot-span bg-danger">
+                        Logout
+                    </a>
+                @else
+                    @if (Auth::guard(ADMIN_GUARD)->check())
+                        <a href="{{route("admin.dashboard")}}"
+                           class="bot-span bg-danger">
+                            Back Dashboard
+                        </a>
+                    @elseif (Auth::guard(COORDINATOR_GUARD)->check())
+                        <a href="{{route("coordinator.dashboard")}}"
+                           class="bot-span bg-danger">
+                            Back Dashboard
+                        </a>
+                    @else
+                        <a href="{{route("student.dashboard")}}"
+                           class="bot-span bg-danger">
+                            Back Dashboard
+                        </a>
+                    @endif
+                @endif
             </section>
         </div>
     </div>
@@ -135,14 +158,27 @@
         }
         .return-dashboard {
             display: grid;
-            grid-template-rows: 1fr;
+            grid-template-rows: 80px 50px;
             grid-template-columns: 80px auto;
+            grid-template-areas: "logo profile" "botspan botspan";
             grid-gap: 0;
-            height: 80px;
             width: 100%;
             padding: 0;
+        }
+        .user-name {
+            grid-area: profile;
+        }
+        .bot-span {
+            grid-area: botspan;
+            display: flex;
             justify-content: center;
-            align-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            user-select: none;
+        }
+        .bot-span:hover{
+            color: white;
         }
         .breadcrumb-section.active {
             /*padding-left: calc(40px + 1.5rem) !important;*/

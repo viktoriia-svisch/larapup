@@ -4,6 +4,7 @@ use App\Helpers\StorageHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Models\Article;
+use App\Models\CommentCoordinator;
 use App\Models\CommentStudent;
 use App\Models\FacultySemester;
 use Carbon\Carbon;
@@ -72,20 +73,27 @@ class CommentController extends Controller
         }
         return back()->with($this->responseBladeMessage("You are not allowed to comment in this faculty", false));
     }
-    public function downloadAttachment($faculty_id, $semester_id, $comment_id, $type)
+    public function downloadAttachmentComment($faculty_id, $semester_id, $comment_id, $type)
     {
-        $comment = CommentStudent::with("article")
-            ->where("id", $comment_id)
-            ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
-                $query->where("faculty_id", $faculty_id)
-                ->where("semester_id", $semester_id);
-            })->first();
         if ($type == STUDENT_GUARD) {
-            $comment->where("student_id", Auth::id())->first();
+            $comment = CommentStudent::with("article")
+                ->where("id", $comment_id)
+                ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
+                    $query->where("faculty_id", $faculty_id)
+                        ->where("semester_id", $semester_id);
+                })->where("student_id", Auth::id())->first();
             $pathRaw = StorageHelper::getCommentStudentPath(Auth::id(), $comment->article_id, $comment->image_path);
         } else {
-            $comment->where("coordinator_id", Auth::id())->first();
-            $pathRaw = StorageHelper::getCommentCoordinatorPath(Auth::id(), $comment->article_id, $comment->image_path);
+            $comment = CommentCoordinator::with("article")
+                ->where("id", $comment_id)
+                ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
+                    $query->where("faculty_id", $faculty_id)
+                        ->where("semester_id", $semester_id);
+                })
+                ->whereHas("article", function (Builder $query) use ($faculty_id, $semester_id) {
+                    $query->where("student_id", Auth::id());
+                })->first();
+            $pathRaw = StorageHelper::getCommentCoordinatorPath($comment->coordinator_id, $comment->article_id, $comment->image_path);
         }
         if ($comment) {
             $path = StorageHelper::locatePath($pathRaw);
