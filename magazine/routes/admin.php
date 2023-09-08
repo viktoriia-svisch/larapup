@@ -45,6 +45,11 @@ Route::group([
     Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
     Route::get('coordinator/profile/{id}', 'CoordinatorController@updateCoordinator')->name('admin.updateCoordinator');
     Route::post('coordinator/profile/{id}', 'CoordinatorController@updateCoordinatorPost')->name('admin.updateCoordinator_post');
+    Route::get('guest', 'GuestController@guest')->name('admin.guest');
+    Route::get('guest/create', 'GuestController@create')->name('admin.createGuest');
+    Route::post('guest/create', 'GuestController@createGuest_post')->name('admin.createGuest_post');
+    Route::get('guest/profile/{id}', 'GuestController@updateGuest')->name('admin.updateGuest');
+    Route::post('guest/profile/{id}', 'GuestController@updateGuestPost')->name('admin.updateGuest_post');
     Route::get('get/{id}', 'AdminController@show');
     Route::post('new-semester', 'AdminController@store');
     Route::redirect('', 'admin/dashboard');
