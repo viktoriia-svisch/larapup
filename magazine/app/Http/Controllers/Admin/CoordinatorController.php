@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCoordinator;
+use App\Http\Requests\UpdateCoordinatorByAdmin;
 use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
@@ -158,7 +159,7 @@ class CoordinatorController extends Controller
         ]);
         return redirect()->back()->with($this->responseBladeMessage("Unable to find the coordinator", false));
     }
-    public function updateCoordinatorPost(Request $request, $id)
+    public function updateCoordinatorPost(UpdateCoordinatorByAdmin $request, $id)
     {
         $coordinator = Coordinator::with("faculty_semester_coordinator")->find($id);
         if (!$coordinator)
