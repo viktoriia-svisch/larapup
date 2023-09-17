@@ -31,10 +31,6 @@ define('COORDINATOR_STATUS', [
     'ACTIVE' => 1,
     'DEACTIVATE' => 0,
 ]);
-define('GUEST_STATUS', [
-    'ACTIVE' => 1,
-    'DEACTIVATE' => 0,
-]);
 define('FILE_MIMES', [
     0 => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     1 => 'image/gif',

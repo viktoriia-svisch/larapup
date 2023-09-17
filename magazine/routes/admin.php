@@ -18,6 +18,8 @@ Route::group([
     Route::post('semester/create', 'SemesterController@createSemester_post')->name('admin.createSemester_post');
     Route::get('semester/{semester_id}', 'SemesterController@chooseSemester')->name('admin.infoSemester');
     Route::get('semester/{semester_id}/backups', 'SemesterController@downloadBackups')->name('admin.infoSemester.downloadBackup');
+    Route::get('semester/update/{semester_id}', 'SemesterController@updateSemester')->name('admin.updateSemester');
+    Route::post('semester/update/{semester_id}', 'SemesterController@updateSemesterPost')->name('admin.updateSemesterPost');
     Route::get('faculty', 'FacultyController@faculty')->name('admin.faculty');
     Route::post('faculty/create', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
     Route::post('faculty/edit', 'FacultyController@updateFaculty')->name('admin.updateFaculty');
@@ -45,11 +47,6 @@ Route::group([
     Route::post('coordinator/create', 'CoordinatorController@createCoordinator_post')->name('admin.createCoordinator_post');
     Route::get('coordinator/profile/{id}', 'CoordinatorController@updateCoordinator')->name('admin.updateCoordinator');
     Route::post('coordinator/profile/{id}', 'CoordinatorController@updateCoordinatorPost')->name('admin.updateCoordinator_post');
-    Route::get('guest', 'GuestController@guest')->name('admin.guest');
-    Route::get('guest/create', 'GuestController@create')->name('admin.createGuest');
-    Route::post('guest/create', 'GuestController@createGuest_post')->name('admin.createGuest_post');
-    Route::get('guest/profile/{id}', 'GuestController@updateGuest')->name('admin.updateGuest');
-    Route::post('guest/profile/{id}', 'GuestController@updateGuestPost')->name('admin.updateGuest_post');
     Route::get('get/{id}', 'AdminController@show');
     Route::post('new-semester', 'AdminController@store');
     Route::redirect('', 'admin/dashboard');
