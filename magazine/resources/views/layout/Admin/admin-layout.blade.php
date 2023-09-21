@@ -50,12 +50,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{route('admin.guest')}}" class="nav-link">
-                            <i class="fas fa-user"></i>
-                            Guest
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <div class="nav-link disabled">
                         </div>
                     </li>

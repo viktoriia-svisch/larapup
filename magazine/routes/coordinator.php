@@ -14,7 +14,7 @@ Route::group([
     Route::get('coordinator-semester-faculty','CoordinatorController@CoordinatorSemesterFaculty') ->name('coordinator.manageFaculty');
     Route::get('coordinator-semester-faculty/{semester}', 'CoordinatorController@chooseSemesterFaculty')->name('coordinator.chooseSemesterFaculty');
     Route::get('coordinatorSemesterFaculty/addStudent/{facultysemester}', 'CoordinatorController@addStudentFaculty')->name('coordinator.addStudentFaculty');
-    Route::post('coordinatorSemesterFaculty/addStudent/{facultysemester}/{student}', 'CoordinatorController@addStudentFaculty_post')->name('coordinator.addStudentFaculty_post');
+    Route::post('coordinatorSemesteFaculty/addStudent/{facultysemester}/{student}', 'CoordinatorController@addStudentFaculty_post')->name('coordinator.addStudentFaculty_post');
     Route::post('new-faculty','CoordinatorController@storeFaculty');
     Route::get('coordinator', 'CoordinatorController@Coordinator')->name('coordinator.coordinator');
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
@@ -22,9 +22,7 @@ Route::group([
     Route::post('manage/{id}', 'CoordinatorController@updateCoordinatorPost')->name('coordinator.manageAccount_post');
     Route::get('faculty/{faculty_id}/{semester_id}/dashboard','FacultyController@facultyDetailDashboard')
         ->name('coordinator.faculty.dashboard');
-    Route::get('faculty/{faculty_id}/{semester_id}/backups','FacultyController@facultyBackupsDownload')
-        ->name('coordinator.faculty.backupsDownload');
-    Route::get('faculty/{faculty_id}/{semester_id}/members','FacultyController@facultyDetailMember')
+    Route::get('faculty/{faculty_id}/{semester_id}/students','FacultyController@facultyDetailStudents')
         ->name('coordinator.faculty.students');
     Route::get('faculty/{faculty_id}/{semester_id}/articles','FacultyController@facultyDetailListArticle')
         ->name('coordinator.faculty.listArticle');

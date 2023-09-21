@@ -75,11 +75,3 @@ Breadcrumbs::for('publishes.publication', function ($trail, $parentRoute, $route
     $trail->parent('publishes', $parentRoute);
     $trail->push(Str::limit($publish->title, 50), $routeActive);
 });
-Breadcrumbs::for('dashboard.guest.create', function ($trail, $parentRoute, $parent2Route, $routeActive) {
-    $trail->parent('dashboard.guest', $parentRoute, $parent2Route);
-    $trail->push("Create new", $routeActive);
-});
-Breadcrumbs::for('dashboard.guest', function ($trail, $parentRoute, $routeActive) {
-    $trail->parent('dashboard', $parentRoute);
-    $trail->push("Guest", $routeActive);
-});

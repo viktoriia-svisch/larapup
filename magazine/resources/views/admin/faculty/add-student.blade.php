@@ -68,6 +68,7 @@
             </form>
         @endforeach
         <h1 class="text-primary">Student list</h1>
+            {{$StudentList->links()}}
             @if (count($StudentList) == 0)
                 <h2 class="text-center text-muted">No available Student</h2>
             @endif

@@ -11,9 +11,6 @@ class Guest extends Authenticate
     protected $hidden = [
         'password', 'deleted_at'
     ];
-    protected $fillable = [
-        'email', 'password', 'faculty_id'
-    ];
     public function setPasswordAttribute($value)
     {
         return $this->attributes['password'] = Hash::make($value);
