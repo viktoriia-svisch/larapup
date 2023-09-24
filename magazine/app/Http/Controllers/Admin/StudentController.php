@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudent;
+use App\Http\Requests\UpdateStudentByAdmin;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -50,7 +51,7 @@ class StudentController extends Controller
             'student' => $student
         ]);
     }
-    public function updateStudentPost(Request $request, $id)
+    public function updateStudentPost(UpdateStudentByAdmin $request, $id)
     {
         $student = Student::find($id);
         if (!$student) return redirect()->back();

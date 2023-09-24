@@ -6,7 +6,9 @@ use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
 use App\Models\FacultySemesterCoordinator;
+use App\Models\FacultySemesterStudent;
 use App\Models\Semester;
+use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -37,7 +39,7 @@ class CoordinatorController extends Controller
             ->whereHas('faculty_semester_coordinator.coordinator', function ($query) {
                 $query->where('id', Auth::guard(COORDINATOR_GUARD)->user()->id);
             })
-            ->whereHas('semester', function (Builder $query){
+            ->whereHas('semester', function (Builder $query) {
                 $query->where('start_date', '<=', Carbon::now()->toDateTimeString())
                     ->where('end_date', '>', Carbon::now()->toDateTimeString());
             })
@@ -177,9 +179,9 @@ class CoordinatorController extends Controller
         if ($facultySemester != null) {
             $coors = Coordinator::with("faculty_semester_coordinator")
                 ->whereDoesntHave("faculty_semester_coordinator",
-                function (Builder $builder) use ($facultySemester) {
-                    $builder->where('faculty_semester_id', $facultySemester->id);
-                })->get();
+                    function (Builder $builder) use ($facultySemester) {
+                        $builder->where('faculty_semester_id', $facultySemester->id);
+                    })->get();
             $unavailableCoors = Coordinator::whereHas('faculty_semester_coordinator', function (Builder $builder) use ($facultySemester) {
                 $builder->where('faculty_semester_id', '=', $facultySemester->id);
             })->get();

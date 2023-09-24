@@ -41,7 +41,7 @@
         </div>
     </div>
     <hr>
-    @include("layout.response.responseMessage")
+    @include("layout.response.errors")
     <div class="container-fluid row m-0 p-0">
         <div class="col-12 col-md-4 m-0 p-0 pr-4 border-right d-flex justify-content-center align-items-center">
             @if ($article && count($article->publish) > 0)
@@ -223,7 +223,7 @@
             @if($article && sizeof($article->publish) > 0)
             flashMessage("This article is already published, any modification is not allowed!", true, 8000);
             @else
-            @if(!(($article && count($article->article_file) > 2) || $article))
+            @if(!(($article && count($article->article_file) > 2) || !$article))
             articleModal.modal('show');
             @endif
             @endif

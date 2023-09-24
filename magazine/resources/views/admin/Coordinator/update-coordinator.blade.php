@@ -7,7 +7,7 @@
         @if(\Illuminate\Support\Facades\Session::has('updateStatus'))
             <div class="card col-12">
                 @if(\Illuminate\Support\Facades\Session::get('updateStatus'))
-                    <div class="card-body bg-danger">
+                    <div class="card-body bg-success">
                         Update Success
                     </div>
                 @else
@@ -45,16 +45,37 @@
             <hr>
             <form method="post" action="{{route('admin.updateCoordinator_post', [$coordinator->id])}}">
                 {{csrf_field()}}
+                @if($errors->has('first_name'))
+                    <div class="card bg-danger text-white rounded-0">
+                        <div class="card-body p-1 rounded-0">
+                            {{$errors->first('first_name')}}
+                        </div>
+                    </div>
+                @endif
                 <label style="color: #0b1011">First Name</label>
                 <div>
                     <input name='first_name' class="form-control" type="text" placeholder="{{$coordinator->first_name}}"
                            value="{{$coordinator->first_name}}">
                 </div>
+                @if($errors->has('last_name'))
+                    <div class="card bg-danger text-white rounded-0">
+                        <div class="card-body p-1 rounded-0">
+                            {{$errors->first('last_name')}}
+                        </div>
+                    </div>
+                @endif
                 <div style="margin-top: 2vw">
                     <label style="color: #0b1011">Last Name</label>
                     <input name="last_name" class="form-control" type="text" placeholder="{{$coordinator->last_name}}"
                            value="{{$coordinator->last_name}}">
                 </div>
+                @if($errors->has('dateOfBirth'))
+                    <div class="card bg-danger text-white rounded-0">
+                        <div class="card-body p-1 rounded-0">
+                            {{$errors->first('dateOfBirth')}}
+                        </div>
+                    </div>
+                @endif
                 <div class="input-group input-group-alternative mt-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
@@ -63,41 +84,44 @@
                            value="{{$coordinator->dateOfBirth}}" placeholder="Date of Birth"
                            type="text">
                 </div>
+                @if($errors->has('gender'))
+                    <div class="card bg-danger text-white rounded-0">
+                        <div class="card-body p-1 rounded-0">
+                            {{$errors->first('gender')}}
+                        </div>
+                    </div>
+                @endif
                 <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
                     <h6 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw;">Gender</h6>
-                    @if($coordinator->gender == 1)
-                        <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                            <input name="gender" value="{{GENDER['MALE']}}" class="custom-control-input" id="genderMale"
-                                   type="radio">
-                            <label class="custom-control-label" for="genderMale">Male</label>
-                        </div>
-                        <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                            <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input" id="genderFemale"
-                                   checked="" type="radio">
-                            <label class="custom-control-label" for="genderFemale">Female</label>
-                        </div>
-                    @else
-                        <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                            <input name="gender" value="{{GENDER['MALE']}}" class="custom-control-input" id="genderMale"
-                                   type="radio">
-                            <label class="custom-control-label" for="genderMale">Male</label>
-                        </div>
-                        <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                            <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input" id="genderFemale"
-                                   checked="" type="radio">
-                            <label class="custom-control-label" for="genderFemale">Female</label>
-                        </div>
-                    @endif
+                    <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
+                        <input name="gender" value="{{GENDER['MALE']}}" class="custom-control-input" id="genderMale"
+                               type="radio">
+                        <label class="custom-control-label" for="genderMale">Male</label>
+                    </div>
+                    <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
+                        <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input" id="genderFemale"
+                               type="radio">
+                        <label class="custom-control-label" for="genderFemale">Female</label>
+                    </div>
                 </div>
+                @if($errors->has('status'))
+                    <div class="card bg-danger text-white rounded-0">
+                        <div class="card-body p-1 rounded-0">
+                            {{$errors->first('status')}}
+                        </div>
+                    </div>
+                @endif
                 <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
                     <h6 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw;">Account Status</h6>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                        <input name="status" value="{{COORDINATOR_STATUS['ACTIVE']}}" class="custom-control-input" id="statusStandby"
+                        <input name="status" value="{{COORDINATOR_STATUS['ACTIVE']}}" class="custom-control-input"
+                               id="statusStandby"
                                checked="" type="radio">
                         <label class="custom-control-label" for="statusStandby">Active</label>
                     </div>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                        <input name="status" value="{{COORDINATOR_STATUS['DEACTIVATE']}}" class="custom-control-input" id="statusOngoing"
+                        <input name="status" value="{{COORDINATOR_STATUS['DEACTIVATE']}}" class="custom-control-input"
+                               id="statusOngoing"
                                type="radio">
                         <label class="custom-control-label" for="statusOngoing">Deactivate</label>
                     </div>
@@ -126,7 +150,9 @@
                 // endDate: "today",
             });
             var status = {{$coordinator->status}};
+            var gender = {{$coordinator->gender}};
             $("input[name=status][value=" + status + "]").prop('checked', true);
+            $("input[name=gender][value=" + gender + "]").prop('checked', true);
         })
     </script>
 @endpush

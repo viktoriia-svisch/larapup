@@ -32,6 +32,14 @@ class FacultyController extends Controller
             'searching' => false
         ]);
     }
+    public function searchFaculty($semester, $request)
+    {
+        $search = Faculty::with("faculty_semester")
+            ->where('name', 'LIKE', '%' . $request . '%')
+            ->where('semester_id', 'like', '%' . $semester . '%')
+            ->get();
+        return response()->json($search);
+    }
     public function createFaculty_semester()
     {
         $listSemester = Semester::with("faculty_semester")
@@ -205,13 +213,5 @@ class FacultyController extends Controller
                 $this->responseBladeMessage('Delete successful, no student has been deleted')
             );
         }
-    }
-    public function searchFaculty($semester, $request)
-    {
-        $search = Faculty::with("faculty_semester")
-            ->where('name', 'LIKE', '%' . $request . '%')
-            ->where('semester_id', 'like', '%' . $semester . '%')
-            ->get();
-        return response()->json($search);
     }
 }
