@@ -75,9 +75,9 @@
                             </div>
                         </div>
                         <div class="col-auto d-flex align-items-center">
-                            <a class="btn btn-icon btn-default" href="{{route('admin.updateSemester', [$activeSemester->id])}}">
+                            <button class="btn btn-icon btn-default" type="button">
                                 <i class="fas fa-cog top-0"></i>
-                            </a>
+                            </button>
                             <a class="btn btn-icon btn-success" href="{{route('admin.infoSemester', [$activeSemester->id])}}">
                                 <i class="fas fa-info top-0"></i>
                             </a>
@@ -111,9 +111,9 @@
                             </div>
                         </div>
                         <div class="col-auto d-flex align-items-center">
-                            <a class="btn btn-icon btn-default" href="{{route('admin.updateSemester', [$semester->id])}}">
+                            <button class="btn btn-icon btn-default" type="button">
                                 <i class="fas fa-cog top-0"></i>
-                            </a>
+                            </button>
                             <a class="btn btn-icon btn-success" href="{{route('admin.infoSemester', [$semester->id])}}">
                                 <i class="fas fa-info top-0"></i>
                             </a>
@@ -148,9 +148,9 @@
                             </div>
                         </div>
                         <div class="col-auto d-flex align-items-center">
-                            <a class="btn btn-icon btn-default" href="{{route('admin.updateSemester', [$semester->id])}}">
+                            <button class="btn btn-icon btn-default" type="button">
                                 <i class="fas fa-cog top-0"></i>
-                            </a>
+                            </button>
                             <a class="btn btn-icon btn-success" href="{{route('admin.infoSemester', [$semester->id])}}">
                                 <i class="fas fa-info top-0"></i>
                             </a>

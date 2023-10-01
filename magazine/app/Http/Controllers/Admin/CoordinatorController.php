@@ -2,7 +2,6 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCoordinator;
-use App\Http\Requests\UpdateCoordinatorByAdmin;
 use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
@@ -159,7 +158,7 @@ class CoordinatorController extends Controller
         ]);
         return redirect()->back()->with($this->responseBladeMessage("Unable to find the coordinator", false));
     }
-    public function updateCoordinatorPost(UpdateCoordinatorByAdmin $request, $id)
+    public function updateCoordinatorPost(Request $request, $id)
     {
         $coordinator = Coordinator::with("faculty_semester_coordinator")->find($id);
         if (!$coordinator)
@@ -169,6 +168,7 @@ class CoordinatorController extends Controller
         $coordinator->dateOfBirth = $request->get('dateOfBirth') ?? $coordinator->dateOfBirth;
         $coordinator->gender = $request->get('gender') ?? $coordinator->gender;
         $coordinator->status = $request->get('status') ?? $coordinator->status;
+        $coordinator->type = $request->get('type') ?? $coordinator->type;
         if ($request->get('old_password')) {
             if (Hash::check($request->get('old_password'), $coordinator->password)) {
                 $coordinator->password = $request->get('new_password');
