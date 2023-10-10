@@ -2,7 +2,6 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\FacultySemesterBaseController;
 use App\Http\Requests\CreateSemester;
-use App\Http\Requests\UpdateSemester;
 use App\Models\Semester;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -185,16 +184,6 @@ class SemesterController extends FacultySemesterBaseController
         if (!$viewingSemester) {
             return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
         }
-        $arrFile = [];
-        foreach ($viewingSemester->faculty_semester as $facSemester) {
-            foreach ($facSemester->article as $article) {
-                $arrFile = array_merge($arrFile, $article->article_file->toArray());
-            }
-        }
-        if (sizeof($arrFile) == 0) {
-            return redirect()->route("admin.infoSemester", [$semester_id])
-                ->with($this->responseBladeMessage("This semester does not have any data", false));
-        }
         $dirDownload = $this->downloadArticleSemester($semester_id);
         if ($dirDownload) {
             ob_end_clean();
@@ -208,33 +197,5 @@ class SemesterController extends FacultySemesterBaseController
             return Response::download($dirDownload, basename($dirDownload), $headers);
         }
         return redirect()->back()->with($this->responseBladeMessage("Unable to create backup", true));
-    }
-    public function updateSemester($semester_id)
-    {
-        $viewSemester = Semester::with("faculty_semester")
-            ->where("id", $semester_id)->first();
-        if (!$viewSemester) {
-            return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
-        }
-        return view('admin.Semester.update-semester')
-            ->with([
-                'currentSemester' => $viewSemester
-            ]);
-    }
-    public function updateSemesterPost(UpdateSemester $request, $id)
-    {
-        $Semester = Semester::with("faculty_semester")->find($id);
-        if (!$Semester) return redirect()
-            ->back()
-            ->withInput()
-            ->with($this->responseBladeMessage("Unable to find the correct semester!", false));
-        $Semester->name = $request->get('name') ?? $Semester->name;
-        $Semester->description = $request->get('description') ?? $Semester->description;
-        $Semester->start_date = $request->get('start_date') ?? $Semester->start_date;
-        $Semester->end_date = $request->get('end_date') ?? $Semester->end_date;
-        if ($Semester->save()) {
-            return back()->with($this->responseBladeMessage("Update successfully!"));
-        }
-        return back()->with($this->responseBladeMessage("Update failed!", false));
     }
 }

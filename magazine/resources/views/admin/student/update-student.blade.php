@@ -4,19 +4,7 @@
 @endpush
 @section("admin-content")
     <div class="container row col-md-12" style="margin-top: -2.2vw">
-        @if(\Illuminate\Support\Facades\Session::has('updateStatus'))
-            <div class="card col-12">
-                @if(\Illuminate\Support\Facades\Session::get('updateStatus'))
-                    <div class="card-body bg-danger">
-                        Update Success
-                    </div>
-                @else
-                    <div class="card-body bg-danger">
-                        Update Failed
-                    </div>
-                @endif
-            </div>
-        @endif
+        @include("layout.response.errors")
         <div class="col-sm-2">
         </div>
         <div class="col-sm-3" style=" border: 1px solid #517777; padding: 3%; margin-bottom: 30vw">
