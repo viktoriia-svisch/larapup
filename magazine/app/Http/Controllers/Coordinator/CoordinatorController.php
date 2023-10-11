@@ -136,7 +136,7 @@ class CoordinatorController extends Controller
     {
         $student = Student::with("faculty_semester_student")->find($student);
         $FacultySemester = Faculty::with("faculty_semester")->find($FacultySemester);
-        $FacuSemeStudent = new FacultySemesterStudent;
+        $FacuSemeStudent = new FacultySemesterStudent();
         $FacuSemeStudent->faculty_semester_id = $FacultySemester->id;
         $FacuSemeStudent->student_id = $student->id;
         $HasFaculty = FacultySemesterStudent::with("faculty_semester")->where('student_id', '=', $student->id)->first();
