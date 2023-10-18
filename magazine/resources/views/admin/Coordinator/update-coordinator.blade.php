@@ -67,7 +67,7 @@
                     </div>
                 @endif
                 <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
-                    <h4 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw; margin-left: -1vw;">Gender</h4>
+                    <h6 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw;">Gender</h6>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
                         <input name="gender" value="{{GENDER['MALE']}}" class="custom-control-input" id="genderMale"
                                type="radio">
@@ -79,34 +79,26 @@
                         <label class="custom-control-label" for="genderFemale">Female</label>
                     </div>
                 </div>
-                <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
-                    <h4 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw; margin-left: -1vw;">Account Type</h4>
-                    <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                        <input name="type" value="{{COORDINATOR_LEVEL['MASTER']}}" class="custom-control-input"
-                               id="typeMaster"
-                               type="radio">
-                        <label class="custom-control-label" for="typeMaster">Master</label>
+                @if($errors->has('status'))
+                    <div class="card bg-danger text-white rounded-0">
+                        <div class="card-body p-1 rounded-0">
+                            {{$errors->first('status')}}
+                        </div>
                     </div>
-                    <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                        <input name="type" value="{{COORDINATOR_LEVEL['NORMAL']}}" class="custom-control-input"
-                               id="typeNormal"
-                               type="radio">
-                        <label class="custom-control-label" for="typeNormal">Normal</label>
-                    </div>
-                </div>
+                @endif
                 <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
-                    <h4 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw; margin-left: -1vw;">Account Status</h4>
+                    <h6 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw;">Account Status</h6>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
                         <input name="status" value="{{COORDINATOR_STATUS['ACTIVE']}}" class="custom-control-input"
-                               id="statusActive"
-                               type="radio">
-                        <label class="custom-control-label" for="statusActive">Active</label>
+                               id="statusStandby"
+                               checked="" type="radio">
+                        <label class="custom-control-label" for="statusStandby">Active</label>
                     </div>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
                         <input name="status" value="{{COORDINATOR_STATUS['DEACTIVATE']}}" class="custom-control-input"
-                               id="statusDeactivate"
+                               id="statusOngoing"
                                type="radio">
-                        <label class="custom-control-label" for="statusDeactivate">Deactivate</label>
+                        <label class="custom-control-label" for="statusOngoing">Deactivate</label>
                     </div>
                 </div>
                 <div style="margin-top: 2vw">
@@ -134,10 +126,8 @@
             });
             var status = {{$coordinator->status}};
             var gender = {{$coordinator->gender}};
-            var type = {{$coordinator->type}};
             $("input[name=status][value=" + status + "]").prop('checked', true);
             $("input[name=gender][value=" + gender + "]").prop('checked', true);
-            $("input[name=type][value=" + type + "]").prop('checked', true);
         })
     </script>
 @endpush
