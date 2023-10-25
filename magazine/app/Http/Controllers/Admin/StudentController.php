@@ -64,12 +64,18 @@ class StudentController extends Controller
             if(Hash::check($request->get('old_password'),$student->password)) {
                 $student->password =  $request->get('new_password');
             } else {
-                return back()->with($this->responseBladeMessage("Password was incorrect!", false));
+                return back()->with([
+                    'updateStatus' => false
+                ]);
             }
         }
         if ($student->save()) {
-            return back()->with($this->responseBladeMessage("Update successfully"));
+            return back()->with([
+                'updateStatus' => true
+            ]);
         }
-        return back()->with($this->responseBladeMessage("Update unsuccessfully", false));
+        return back()->with([
+            'updateStatus' => false
+        ]);
     }
 }

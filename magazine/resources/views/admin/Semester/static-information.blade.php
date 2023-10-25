@@ -4,7 +4,6 @@
 @endpush
 @section("admin-content")
     <div class="container">
-        @include("layout.response.errors")
         @if ($count = count($info) == 0)
             <h1 class="text-center text-muted">No record found</h1>
         @else

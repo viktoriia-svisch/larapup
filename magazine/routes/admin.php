@@ -18,14 +18,13 @@ Route::group([
     Route::post('semester/create', 'SemesterController@createSemester_post')->name('admin.createSemester_post');
     Route::get('semester/{semester_id}', 'SemesterController@chooseSemester')->name('admin.infoSemester');
     Route::get('semester/{semester_id}/backups', 'SemesterController@downloadBackups')->name('admin.infoSemester.downloadBackup');
-    Route::get('semester/{semester_id}/update', 'SemesterController@updateSemester')->name('admin.updateSemester');
-    Route::post('semester/{semester_id}/update', 'SemesterController@updateSemesterPost')->name('admin.updateSemesterPost');
     Route::get('faculty', 'FacultyController@faculty')->name('admin.faculty');
     Route::post('faculty/create', 'FacultyController@createFaculty_post')->name('admin.createFaculty_post');
     Route::post('faculty/edit', 'FacultyController@updateFaculty')->name('admin.updateFaculty');
     Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');
+    Route::post('faculty-semester-delete', 'FacultyController@deleteSemesterFaculty')->name('admin.deleteSemesterFaculty');
     Route::post('faculty-student-delete/{studentId}', 'FacultyController@deleteStudentFaculty')->name('admin.deleteStudentFaculty');
-    Route::post('faculty-semester-delete/{facultySemesterId}', 'FacultyController@deleteSemesterFaculty')->name('admin.deleteSemesterFaculty');
+    Route::post('faculty-semester-delete/{facultySemesterId}', 'FacultyController@deleteSemesterFaculty')->name('admin.deleteAllStudentFaculty');
     Route::post('search-faculty/{semester}/{request}', 'Admin\FacultyController@searchFaculty');
     Route::get('faculty/choose-semester', 'FacultyController@chooseSemester')->name('admin.chooseSemester');
     Route::get('faculty/choose-semester/{semester}', 'FacultyController@chooseSemesterFaculty')->name('admin.chooseSemesterFaculty');
