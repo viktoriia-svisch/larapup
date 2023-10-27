@@ -3,46 +3,21 @@
 @push("custom-css")
 @endpush
 @section("admin-content")
-    <div class="container row col-md-12" style="margin-top: -2.2vw">
-        @if(\Illuminate\Support\Facades\Session::has('updateStatus'))
-            <div class="card col-12">
-                @if(\Illuminate\Support\Facades\Session::get('updateStatus'))
-                    <div class="card-body bg-danger">
-                        Update Success
-                    </div>
-                @else
-                    <div class="card-body bg-danger">
-                        Update Failed
-                    </div>
-                @endif
-            </div>
-        @endif
-        <div class="col-sm-2">
-        </div>
-        <div class="col-sm-3" style=" border: 1px solid #517777; padding: 3%; margin-bottom: 30vw">
-            <div class="row">
-                <div class="col-xl-2">
-                </div>
-                <img class="col-xl-8 " style="width: 320px; height: 200px"
-                     src="https://i.pinimg.com/564x/40/3e/6d/403e6d4751905cca69e5a72015623f64.jpg">
-                <div class="col-xl-2">
-                </div>
-            </div>
+    <div class="container row pt-5">
+        <div class="col-12 col-md-4 ml-auto mr-auto mt-0 pt-0">
+            <img class="img-center img-fluid" style="width: 200px; height: 200px"
+                 src="https://i.pinimg.com/564x/40/3e/6d/403e6d4751905cca69e5a72015623f64.jpg">
             <hr>
-            <div class="row col-xl-12" style=" margin-top: 2vw">
-                <h5 class="col-xl-12"
-                    style="text-align: center"> {{$student->last_name}} {{$student->first_name}}</h5>
-                <p class="col-xl-12">Gender:
-                    @if($student->gender == 1)Male
-                    @else Female
-                    @endif
-                </p>
-                <p class="col-xl-12">Date of birth: {{$student->dateOfBirth}}</p>
+            <div class="col-12 m-auto">
+                <h5 style="text-align: center"> {{$student->last_name}} {{$student->first_name}}</h5>
+                <p class="text-center">Gender: @if($student->gender == 1) Male @else Female @endif</p>
+                <p class="text-center">Date of birth: {{$student->dateOfBirth}}</p>
             </div>
         </div>
-        <div class="col-sm-5" style=" border-top: 1px solid; padding: 2%;">
+        <div class="col-12 col-md-6 m-auto">
             <h3>Information of Student</h3>
             <hr>
+            @include("layout.response.errors")
             <form method="post" action="{{route('admin.updateStudent_post', [$student->id])}}">
                 {{csrf_field()}}
                 @if($errors->has('first_name'))

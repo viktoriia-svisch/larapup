@@ -169,22 +169,17 @@ class CoordinatorController extends Controller
         $coordinator->dateOfBirth = $request->get('dateOfBirth') ?? $coordinator->dateOfBirth;
         $coordinator->gender = $request->get('gender') ?? $coordinator->gender;
         $coordinator->status = $request->get('status') ?? $coordinator->status;
+        $coordinator->type = $request->get('type') ?? $coordinator->type;
         if ($request->get('old_password')) {
             if (Hash::check($request->get('old_password'), $coordinator->password)) {
                 $coordinator->password = $request->get('new_password');
             } else {
-                return back()->with([
-                    'updateStatus' => false
-                ]);
+                return back()->with($this->responseBladeMessage("Password was incorrect!", false));
             }
         }
         if ($coordinator->save()) {
-            return back()->with([
-                'updateStatus' => true
-            ]);
+            return back()->with($this->responseBladeMessage("Updated successfully"));
         }
-        return back()->with([
-            'updateStatus' => false
-        ]);
+        return back()->with($this->responseBladeMessage("Update unsuccessfully", false));
     }
 }
