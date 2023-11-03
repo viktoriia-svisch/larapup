@@ -1,11 +1,12 @@
 <?php
 namespace App\Helpers;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 class StorageHelper
 {
     const TYPES = [
@@ -26,7 +27,7 @@ class StorageHelper
     ];
     public static function savePublishFileSubmission($idFacultySemester, $idPublish, UploadedFile $file, &$filePath = null)
     {
-        $fileName = $file->getClientOriginalName();
+        $fileName = Carbon::now()->toDateString() . '-' . Str::random(6) . '-' . $file->getClientOriginalName();
         $filePath = self::getPublishFilePath($idFacultySemester, $idPublish);
         self::save($file, $filePath, $fileName);
         return [
@@ -80,7 +81,7 @@ class StorageHelper
     }
     public static function saveAvatarUser($idUser, $type, UploadedFile $file, &$filePath = null)
     {
-        $fileName = $file->getClientOriginalName();
+        $fileName = Carbon::now()->toDateString() . '-' . Str::random(6) . '-' . $file->getClientOriginalName();
         $filePath = self::getAvatarUserPath($idUser, $type);
         self::save($file, $filePath, $fileName);
         return [
@@ -102,9 +103,9 @@ class StorageHelper
     {
         return self::disk()->get(self::getAvatarUserPath($idUser, $type, $path));
     }
-    public static function saveArticleFileSubmission($idFacultySemester, $idArticle, UploadedFile $file, &$filePath = null)
+    public static function saveArticleFileSubmission($idFacultySemester, $idArticle, UploadedFile $file, $prefix, &$filePath = null)
     {
-        $fileName = $file->getClientOriginalName();
+        $fileName = $prefix . $file->getClientOriginalName();
         $filePath = self::getArticleFilePath($idFacultySemester, $idArticle);
         self::save($file, $filePath, $fileName);
         return $filePath . $fileName;
@@ -125,7 +126,7 @@ class StorageHelper
     }
     public static function saveCommentCoordinator($idCoordinator, $idArticle, UploadedFile $file, &$filePath = null)
     {
-        $fileName = $file->getClientOriginalName();
+        $fileName = Carbon::now()->toDateString() . '-' . Str::random(6) . '-' . $file->getClientOriginalName();
         $filePath = self::getCommentCoordinatorPath($idCoordinator, $idArticle);
         self::save($file, $filePath, $fileName);
         return $fileName;
@@ -146,7 +147,7 @@ class StorageHelper
     }
     public static function saveCommentStudent($idStudent, $idArticle, UploadedFile $file, &$filePath = null)
     {
-        $fileName = $file->getClientOriginalName();
+        $fileName = Carbon::now()->toDateString() . '-' . Str::random(6) . '-' . $file->getClientOriginalName();
         $filePath = self::getCommentStudentPath($idStudent, $idArticle);
         self::save($file, $filePath, $fileName);
         return $fileName;
@@ -167,7 +168,7 @@ class StorageHelper
     }
     public static function saveProfile($idArticle, UploadedFile $file, &$filePath = null)
     {
-        $fileName = $file->getClientOriginalName();
+        $fileName = Carbon::now()->toDateString() . '-' . Str::random(6) . '-' . $file->getClientOriginalName();
         $filePath = self::getProfilePath($idArticle);
         self::save($file, $filePath, $fileName);
         return $filePath . $fileName;
