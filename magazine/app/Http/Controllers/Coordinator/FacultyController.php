@@ -175,9 +175,7 @@ class FacultyController extends FacultySemesterBaseController
         $facultyUpdate->first_deadline = Carbon::parse($request->get('first_deadline')) ?? $facultyUpdate->first_deadline;
         $facultyUpdate->second_deadline = Carbon::parse($request->get('second_deadline')) ?? $facultyUpdate->second_deadline;
         $facultyUpdate->description = $request->get('description') ?? $facultyUpdate->description;
-        if($facultyUpdate->save()){
-            return back()->with($this->responseBladeMessage('Update faculty success'));
-        };
+        $facultyUpdate->save();
         return redirect()->back()->withInput();
     }
     public function facultyDetailListArticle(Request $request, $faculty_id, $semester_id)

@@ -146,13 +146,6 @@ class FacultySemesterBaseController extends Controller
         $genName = str_replace("-", "", $listArticle[0]->faculty_semester->semester->name . Carbon::now()->toDateString());
         $genName = str_replace(" ", "", $genName);
         $tempDir = storage_path("app/backups/faculty/" . $listArticle[0]->faculty_semester->id);
-        $arrFile = 0;
-        foreach ($listArticle as $article){
-            $arrFile = $arrFile + sizeof($article->article_file);
-        }
-        if ($arrFile == 0){
-            return false;
-        }
         if (!file_exists($tempDir))
             File::makeDirectory($tempDir, 0777, true);
         $rawZipper = new ZipArchive();
@@ -169,6 +162,7 @@ class FacultySemesterBaseController extends Controller
             }
         }
         $rawZipper->close();
+        if ($rawZipper->numFiles == 0 ) return false;
         return $tempDir;
     }
     public function downloadArticleSemester($semester_id)
