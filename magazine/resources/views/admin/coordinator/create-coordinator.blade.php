@@ -12,6 +12,7 @@
     <div class="col-sm-5 m-auto">
         <h1 class="title">Create Coordinator</h1>
         <hr>
+        @include("layout.response.errors")
         <form action="{{route('admin.createCoordinator_post')}}" method="post">
             {{csrf_field()}}
             <label style="color: #0b1011">First Name</label>

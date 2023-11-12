@@ -181,7 +181,7 @@
             </div>
         </div>
     @endif
-    @if ($article && count($article->article_file) > 0  && $article->publish == null)
+    @if ($article && count($article->article_file) > 0  &&  sizeof($article->publish) == 0)
         <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDelete"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">

@@ -8,6 +8,7 @@
             <small class="text-muted mb-0 pb-0">Faculty Information</small>
             <h1 class="mt-0 pt-0" style="line-height: 1.625rem;">{{$facultySemester->semester->name}}</h1>
             <hr>
+            @include("layout.response.errors")
             <form method="post"
                   action="{{route('coordinator.faculty.settingPost', [$facultySemester->faculty_id, $facultySemester->semester_id])}}">
                 {{csrf_field()}}
@@ -46,7 +47,7 @@
                 @endif
                 <div class="card-body p-1 rounded-0" style="margin-top: 2vw">
                     <label>Description</label>
-                    <input class="form-control" type="text" name="description"
+                    <input class="form-control form-control-alternative" type="text" name="description"
                            placeholder="{{$facultySemester->description}}"
                            value="{{$facultySemester->description}}">
                 </div>
@@ -59,6 +60,10 @@
         <div class="col-6">
             <small class="text-muted mb-0 pb-0">Belongs To Semester</small>
             <h1 class="mt-0 pt-0" style="line-height: 1.625rem;">{{$facultySemester->semester->name}}</h1>
+            <div class="card-body p-1 rounded-0">
+                <label>End date: </label>
+                <h4 class="mt-0 pt-0" style="line-height: 1.625rem;">{{\App\Helpers\DateTimeHelper::formatDateInput($facultySemester->semester->end_date)}}</h4>
+            </div>
         </div>
     </div>
 @endsection
