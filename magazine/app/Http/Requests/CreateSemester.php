@@ -11,7 +11,7 @@ class CreateSemester extends FormRequest
     public function rules()
     {
         return [
-              'name' => 'required|min:2|max:40|bail',
+              'name' => 'required|min:2|bail',
               'start_date' => ['required','after:now',new checkDate(),'date','bail'],
               'end_date'=>['required','after:start_date','date','bail']
         ];

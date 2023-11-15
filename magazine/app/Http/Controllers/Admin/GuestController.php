@@ -8,7 +8,6 @@ use App\Models\FacultySemesterCoordinator;
 use App\Models\Guest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 class GuestController extends Controller
 {
     public function guest(Request $request)
@@ -49,7 +48,7 @@ class GuestController extends Controller
             return view('admin.guest.active-guest', [
                 'guest' => $guest
             ]);
-        return redirect()->back()->with($this->responseBladeMessage("Unable to find the Guest", false));
+        return redirect()->back()->with($this->responseBladeMessage("Unable to find the coordinator", false));
     }
     public function updateGuestPost(Request $request, $id)
     {
@@ -61,12 +60,18 @@ class GuestController extends Controller
             if (Hash::check($request->get('old_password'), $guest->password)) {
                 $guest->password = $request->get('new_password');
             } else {
-                return redirect()->back()->with($this->responseBladeMessage("Update Guest failed", false));;
+                return back()->with([
+                    'updateStatus' => false
+                ]);
             }
         }
         if ($guest->save()) {
-            return redirect()->back()->with($this->responseBladeMessage("Update Guest success"));;
+            return back()->with([
+                'updateStatus' => true
+            ]);
         }
-        return redirect()->back()->with($this->responseBladeMessage("Update Guest failed", false));;
+        return back()->with([
+            'updateStatus' => false
+        ]);
     }
 }

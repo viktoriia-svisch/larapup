@@ -4,10 +4,22 @@
 @endpush
 @section("admin-content")
     <div class="container row col-md-12" style="margin-top: -2.2vw">
+        @if(\Illuminate\Support\Facades\Session::has('updateStatus'))
+            <div class="card col-12">
+                @if(\Illuminate\Support\Facades\Session::get('updateStatus'))
+                    <div class="card-body bg-success">
+                        Update Success
+                    </div>
+                @else
+                    <div class="card-body bg-danger">
+                        Update Failed
+                    </div>
+                @endif
+            </div>
+        @endif
         <div class="col-sm-5 m-auto" style=" border-top: 1px solid; padding: 2%;">
             <h3>Information of Coordinator</h3>
             <hr>
-            @include("layout.response.errors")
             <form method="post" action="{{route('admin.updateGuest_post', [$guest->id])}}">
                 {{csrf_field()}}
                 <div>
