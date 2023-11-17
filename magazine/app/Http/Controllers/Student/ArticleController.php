@@ -11,9 +11,11 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class ArticleController extends Controller
 {
@@ -28,8 +30,13 @@ class ArticleController extends Controller
             $files = $request->file("wordDocument");
             $arrNew = [];
             foreach ($files as $file) {
+                $filePrefix = Carbon::now()->toDateString() . '-' . Str::random(6) . '-';
                 try {
-                    $filePath = StorageHelper::saveArticleFileSubmission($article->faculty_semester_id, $article->id, $file);
+                    $filePath = StorageHelper::saveArticleFileSubmission(
+                        $article->faculty_semester_id,
+                        $article->id, $file,
+                        $filePrefix
+                    );
                 } catch (Exception $exception) {
                     DB::rollback();
                     return back()->with($this->responseBladeMessage(
@@ -38,7 +45,7 @@ class ArticleController extends Controller
                     ));
                 }
                 $articleFile = new ArticleFile();
-                $articleFile->title = $file->getClientOriginalName();
+                $articleFile->title = $filePrefix .$file->getClientOriginalName();
                 $articleFile->file_path = $filePath;
                 $fileEXT = UploadFileValidate::checkExtension($file->getClientOriginalExtension());
                 $articleFile->type = FILE_EXT_INDEX[$fileEXT];
