@@ -5,14 +5,12 @@ use App\Http\Requests\CreateFaculty;
 use App\Models\Faculty;
 use App\Models\FacultySemester;
 use App\Models\FacultySemesterStudent;
-use App\Models\FacultySemesterCoordinator;
 use App\Models\Semester;
 use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
 class FacultyController extends Controller
 {
     public function faculty(Request $request)
@@ -21,14 +19,14 @@ class FacultyController extends Controller
         if ($searchTerms) {
             $faculties = Faculty::with('faculty_semester')
                 ->where('name', 'LIKE', '%' . $searchTerms . '%')
-                ->paginate(PER_PAGE);
+                ->paginate(10);
             return view('admin.faculty.faculty', [
                 'faculties' => $faculties,
                 'searching' => $searchTerms
             ]);
         }
         $faculties = Faculty::with('faculty_semester')
-            ->paginate(PER_PAGE);
+            ->paginate(10);
         return view('admin.faculty.faculty', [
             'faculties' => $faculties,
             'searching' => false
@@ -104,7 +102,7 @@ class FacultyController extends Controller
                         ->orWhere('description', 'like', '%' . $searchTerms . '%');
                 })
                 ->orderBy('start_date', 'desc')
-                ->paginate(PER_PAGE);
+                ->get();
         } else {
             $semestersFuture = Semester::with(['faculty_semester'])
                 ->where('start_date', '>=', Carbon::now())
@@ -120,6 +118,7 @@ class FacultyController extends Controller
     {
         $semester = Semester::with("faculty_semester")->find($semester);
         $faculty = Faculty::all();
+        $StudentList = Student::all();
         $FacultySemester = DB::table('faculty_semesters')
             ->join('faculties', 'faculty_semesters.faculty_id', '=', 'faculties.id')
             ->select('faculties.name', 'faculty_semesters.id')
@@ -128,6 +127,7 @@ class FacultyController extends Controller
         return view('admin.faculty.choose-semester-faculty', [
             'semester' => $semester,
             'faculty' => $faculty,
+            'StudentList' => $StudentList,
             'FacultySemester' => $FacultySemester,
         ]);
     }
@@ -164,8 +164,8 @@ class FacultyController extends Controller
             $StudentList = DB::table('students')
             ->leftjoin('faculty_semester_students', 'faculty_semester_students.student_id', '=', 'students.id')
             ->select('students.first_name','students.id','students.last_name')
-            ->whereNull('faculty_semester_students.student_id')
-            ->paginate(PER_PAGE);
+             ->whereNull('faculty_semester_students.student_id')
+            ->get();
             return view('admin.faculty.add-student', [
                 'semester' => $semester,
                 'faculty' => $faculty,
@@ -197,40 +197,19 @@ class FacultyController extends Controller
             $this->responseBladeMessage('Delete successful')
         );
     }
-    public function deleteSemesterFaculty(Request $request)
+    public function deleteSemesterFaculty($facultySemesterId)
     {
-        $hasStudent = FacultySemesterStudent::where('faculty_semester_id','=',$request->facu_seme_id)->first();
-        $hasCoordinator = FacultySemesterCoordinator::where('faculty_semester_id','=',$request->facu_seme_id)->first();
-        if($hasCoordinator && $hasStudent){
-            $removeCoordinator = FacultySemesterCoordinator::where('faculty_semester_id','=',$request->facu_seme_id)->get()->each->delete();
-            $removeStudent = FacultySemesterStudent::where('faculty_semester_id','=',$request->facu_seme_id)->get()->each->delete();
-            $FacuSeme = FacultySemester::find($request->facu_seme_id);
-            $FacuSeme->delete();
+        $hasStudent = FacultySemesterStudent::where('faculty_semester_id','=',$facultySemesterId)->first();
+        if(!empty($hasStudent)){
             return back()->with(
-                $this->responseBladeMessage('Delete successful, all students and coordinator are removed')
-            );
-        }
-        if($hasCoordinator){
-            $removeCoordinator = FacultySemesterCoordinator::where('faculty_semester_id','=',$request->facu_seme_id)->get()->each->delete();
-            $FacuSeme = FacultySemester::find($request->facu_seme_id);
-            $FacuSeme->delete();
-            return back()->with(
-                $this->responseBladeMessage('Delete successful, all coordinator are removed')
-            );
-        }
-        if($hasStudent){
-            $removeStudent = FacultySemesterStudent::where('faculty_semester_id','=',$request->facu_seme_id)->get()->each->delete();
-            $FacuSeme = FacultySemester::find($request->facu_seme_id);
-            $FacuSeme->delete();
-            return back()->with(
-                $this->responseBladeMessage('Delete successful, the faculty is removed')
+                $this->responseBladeMessage('Please remove all students first', false)
             );
         }
         else{
-            $FacuSeme = FacultySemester::find($request->facu_seme_id);
+            $FacuSeme = FacultySemester::find($facultySemesterId);
             $FacuSeme->delete();
             return back()->with(
-                $this->responseBladeMessage('Delete successful, no student has been deleted')
+                $this->responseBladeMessage('Delete successful')
             );
         }
     }

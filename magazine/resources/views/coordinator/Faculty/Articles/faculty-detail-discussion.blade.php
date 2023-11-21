@@ -154,6 +154,15 @@
                     </div>
                     <div class="col-auto">
                         <img alt=""
+                             @if($comment->student_id)
+                             @if (!$comment->student->avatar_path)
+                             src="http://getdrawings.com/images/anime-girls-drawing-34.jpg"
+                             @endif
+                             @else
+                             @if (!$comment->coordinator->avatar_path)
+                             src="http://getdrawings.com/images/anime-girls-drawing-34.jpg"
+                             @endif
+                             @endif
                              style="width: 50px; height: 50px; object-fit: cover; object-position: center; overflow: hidden;"
                              class="img-fluid rounded-circle">
                     </div>

@@ -132,7 +132,9 @@
         <div class="form-group">
             <label for="title">Title of the published</label>
             <input type="text" class="form-control form-control-alternative" id="title" name="title"
-                   value="{{$published->title}}" placeholder="Publishing title">
+                   @if ($published && $published->title)
+                   value="{{$published->title}}"
+                   @endif placeholder="Publishing title">
             <small class="form-text">Not exceed 170 characters and is required at least 3 characters.</small>
         </div>
         <hr style="width: 50%; margin: auto;">
@@ -143,7 +145,11 @@
                     <label for="description">Publish content</label>
                     <textarea class="form-control form-control-alternative" id="description" name="description"
                               rows="10"
-                              placeholder="Write a section text here...">{{$published->content}}</textarea>
+                              placeholder="Write a section text here...">
+                        @if ($published && $published->title)
+                            {{$published->content}}
+                        @endif
+                    </textarea>
                     <small class="form-text">
                         Not exceed 1500 characters and is required at least 3 characters.
                     </small>
