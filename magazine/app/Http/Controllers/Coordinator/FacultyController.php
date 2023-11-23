@@ -175,7 +175,7 @@ class FacultyController extends FacultySemesterBaseController
         $facultyUpdate->first_deadline = Carbon::parse($request->get('first_deadline')) ?? $facultyUpdate->first_deadline;
         $facultyUpdate->second_deadline = Carbon::parse($request->get('second_deadline')) ?? $facultyUpdate->second_deadline;
         $facultyUpdate->description = $request->get('description') ?? $facultyUpdate->description;
-        if($facultyUpdate->save()){
+        if ($facultyUpdate->save()) {
             return back()->with($this->responseBladeMessage('Update faculty success'));
         };
         return redirect()->back()->withInput();
@@ -228,6 +228,7 @@ class FacultyController extends FacultySemesterBaseController
     {
         $title = $request->get("title");
         $listDescription = $request->get("description");
+        $grade = $request->get("grade");
         $listImage = $request->get("old_image");
         $listNewImage = $request->file("image");
         $facultySemester = FacultySemester::with("semester")
@@ -249,6 +250,12 @@ class FacultyController extends FacultySemesterBaseController
         $publishData->title = $title;
         $publishData->content = $listDescription;
         if (!$publishData->save()) {
+            DB::rollback();
+            return back()->with($this->responseBladeMessage("Cannot begin to publish", false));
+        }
+        $article->grade = $grade;
+        $article->status = ARTICLE_STATUS["PUBLISHED"];
+        if (!$article->save()) {
             DB::rollback();
             return back()->with($this->responseBladeMessage("Cannot begin to publish", false));
         }
@@ -281,7 +288,7 @@ class FacultyController extends FacultySemesterBaseController
                 try {
                     $newImage = new PublishImage([
                         "image_path" => StorageHelper::savePublishFileSubmission($facultySemester->id, $publishData->id, $img)["file"],
-                        "image_ext" => FILE_EXT_INDEX[$img->getClientOriginalExtension()],
+                        "image_ext" => FILE_EXT_INDEX[strtolower($img->getClientOriginalExtension())],
                         "description" => "N/D"
                     ]);
                     array_push($arrNewImage, $newImage);

@@ -88,8 +88,20 @@
                     </div>
                 @endforeach
             </div>
-            <div class="col-auto">
-                123
+            <div class="col-auto ml-3 pl-3 border-left">
+                <label for="grade">Grading</label>
+                <select name="grade" id="grade" class="form-control form-control-alternative">
+                    <option value="1" @if($article->grade == 1) selected @endif>1</option>
+                    <option value="2" @if($article->grade == 2) selected @endif>2</option>
+                    <option value="3" @if($article->grade == 3) selected @endif>3</option>
+                    <option value="4" @if($article->grade == 4) selected @endif>4</option>
+                    <option value="5" @if($article->grade == 5) selected @endif>5</option>
+                    <option value="6" @if($article->grade == 6) selected @endif>6</option>
+                    <option value="7" @if($article->grade == 7) selected @endif>7</option>
+                    <option value="8" @if($article->grade == 8) selected @endif>8</option>
+                    <option value="9" @if($article->grade == 9) selected @endif>9</option>
+                    <option value="10" @if($article->grade == 10) selected @endif>10</option>
+                </select>
             </div>
         </div>
         <div class="col-12">
@@ -145,11 +157,7 @@
                     <label for="description">Publish content</label>
                     <textarea class="form-control form-control-alternative" id="description" name="description"
                               rows="10"
-                              placeholder="Write a section text here...">
-                        @if ($published && $published->title)
-                            {{$published->content}}
-                        @endif
-                    </textarea>
+                              placeholder="Write a section text here...">@if ($published && $published->content){{$published->content}}@endif</textarea>
                     <small class="form-text">
                         Not exceed 1500 characters and is required at least 3 characters.
                     </small>
@@ -179,7 +187,8 @@
                         <i class="fa fa-plus"></i>
                         Add image
                         <input type="file" name="image[]" multiple accept="image/jpeg, image/png" class="form-control"
-                               @if (!($published && sizeof($published->publish_image) < 11)) disabled @endif hidden
+                               @if ($published && sizeof($published->publish_image) > 11) disabled
+                               @endif hidden
                                onchange="listUploadImage(this)" id="uploadFileInput">
                     </label>
                 </div>
