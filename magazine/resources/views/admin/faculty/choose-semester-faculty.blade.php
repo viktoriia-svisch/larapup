@@ -7,6 +7,7 @@
         }
     </style>
 @endpush
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 @section('breadcrumb')
     <div class="container">
             {{ Breadcrumbs::render('dashboard.faculty.create', route('admin.dashboard'), route('admin.faculty'), route('admin.chooseSemester')) }}
@@ -58,17 +59,14 @@
                         </div>
                     </div>
                     <div class="col-auto d-flex align-items-center">
-                        <a class="btn btn-block m-0 btn-success" type="button" href="{{route('admin.addStudentFaculty', [$FacuSeme->id])}}">
+                        <a class="btn btn-block m-0 btn-success" href="{{route('admin.addStudentFaculty', [$FacuSeme->id])}}">
                             Student list
                         </a>
                         &nbsp;
                         &nbsp;
-                        <form action="{{route('admin.deleteSemesterFaculty', [$FacuSeme->id])}}" method="post" >
-                            {{ csrf_field() }}
-                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit">
+                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit" data-fsid={{$FacuSeme->id}} data-toggle="modal" data-target="#delete">
                                 Remove faculty
                             </button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -100,3 +98,51 @@
             @endforeach
 </div>
 @endsection
+@section('modal')
+    <div class="col-md-4" id="modal">
+        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="modal-form"
+             aria-hidden="true">
+            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="card bg-secondary shadow border-0">
+                            <div class="card-body px-lg-5 py-lg-5">
+                                    <form action="{{route('admin.deleteSemesterFaculty')}}" method="post" >
+                                        {{csrf_field()}}
+                                        <h2 class="text-primary">Delete this faculty ?</h2>
+                                        <p class="text-center text-muted">
+                                            If you delete this faculty, it will delete all students belongs to the chosen semester faculty.
+                                            You can manually delete specific students in student list.
+                                        </p>
+                                        <div class="modal-body">
+                                        <input type="hidden" name="facu_seme_id" id="facu_seme_id" value="">
+                                        <div class="col-12 m-0 p-0">
+                                            <button class="btn btn-block m-0 btn-success" data-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                            <br>
+                                            <button class="btn btn-block m-0 btn-danger" id="submit" type="submit">
+                                                Delete
+                                            </button>
+                                        </div>
+                                        </div>
+                                  </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+<script src="{{asset('js/app.js')}}"></script>
+<script>
+    $(function(){
+        $(document).on('show.bs.modal','#delete', function(event){
+        var button = $(event.relatedTarget)
+        var facu_seme_id = button.data('fsid')
+        var modal = $(this)
+        modal.find('.modal-body #facu_seme_id').val(facu_seme_id);
+        });
+    });
+</script>

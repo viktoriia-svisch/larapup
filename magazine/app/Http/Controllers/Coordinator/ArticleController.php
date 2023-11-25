@@ -9,6 +9,7 @@ use App\Models\CommentStudent;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -34,7 +35,7 @@ class ArticleController extends FacultySemesterBaseController
     public function facultyArticleDiscussion($faculty_id, $semester_id, $article_id)
     {
         $article = $this->retrieveDetailArticle($faculty_id, $semester_id, $article_id);
-        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, null, COORDINATOR_GUARD, $article_id);
+        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, null, COORDINATOR_GUARD);
         return $this->facultyDetail(
             $faculty_id,
             $semester_id,

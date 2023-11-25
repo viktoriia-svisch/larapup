@@ -46,7 +46,7 @@
                         <span class="font-weight-normal">{{$semester->end_date}}</span>
                     </p>
                 </div>
-                <a class="btn btn-block m-0 btn-success" type="button" href="{{route('admin.chooseSemesterFaculty', [$semester->id])}}">
+                <a class="btn btn-block m-0 btn-success" href="{{route('admin.chooseSemesterFaculty', [$semester->id])}}">
                         Select Semester
                 </a>
             </a>

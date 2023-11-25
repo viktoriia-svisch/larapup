@@ -10,6 +10,8 @@ define('GENDER', [
 define('ARTICLE_STATUS', [
     'PENDING' => 0,
     'PUBLISHED' => 1,
+    'DECLINED' => 2,
+    'FINISHED' => 3
 ]);
 define('ARTICLE_NEWS', [
     'NEW' => 0,

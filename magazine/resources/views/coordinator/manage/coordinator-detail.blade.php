@@ -16,10 +16,7 @@
             <div class="row col-12 m-0">
                 <div class="col-12 d-flex justify-content-center">
                     <img class="rounded-circle"
-                         @if (!$coordinator->avatar_path)
-                         src="http://getdrawings.com/images/anime-girls-drawing-34.jpg"
-                         @endif
-                         alt="Lights"
+                         src="https://i.pinimg.com/564x/40/3e/6d/403e6d4751905cca69e5a72015623f64.jpg" alt="Lights"
                          style="width:190px; height: 190px; object-fit: cover; object-position: center">
                 </div>
                 <div class="col-9 m-auto">
