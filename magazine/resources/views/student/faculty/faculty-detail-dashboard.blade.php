@@ -102,19 +102,34 @@
                     </div>
                     <div class="col-auto">
                         <img alt=""
+                             @if($comment->student_id)
+                             @if (!$comment->student->avatar_path)
+                             src="http://getdrawings.com/images/anime-girls-drawing-34.jpg"
+                             @endif
+                             @else
+                             @if (!$comment->coordinator->avatar_path)
+                             src="http://getdrawings.com/images/anime-girls-drawing-34.jpg"
+                             @endif
+                             @endif
                              style="width: 50px; height: 50px; object-fit: cover; object-position: center; overflow: hidden;"
                              class="img-fluid rounded-circle">
                     </div>
                     <div class="col card p-0">
                         <div class="card-body p-3">
-                                @if ($comment->student_id)
+                            @if ($comment->student_id)
                                 <p class="text-primary font-weight-bold">
                                     {{$comment->student->first_name . ' ' . $comment->student->last_name}}
-                                @else
-                                <p class="text-danger font-weight-bold">
+                                </p>
+                            @else
+                                <p class="text-default font-weight-bold">
                                     {{$comment->coordinator->first_name . ' ' . $comment->coordinator->last_name}}
-                                @endif
-                            </p>
+                                    @if ($comment->coordinator->type == COORDINATOR_LEVEL["MASTER"])
+                                        <small class="text-danger">
+                                            (Master)
+                                        </small>
+                                    @endif
+                                </p>
+                            @endif
                             {{$comment->content}}
                             <div class="col-12 pl-0">
                                 <br>

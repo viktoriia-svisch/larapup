@@ -15,7 +15,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use ZipArchive;
 class FacultySemesterBaseController extends Controller
@@ -106,16 +105,16 @@ class FacultySemesterBaseController extends Controller
             })
             ->where("student_id", $student_id)->first();
     }
-    public function retrieveCommentAll($faculty_id, $semester_id, $guardStudent = STUDENT_GUARD, $guardCoordinator = COORDINATOR_GUARD)
+    public function retrieveCommentAll($faculty_id, $semester_id, $guardStudent = STUDENT_GUARD, $guardCoordinator = COORDINATOR_GUARD, $article_id = null)
     {
-        $commentStudent = $this->retrieveCommentStudent($faculty_id, $semester_id, $guardStudent);
-        $commentCoordinator = $this->retrieveCommentCoordinator($faculty_id, $semester_id, $guardCoordinator);
+        $commentStudent = $this->retrieveCommentStudent($faculty_id, $semester_id, $guardStudent, $article_id);
+        $commentCoordinator = $this->retrieveCommentCoordinator($faculty_id, $semester_id, $guardCoordinator, $article_id);
         $arrCombined = $commentStudent->concat($commentCoordinator)->sortByDesc(function ($comment) {
             return $comment['created_at'];
         });
         return $arrCombined;
     }
-    public function retrieveCommentStudent($faculty_id, $semester_id, $guard = STUDENT_GUARD)
+    public function retrieveCommentStudent($faculty_id, $semester_id, $guard = STUDENT_GUARD, $article_id = null)
     {
         $commentStudent = CommentStudent::with("student")
             ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
@@ -124,9 +123,12 @@ class FacultySemesterBaseController extends Controller
         if ($guard == STUDENT_GUARD) {
             $commentStudent = $commentStudent->where("student_id", Auth::guard($guard)->user()->id);
         }
+        if ($article_id) {
+            $commentStudent = $commentStudent->where("article_id", $article_id);
+        }
         return $commentStudent->get();
     }
-    public function retrieveCommentCoordinator($faculty_id, $semester_id, $guard = COORDINATOR_GUARD)
+    public function retrieveCommentCoordinator($faculty_id, $semester_id, $guard = COORDINATOR_GUARD, $article_id = null)
     {
         $commentCoordinator = CommentCoordinator::with("coordinator")
             ->whereHas("article.faculty_semester", function (Builder $query) use ($faculty_id, $semester_id) {
@@ -134,6 +136,9 @@ class FacultySemesterBaseController extends Controller
             });
         if ($guard == COORDINATOR_GUARD) {
             $commentCoordinator = $commentCoordinator->where("coordinator_id", Auth::guard($guard)->user()->id);
+        }
+        if ($article_id) {
+            $commentCoordinator = $commentCoordinator->where("article_id", $article_id);
         }
         return $commentCoordinator->get();
     }
@@ -147,10 +152,10 @@ class FacultySemesterBaseController extends Controller
         $genName = str_replace(" ", "", $genName);
         $tempDir = storage_path("app/backups/faculty/" . $listArticle[0]->faculty_semester->id);
         $arrFile = 0;
-        foreach ($listArticle as $article){
+        foreach ($listArticle as $article) {
             $arrFile = $arrFile + sizeof($article->article_file);
         }
-        if ($arrFile == 0){
+        if ($arrFile == 0) {
             return false;
         }
         if (!file_exists($tempDir))
