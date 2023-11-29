@@ -10,9 +10,8 @@ Route::group([
     Route::get('cor','CoordinatorController@index');
     Route::get('get/{id}','CoordinatorController@show');
     Route::post('new-coordinator','CoordinatorController@store');
-    Route::get('semester', 'CoordinatorController@CoordinatorSemester')->name('coordinator.manageSemester');
-    Route::get('coordinator-semester-faculty','CoordinatorController@CoordinatorSemesterFaculty') ->name('coordinator.manageFaculty');
-    Route::get('coordinator-semester-faculty/{semester}', 'CoordinatorController@chooseSemesterFaculty')->name('coordinator.chooseSemesterFaculty');
+    Route::get('semester', 'SemesterController@listSemester')->name('coordinator.manageSemester');
+    Route::get('semester/{semester_id}', 'SemesterController@semesterFaculty')->name('coordinator.chooseSemesterFaculty');
     Route::get('coordinatorSemesterFaculty/addStudent/{facultysemester}', 'CoordinatorController@addStudentFaculty')->name('coordinator.addStudentFaculty');
     Route::post('coordinatorSemesterFaculty/addStudent/{facultysemester}/{student}', 'CoordinatorController@addStudentFaculty_post')->name('coordinator.addStudentFaculty_post');
     Route::post('new-faculty','CoordinatorController@storeFaculty');
