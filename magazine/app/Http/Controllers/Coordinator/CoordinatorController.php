@@ -85,6 +85,35 @@ class CoordinatorController extends Controller
     public function dashboard(){
         return view('coordinator.dashboard');
     }
+    public function CoordinatorSemester()
+    {
+        $facultySemesterCoordinator = FacultySemesterCoordinator::with("faculty_semester")
+            ->where('coordinator_id', Auth::guard(COORDINATOR_GUARD)->user()->id)
+            ->whereHas("faculty_semester.semester")
+            ->first();
+        return view('coordinator.Semester.semester', [
+            'facSemesterCoordinator' => $facultySemesterCoordinator]);
+    }
+    public function chooseSemesterFaculty($semester)
+    {
+        $semester = Semester::with("faculty_semester")->find($semester);
+        $faculty = FacultySemesterCoordinator::with("faculty_semester")
+            ->where('coordinator_id', Auth::guard(COORDINATOR_GUARD)->user()->id)
+            ->whereHas("faculty_semester.faculty")->get();
+        $StudentList = Student::all();
+        $FacultySemester = DB::table('faculty_semesters')
+            ->join('faculties', 'faculty_semesters.faculty_id', '=', 'faculties.id')
+            ->join('faculty_semester_coordinators', 'faculty_semesters.id', '=', 'faculty_semester_coordinators.faculty_semester_id')
+            ->select('faculties.name', 'faculty_semesters.id')
+            ->where('faculty_semesters.semester_id', '=', $semester->id)
+            ->where('faculty_semester_coordinators.coordinator_id', '=', Auth::guard(COORDINATOR_GUARD)->user()->id)
+            ->get();
+        return view('coordinator.Semester.choose-semester-faculty')
+            ->with('semester', $semester)
+            ->with('faculties', $faculty)
+            ->with('StudentList', $StudentList)
+            ->with('FacultySemester', $FacultySemester);
+    }
     public function addStudentFaculty($facultysemester)
     {
         $FacultySemester = FacultySemester::with("faculty")->find($facultysemester);

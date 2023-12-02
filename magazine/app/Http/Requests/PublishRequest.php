@@ -14,16 +14,8 @@ class PublishRequest extends FormRequest
         return [
             "title" => "required|min:3|max:170",
             "description" => ["required", "min:3", 'max:1500'],
-            "grade" => 'required|integer|between:1,10',
             "old_image" => ["array", 'max:10'],
             "image" => ['array', "max:10", new PublishImageRule($this)]
-        ];
-    }
-    public function attributes()
-    {
-        return [
-            "old_image" => "Existed image",
-            "image" => "New Image",
         ];
     }
 }

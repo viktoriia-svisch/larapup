@@ -7,6 +7,4 @@ return [
     'create_faculty_failed' => 'Student was unsuccessfully created',
     'create_coordinator_success' => 'Coordinator was created successfully',
     'create_coordinator_failed' => 'Coordinator was unsuccessfully created',
-    "action_success" => "Action success!",
-    "action_failed" => "Action failed",
 ];
