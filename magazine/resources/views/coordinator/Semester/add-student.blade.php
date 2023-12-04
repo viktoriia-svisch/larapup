@@ -2,23 +2,35 @@
 @section('title', 'Create Faculty')
 @push("custom-css")
 @endpush
+@section('breadcrumb')
+    <div class="container">
+        {{ Breadcrumbs::render(
+        'dashboard.faculty.addStudent',
+        route('coordinator.dashboard'),
+        route('coordinator.faculty'),
+        route("coordinator.addStudentFaculty", [$FacultySemester->id])
+        ) }}
+    </div>
+@endsection
 @section("coordinator-content")
-<div class="container">
+    <div class="container">
+        @include('layout.response.errors')
+        <hr>
         <br>
         @foreach($semester as $sem)
-        @foreach($faculty as $fac)
-        <h1 class="heading-title">Faculty {{$fac->name}} of semester {{$sem->name}} </h1>
+            @foreach($faculty as $fac)
+                <h1 class="heading-title">Faculty {{$fac->name}} of semester {{$sem->name}} </h1>
+            @endforeach
         @endforeach
-        @endforeach
-            <span class="text-gray">
+        <span class="text-gray">
                 You can add student to faculty of specific semester
             </span>
-            <h1 class="text-primary">Current Students</h1>
-            <p class="text-muted">Display all the faculty within the semester.</p>
-            @if (count($AvailableStudent) == 0)
+        <h1 class="text-primary">Current Students</h1>
+        <p class="text-muted">Display all the faculty within the semester.</p>
+        @if (count($AvailableStudent) == 0)
             <h2 class="text-center text-muted">No record found</h2>
-            @endif
-            @foreach($AvailableStudent as $currentstudent)
+        @endif
+        @foreach($AvailableStudent as $currentstudent)
             @csrf
             <div class="card mb-2">
                 <div class="card-body row">
@@ -35,12 +47,13 @@
                 </div>
             </div>
         @endforeach
-            <h1 class="text-primary">Student list</h1>
-            @if (count($StudentList) == 0)
-                <h2 class="text-center text-muted">No record found</h2>
-            @endif
-            @foreach($StudentList as $student)
-            <form action="{{route('coordinator.addStudentFaculty_post', [$FacultySemester->id, $student->id])}}" method="post" >
+        <h1 class="text-primary">Student list</h1>
+        @if (count($StudentList) == 0)
+            <h2 class="text-center text-muted">No record found</h2>
+        @endif
+        @foreach($StudentList as $student)
+            <form action="{{route('coordinator.addStudentFaculty_post', [$FacultySemester->id, $student->id])}}"
+                  method="post">
                 @csrf
                 <div class="card mb-2">
                     <div class="card-body row">
@@ -50,15 +63,15 @@
                             </div>
                         </div>
                         <div class="col-auto d-flex align-items-center">
-                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit" >
+                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit">
                                 Add student
                             </button>
                         </div>
                     </div>
                 </div>
             </form>
-            @endforeach
-</div>
+        @endforeach
+    </div>
 @endsection
 @push("custom-js")
 @endpush
