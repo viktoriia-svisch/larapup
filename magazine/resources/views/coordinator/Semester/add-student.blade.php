@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="col-auto d-flex align-items-center">
-                        <a class="btn btn-block m-0 btn-success" type="button">
+                        <a class="btn btn-block m-0 btn-success">
                             Remove student
                         </a>
                     </div>
