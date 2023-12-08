@@ -45,7 +45,7 @@ class ArticleController extends Controller
                     ));
                 }
                 $articleFile = new ArticleFile();
-                $articleFile->title = $filePrefix .$file->getClientOriginalName();
+                $articleFile->title = $filePrefix . $file->getClientOriginalName();
                 $articleFile->file_path = $filePath;
                 $fileEXT = UploadFileValidate::checkExtension($file->getClientOriginalExtension());
                 $articleFile->type = FILE_EXT_INDEX[$fileEXT];
@@ -54,13 +54,17 @@ class ArticleController extends Controller
             if ($article->article_file()->saveMany($arrNew)) {
                 $mailService = new MailController();
                 $coordinator = $article->faculty_semester->faculty_semester_coordinator[0]->coordinator;
-                $mailService->sendGradingEmail(
-                    $coordinator->email, $coordinator,
-                    $article->faculty_semester->faculty_id,
-                    $article->faculty_semester->semester_id
-                );
                 DB::commit();
-                return back()->with($this->responseBladeMessage("Upload successfully!"));
+                try {
+                    $mailService->sendGradingEmail(
+                        $coordinator->email, $coordinator,
+                        $article->faculty_semester->faculty_id,
+                        $article->faculty_semester->semester_id
+                    );
+                    return back()->with($this->responseBladeMessage("Upload successfully!"));
+                } catch (Exception $exception) {
+                    return back()->with($this->responseBladeMessage("Upload successfully! But cannot inform the coordinator in-charge through email."));
+                }
             }
         }
         DB::rollback();

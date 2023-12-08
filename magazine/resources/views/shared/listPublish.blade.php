@@ -84,7 +84,6 @@
         @media only screen and (max-width: 580px) {
             .form-searching {
                 max-width: none;
-                padding-left: calc(40px + 1.5rem) !important;
                 padding-right: 0.5rem !important;
             }
         }

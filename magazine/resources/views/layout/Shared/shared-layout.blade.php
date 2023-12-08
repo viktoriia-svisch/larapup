@@ -36,27 +36,30 @@
                     </a>
                 @endforeach
             </section>
+            @php
+                use Illuminate\Support\Facades\Auth;
+                if (Auth::guard(ADMIN_GUARD)->check())
+                {
+                $user = Auth::guard(ADMIN_GUARD)->user();
+                }elseif(Auth::guard(COORDINATOR_GUARD)->check())
+                {
+                $user = Auth::guard(COORDINATOR_GUARD)->user();
+                }elseif (Auth::guard(STUDENT_GUARD)->check())
+                {
+                $user = Auth::guard(STUDENT_GUARD)->user();
+                }else{
+                $user = Auth::guard(GUEST_GUARD)->user();
+                }
+            @endphp
             <section class="return-dashboard">
                 <div class="d-flex justify-content-center align-items-center">
-                    <img src="" alt="Avatar" class="img-fluid"
+                    <img alt="Avatar" class="img-fluid rounded-circle"
+                         @if (!$user->avatar_path)
+                         src="http://getdrawings.com/images/anime-girls-drawing-34.jpg"
+                         @endif
                          style="object-fit: cover; object-position: center; width: 60px; height: 60px; overflow: hidden;">
                 </div>
                 <div class="user-name text-white d-flex align-items-center">
-                    @php
-                        use Illuminate\Support\Facades\Auth;
-                        if (Auth::guard(ADMIN_GUARD)->check())
-                        {
-                        $user = Auth::guard(ADMIN_GUARD)->user();
-                        }elseif(Auth::guard(COORDINATOR_GUARD)->check())
-                        {
-                        $user = Auth::guard(COORDINATOR_GUARD)->user();
-                        }elseif (Auth::guard(STUDENT_GUARD)->check())
-                        {
-                        $user = Auth::guard(STUDENT_GUARD)->user();
-                        }else{
-                        $user = Auth::guard(GUEST_GUARD)->user();
-                        }
-                    @endphp
                     {{$user->first_name . ' ' . $user->last_name}}
                 </div>
                 @if (Illuminate\Support\Facades\Auth::guard(GUEST_GUARD)->check())
@@ -177,7 +180,7 @@
             color: white;
             user-select: none;
         }
-        .bot-span:hover{
+        .bot-span:hover {
             color: white;
         }
         .breadcrumb-section.active {

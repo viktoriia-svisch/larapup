@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers\Admin\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
@@ -31,15 +33,15 @@ class AuthController extends Controller
     {
         return Auth::guard(ADMIN_GUARD);
     }
-    public function username()
-    {
-        return 'email';
-    }
     protected function sendFailedLoginResponse(Request $request)
     {
         throw ValidationException::withMessages([
-            $this->username() => [trans('auth.failed')],
+            $this->username() => [__('auth.failed')],
         ]);
+    }
+    public function username()
+    {
+        return 'email';
     }
     protected function validateLogin(Request $request)
     {
