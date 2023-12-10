@@ -151,21 +151,17 @@ class SemesterController extends FacultySemesterBaseController
         $outOfDate = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
             ->whereColumn('articles.created_at', '>', 'faculty_semesters.first_deadline')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
-            ->count();
+            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)->count();
         $inTime = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
             ->whereColumn('articles.created_at', '<=', 'faculty_semesters.first_deadline')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
-            ->count();
+            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)->count();
         $maxgrade = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
-            ->max('grade');
+            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)->max('grade');
         $mingrade = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
-            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)
-            ->min('grade');
+            ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)->min('grade');
         return view('admin.Semester.static-information')
             ->with([
                 'currentSemester' => $viewingSemester,
