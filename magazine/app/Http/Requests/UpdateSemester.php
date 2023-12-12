@@ -12,8 +12,10 @@ class UpdateSemester extends FormRequest
     public function rules()
     {
         return [
-            'start_date' => ['date',new ValidateSemesterDate($this),'bail'],
-            'end_date'=>['after:start_date', 'date', new ValidateSemesterDate($this),'bail']
+            'name' => "max:50|min:3",
+            'description' => "max:500|min:3",
+            'start_date' => ['date', new ValidateSemesterDate($this), 'bail'],
+            'end_date' => ['after:start_date', 'date', new ValidateSemesterDate($this), 'bail']
         ];
     }
 }

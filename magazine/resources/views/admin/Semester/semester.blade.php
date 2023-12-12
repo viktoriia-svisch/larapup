@@ -28,7 +28,7 @@
                 </a>
             </div>
         </div>
-        <hr> 
+        <hr>
         <form method="get" action="{{route('admin.semester')}}" class="col-12 row m-0">
             {{csrf_field()}}
             <div class="form-group col">
@@ -75,10 +75,12 @@
                             </div>
                         </div>
                         <div class="col-auto d-flex align-items-center">
-                            <a class="btn btn-icon btn-default" href="{{route('admin.updateSemester', [$activeSemester->id])}}">
+                            <a class="btn btn-icon-only btn-default"
+                               href="{{route('admin.updateSemester', [$activeSemester->id])}}">
                                 <i class="fas fa-cog top-0"></i>
                             </a>
-                            <a class="btn btn-icon btn-success" href="{{route('admin.infoSemester', [$activeSemester->id])}}">
+                            <a class="btn btn-icon-only btn-success"
+                               href="{{route('admin.semesterDetail', [$activeSemester->id])}}">
                                 <i class="fas fa-info top-0"></i>
                             </a>
                         </div>
@@ -111,10 +113,12 @@
                             </div>
                         </div>
                         <div class="col-auto d-flex align-items-center">
-                            <a class="btn btn-icon btn-default" href="{{route('admin.updateSemester', [$semester->id])}}">
+                            <a class="btn btn-icon-only btn-default"
+                               href="{{route('admin.updateSemester', [$semester->id])}}">
                                 <i class="fas fa-cog top-0"></i>
                             </a>
-                            <a class="btn btn-icon btn-success" href="{{route('admin.infoSemester', [$semester->id])}}">
+                            <a class="btn btn-icon-only btn-success"
+                               href="{{route('admin.semesterDetail', [$semester->id])}}">
                                 <i class="fas fa-info top-0"></i>
                             </a>
                         </div>
@@ -148,10 +152,11 @@
                             </div>
                         </div>
                         <div class="col-auto d-flex align-items-center">
-                            <a class="btn btn-icon btn-default" href="{{route('admin.updateSemester', [$semester->id])}}">
+                            <a class="btn btn-icon btn-default"
+                               href="{{route('admin.updateSemester', [$semester->id])}}">
                                 <i class="fas fa-cog top-0"></i>
                             </a>
-                            <a class="btn btn-icon btn-success" href="{{route('admin.infoSemester', [$semester->id])}}">
+                            <a class="btn btn-icon btn-success" href="{{route('admin.semesterDetail', [$semester->id])}}">
                                 <i class="fas fa-info top-0"></i>
                             </a>
                         </div>

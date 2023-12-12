@@ -55,45 +55,7 @@
         </div>
     </form>
     <div class="col-12">
-        @if (\Session::has('action_response'))
-            @if (\Session::get('action_response')['status_ok'])
-                <div class="col-md-6 col-12 m-auto">
-                    <div class="card bg-success text-white">
-                        <div class="card-body" style="padding: 1rem;">
-                            {{\Session::get('action_response')['status_message']}}
-                        </div>
-                    </div>
-                </div>
-            @else
-                <div class="col-md-6 col-12 m-auto">
-                    <div class="card bg-danger text-white">
-                        <div class="card-body" style="padding: 1rem;">
-                            {{\Session::get('action_response')['status_message']}}
-                        </div>
-                    </div>
-                </div>
-            @endif
-            <br>
-        @endif
-        <br>
-        @if($errors->has('name'))
-            <div class="col-md-6 col-12 m-auto">
-                <div class="card bg-danger text-white">
-                    <div class="card-body" style="padding: 1rem;">
-                        {{$errors->first('name')}}
-                    </div>
-                </div>
-            </div>
-        @endif
-        @if($errors->has('faculty_name'))
-            <div class="col-md-6 col-12 m-auto">
-                <div class="card bg-danger text-white">
-                    <div class="card-body" style="padding: 1rem;">
-                        {{$errors->first('faculty_name')}}
-                    </div>
-                </div>
-            </div>
-        @endif
+        @include('layout.response.errors')
     </div>
     @if (count($faculties) == 0)
         <h2 class="text-center text-muted">No record found</h2>

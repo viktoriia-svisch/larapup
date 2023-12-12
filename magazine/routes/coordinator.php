@@ -7,9 +7,6 @@ Route::group([
     'middleware' => ['auth:'.COORDINATOR_GUARD ],          
 ], function ($router) {
     Route::get('dashboard', 'CoordinatorController@dashboard')->name('coordinator.dashboard');
-    Route::get('cor','CoordinatorController@index');
-    Route::get('get/{id}','CoordinatorController@show');
-    Route::post('new-coordinator','CoordinatorController@store');
     Route::get('semester', 'SemesterController@listSemester')->name('coordinator.manageSemester');
     Route::get('semester/{semester_id}', 'SemesterController@semesterFaculty')->name('coordinator.chooseSemesterFaculty');
     Route::get('coordinatorSemesterFaculty/addStudent/{facultysemester}', 'CoordinatorController@addStudentFaculty')->name('coordinator.addStudentFaculty');

@@ -1,11 +1,14 @@
 <?php
 namespace App\Http\Controllers\Admin;
+use App\Helpers\DateTimeHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
 use App\Http\Requests\CreateSemester;
 use App\Http\Requests\UpdateSemester;
+use App\Models\FacultySemester;
 use App\Models\Semester;
 use Exception;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -24,7 +27,7 @@ class SemesterController extends FacultySemesterBaseController
             $semestersActive = Semester::with(['faculty_semester'])
                 ->where('start_date', '<=', Carbon::now())
                 ->where('end_date', '>=', Carbon::now())
-                ->where(function ($query) use ($searchTerms) {
+                ->where(function (Builder $query) use ($searchTerms) {
                     $query->where('name', 'like', '%' . $searchTerms . '%')
                         ->orWhere('start_date', 'like', '%' . $searchTerms . '%')
                         ->orWhere('end_date', 'like', '%' . $searchTerms . '%')
@@ -33,7 +36,7 @@ class SemesterController extends FacultySemesterBaseController
                 ->first();
             $semestersFuture = Semester::with(['faculty_semester'])
                 ->where('start_date', '>=', Carbon::now())
-                ->where(function ($query) use ($searchTerms) {
+                ->where(function (Builder $query) use ($searchTerms) {
                     $query->where('name', 'like', '%' . $searchTerms . '%')
                         ->orWhere('start_date', 'like', '%' . $searchTerms . '%')
                         ->orWhere('end_date', 'like', '%' . $searchTerms . '%')
@@ -43,7 +46,7 @@ class SemesterController extends FacultySemesterBaseController
                 ->get();
             $semestersPast = Semester::with(['faculty_semester'])
                 ->where('end_date', '<=', Carbon::now())
-                ->where(function ($query) use ($searchTerms) {
+                ->where(function (Builder $query) use ($searchTerms) {
                     $query->where('name', 'like', '%' . $searchTerms . '%')
                         ->orWhere('start_date', 'like', '%' . $searchTerms . '%')
                         ->orWhere('end_date', 'like', '%' . $searchTerms . '%')
@@ -72,28 +75,31 @@ class SemesterController extends FacultySemesterBaseController
             'searching' => $searching
         ]);
     }
-    public function semesterSearch(Request $request)
+    public function semester_faculties(Request $request, $semester_id)
     {
-        $searchTerms = $request->get('search_semester_input');
-        if ($searchTerms) {
-            $futureSemester = Semester::with('faculty_semester')
-                ->where('name', 'LIKE', '%' . $searchTerms . '%')
-                ->paginate(PER_PAGE);
-            return view('admin.faculty.choose-semester', [
-                'futureSemester' => $futureSemester,
-                'searching' => $searchTerms
-            ]);
+        $search = $request->get("search") ?? null;
+        $viewingSemester = $this->retrieveCurrentSemester(null, $semester_id);
+        if (!$viewingSemester) {
+            return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
         }
-        $futureSemester = Semester::with('faculty_semester')
-            ->paginate(PER_PAGE);
-        return view('admin.faculty.choose-semester', [
-            'futureSemester' => $futureSemester,
-            'searching' => false
-        ]);
+        $faculties = FacultySemester::with("semester")
+            ->where("semester_id", $semester_id);
+        if ($search) {
+            $faculties = $faculties->where(function (Builder $builder) use ($search) {
+                $builder->where("name", "like", "%$search%")
+                    ->where("description", "like", "%$search%");
+            });
+        }
+        return view('admin.Semester.semester-faculties')
+            ->with([
+                'currentSemester' => $viewingSemester,
+                "faculties" => $faculties->paginate(PER_PAGE),
+                'search' => $search
+            ]);
     }
     public function createSemester()
     {
-        $lastSem = Semester::orderBy('end_date', 'desc')->first();
+        $lastSem = Semester::with("faculty_semester")->orderBy('end_date', 'desc')->first();
         return view('admin.Semester.create-semester', [
             'lastSemester' => $lastSem
         ]);
@@ -116,22 +122,21 @@ class SemesterController extends FacultySemesterBaseController
     }
     public function createSemesterFaculty()
     {
-        $lastSem = Semester::orderBy('end_date', 'desc')->first();
+        $lastSem = Semester::with("faculty_semester")->orderBy('end_date', 'desc')->first();
         return view('admin.Semester.create-semester', [
             'lastSemester' => $lastSem
         ]);
     }
     public function createSemesterFaculty_post()
     {
-        $lastSem = Semester::orderBy('end_date', 'desc')->first();
+        $lastSem = Semester::with("faculty_semester")->orderBy('end_date', 'desc')->first();
         return view('admin.Semester.create-semester', [
             'lastSemester' => $lastSem
         ]);
     }
-    public function chooseSemester($semester_id)
+    public function semesterStatistic($semester_id)
     {
-        $viewingSemester = Semester::with("faculty_semester")
-            ->where("id", $semester_id)->first();
+        $viewingSemester = $this->retrieveCurrentSemester(null, $semester_id);
         if (!$viewingSemester) {
             return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
         }
@@ -162,7 +167,7 @@ class SemesterController extends FacultySemesterBaseController
         $mingrade = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
             ->where('faculty_semesters.semester_id', '=', $viewingSemester->id)->min('grade');
-        return view('admin.Semester.static-information')
+        return view('admin.Semester.semester-statistic')
             ->with([
                 'currentSemester' => $viewingSemester,
                 'info' => $articleInSemester,
@@ -176,8 +181,7 @@ class SemesterController extends FacultySemesterBaseController
     }
     public function downloadBackups($semester_id)
     {
-        $viewingSemester = Semester::with("faculty_semester")
-            ->where("id", $semester_id)->first();
+        $viewingSemester = $this->retrieveCurrentSemester(null, $semester_id);
         if (!$viewingSemester) {
             return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
         }
@@ -207,30 +211,58 @@ class SemesterController extends FacultySemesterBaseController
     }
     public function updateSemester($semester_id)
     {
-        $viewSemester = Semester::with("faculty_semester")
-            ->where("id", $semester_id)->first();
-        if (!$viewSemester) {
+        $viewingSemester = $this->retrieveCurrentSemester(null, $semester_id);
+        if (!$viewingSemester) {
             return redirect()->back()->with($this->responseBladeMessage("Unable to find the semester", false));
         }
-        return view('admin.Semester.update-semester')
+        return view('admin.Semester.semester-settings')
             ->with([
-                'currentSemester' => $viewSemester
+                'currentSemester' => $viewingSemester
             ]);
     }
     public function updateSemesterPost(UpdateSemester $request, $id)
     {
-        $Semester = Semester::with("faculty_semester")->find($id);
-        if (!$Semester) return redirect()
+        $viewingSemester = $this->retrieveCurrentSemester(null, $id);
+        if (DateTimeHelper::isNowPassedDate($viewingSemester->start_date)) {
+            return back()
+                ->withInput()
+                ->with($this->responseBladeMessage("The semester was already activated. Changes cannot be applied", false));
+        }
+        if (!$viewingSemester) return redirect()
             ->back()
             ->withInput()
             ->with($this->responseBladeMessage("Unable to find the correct semester!", false));
-        $Semester->name = $request->get('name') ?? $Semester->name;
-        $Semester->description = $request->get('description') ?? $Semester->description;
-        $Semester->start_date = $request->get('start_date') ?? $Semester->start_date;
-        $Semester->end_date = $request->get('end_date') ?? $Semester->end_date;
-        if ($Semester->save()) {
+        if (!DateTimeHelper::isNowPassedDate($viewingSemester->start_date)) {
+            $viewingSemester->name = $request->get('name') ?? $viewingSemester->name;
+            $viewingSemester->start_date = $request->get('start_date') ?? $viewingSemester->start_date;
+            $viewingSemester->end_date = $request->get('end_date') ?? $viewingSemester->end_date;
+        }
+        if (!DateTimeHelper::isNowPassedDate($viewingSemester->end_date)) {
+            $viewingSemester->description = $request->get('description') ?? $viewingSemester->description;
+        }
+        if ($viewingSemester->save()) {
             return back()->with($this->responseBladeMessage("Update successfully!"));
         }
         return back()->with($this->responseBladeMessage("Update failed!", false));
+    }
+    public function deleteSemester($semester_id)
+    {
+        $viewingSemester = $this->retrieveCurrentSemester(null, $semester_id);
+        if (DateTimeHelper::isNowPassedDate($viewingSemester->start_date)) {
+            return back()
+                ->withInput()
+                ->with($this->responseBladeMessage("The semester was already activated. Changes cannot be applied", false));
+        }
+        if (!$viewingSemester) return redirect()
+            ->back()
+            ->withInput()
+            ->with($this->responseBladeMessage("Unable to find the correct semester!", false));
+        try {
+            if ($viewingSemester->delete()) {
+                return redirect()->route("admin.semester")->with($this->responseBladeMessage("Deleted the semester."));
+            }
+        } catch (Exception $e) {
+        }
+        return redirect()->back()->with($this->responseBladeMessage("Unable to delete this semester, please try again in a moment.", false));
     }
 }

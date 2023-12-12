@@ -2,11 +2,12 @@
 namespace App\Http\Requests;
 use App\Rules\CheckDate;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 class CreateSemester extends FormRequest
 {
     public function authorize()
     {
-        return true;
+        return Auth::guard(COORDINATOR_GUARD)->check() || Auth::guard(ADMIN_GUARD)->check();
     }
     public function rules()
     {

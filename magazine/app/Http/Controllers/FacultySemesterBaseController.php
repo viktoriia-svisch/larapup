@@ -6,6 +6,7 @@ use App\Models\CommentCoordinator;
 use App\Models\CommentStudent;
 use App\Models\Coordinator;
 use App\Models\FacultySemester;
+use App\Models\Semester;
 use App\Models\Student;
 use Carbon\Carbon;
 use Exception;
@@ -60,6 +61,32 @@ class FacultySemesterBaseController extends Controller
             });
         }
         return $faculty->first();
+    }
+    public function retrieveCurrentSemester($search = null, $idSemester = null, $retrieveOne = true)
+    {
+        $semestersActive = Semester::with(['faculty_semester']);
+        if ($idSemester != null) {
+            $semestersActive = $semestersActive->find($idSemester);
+        } else {
+            if ($search) {
+                $semestersActive = $semestersActive->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('start_date', 'like', '%' . $search . '%')
+                        ->orWhere('end_date', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%');
+                });
+            } else {
+                $semestersActive = $semestersActive
+                    ->where('start_date', '<=', Carbon::now())
+                    ->where('end_date', '>=', Carbon::now());
+            }
+            if ($retrieveOne) {
+                $semestersActive = $semestersActive->first();
+            } else {
+                $semestersActive = $semestersActive->get();
+            }
+        }
+        return $semestersActive;
     }
     public function retrieveFacultySemesterMembers(Request $request, $faculty_id, $semester_id)
     {
