@@ -12,7 +12,7 @@
         <h1 class="text-primary">Please choose the semester first</h1>
         <p class="text-muted">After choosing semester, you will then input information of new faculty</p>
         <hr>
-        <form method="get" action="{{route('admin.semesterSearch')}}" class="col-12 row m-0">
+        <form method="get" action="{{route('admin.chooseSemester')}}" class="col-12 row m-0">
             {{csrf_field()}}
             <div class="form-group col">
                 <input type="text" class="form-control form-control-alternative" id="search_semester_input"

@@ -7,11 +7,12 @@ class UpdateCoordinatorByAdmin extends FormRequest
 {
     public function authorize()
     {
-        return Auth::guard(STUDENT_GUARD)->check() || Auth::guard(ADMIN_GUARD)->check();
+        return Auth::guard(COORDINATOR_GUARD)->check() || Auth::guard(ADMIN_GUARD)->check();
     }
     public function rules()
     {
         return [
+            'email' => ['required', 'email', 'unique:coordinators,email', 'bail'],
             'first_name' => 'required|min:2|max:40|bail',
             'last_name' => 'required|min:2|max:80|bail',
             'gender' => 'required|integer',
