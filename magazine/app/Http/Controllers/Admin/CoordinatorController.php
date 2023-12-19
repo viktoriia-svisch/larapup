@@ -167,7 +167,6 @@ class CoordinatorController extends Controller
         $coordinator->first_name = $request->get('first_name') ?? $coordinator->first_name;
         $coordinator->last_name = $request->get('last_name') ?? $coordinator->last_name;
         $coordinator->dateOfBirth = $request->get('dateOfBirth') ?? $coordinator->dateOfBirth;
-        $coordinator->email = $request->get('email') ?? $coordinator->email;
         $coordinator->gender = $request->get('gender') ?? $coordinator->gender;
         $coordinator->status = $request->get('status') ?? $coordinator->status;
         $coordinator->type = $request->get('type') ?? $coordinator->type;
