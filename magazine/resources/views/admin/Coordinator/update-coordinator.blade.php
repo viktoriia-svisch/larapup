@@ -80,8 +80,7 @@
                     </div>
                 </div>
                 <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
-                    <h4 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw; margin-left: -1vw;">Account
-                        Type</h4>
+                    <h4 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw; margin-left: -1vw;">Account Type</h4>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
                         <input name="type" value="{{COORDINATOR_LEVEL['MASTER']}}" class="custom-control-input"
                                id="typeMaster"
@@ -96,18 +95,17 @@
                     </div>
                 </div>
                 <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
-                    <h4 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw; margin-left: -1vw;">Account
-                        Status</h4>
+                    <h4 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw; margin-left: -1vw;">Account Status</h4>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
                         <input name="status" value="{{COORDINATOR_STATUS['ACTIVE']}}" class="custom-control-input"
-                               id="statusActive" @if ($coordinator->status == COORDINATOR_STATUS['ACTIVE'])checked
-                               @endif type="radio">
+                               id="statusActive"
+                               type="radio">
                         <label class="custom-control-label" for="statusActive">Active</label>
                     </div>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
                         <input name="status" value="{{COORDINATOR_STATUS['DEACTIVATE']}}" class="custom-control-input"
-                               id="statusDeactivate" type="radio"
-                               @if ($coordinator->status == COORDINATOR_STATUS['DEACTIVATE'])checked @endif>
+                               id="statusDeactivate"
+                               type="radio">
                         <label class="custom-control-label" for="statusDeactivate">Deactivate</label>
                     </div>
                 </div>

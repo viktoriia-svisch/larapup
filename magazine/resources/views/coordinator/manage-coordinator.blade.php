@@ -86,6 +86,8 @@
         </div>
     </div>
 @endsection
+@section("coordinator-content")
+@endsection
 @push("custom-js")
     <script>
     </script>
