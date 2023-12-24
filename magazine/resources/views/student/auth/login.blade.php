@@ -31,15 +31,9 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    @if($errors->has('email'))
-                        <p class="col-12 text-red">
-                            {{$errors->first('email')}}
-                        </p>
-                    @elseif($errors->has('password'))
-                        <p class="col-12 text-red">
-                            {{$errors->first('password')}}
-                        </p>
-                    @endif
+                    <div class="col-12">
+                        @include('layout.response.errors')
+                    </div>
                     <div class="col-sm-4">
                         <button type="submit" class="btn btn-block btn-default">Login</button>
                     </div>

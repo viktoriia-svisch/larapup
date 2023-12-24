@@ -1,40 +1,44 @@
 <?php
 use Illuminate\Support\Facades\Route;
-Route::get('login', 'Auth\AuthController@showLoginForm')->name('coordinator.login')->middleware('guest:'.COORDINATOR_GUARD);;
-Route::post('login', 'Auth\AuthController@login')->name('coordinator.loginPost')->middleware('guest:'.COORDINATOR_GUARD);;
+Route::get('login', 'Auth\AuthController@showLoginForm')->name('coordinator.login')->middleware('guest:' . COORDINATOR_GUARD);;
+Route::post('login', 'Auth\AuthController@login')->name('coordinator.loginPost')->middleware('guest:' . COORDINATOR_GUARD);;
 Route::any('logout', 'Auth\AuthController@loggedOut')->name('coordinator.logout');
 Route::group([
-    'middleware' => ['auth:'.COORDINATOR_GUARD ],          
+    'middleware' => ['auth:' . COORDINATOR_GUARD],          
 ], function ($router) {
     Route::get('dashboard', 'CoordinatorController@dashboard')->name('coordinator.dashboard');
     Route::get('semester', 'SemesterController@listSemester')->name('coordinator.manageSemester');
-    Route::get('semester/{semester_id}', 'SemesterController@semesterFaculty')->name('coordinator.chooseSemesterFaculty');
+    Route::get('semester/{semester_id}', 'SemesterController@semesterDetail')->name('coordinator.semester.detail');
     Route::get('coordinatorSemesterFaculty/addStudent/{facultysemester}', 'CoordinatorController@addStudentFaculty')->name('coordinator.addStudentFaculty');
     Route::post('coordinatorSemesterFaculty/addStudent/{facultysemester}/{student}', 'CoordinatorController@addStudentFaculty_post')->name('coordinator.addStudentFaculty_post');
-    Route::post('new-faculty','CoordinatorController@storeFaculty');
+    Route::post('new-faculty', 'CoordinatorController@storeFaculty');
     Route::get('coordinator', 'CoordinatorController@Coordinator')->name('coordinator.coordinator');
     Route::get('faculty', 'FacultyController@faculty')->name('coordinator.faculty');
     Route::get('manage/{id}', 'CoordinatorController@updateCoordinator')->name('coordinator.manageAccount');
     Route::post('manage/{id}', 'CoordinatorController@updateCoordinatorPost')->name('coordinator.manageAccount_post');
-    Route::get('faculty/{faculty_id}/{semester_id}/dashboard','FacultyController@facultyDetailDashboard')
+    Route::get('faculty/{faculty_id}/{semester_id}/dashboard', 'FacultyController@facultyDetailDashboard')
         ->name('coordinator.faculty.dashboard');
-    Route::get('faculty/{faculty_id}/{semester_id}/backups','FacultyController@facultyBackupsDownload')
+    Route::get('faculty/{faculty_id}/{semester_id}/backups', 'FacultyController@facultyBackupsDownload')
         ->name('coordinator.faculty.backupsDownload');
-    Route::get('faculty/{faculty_id}/{semester_id}/members','FacultyController@facultyDetailMember')
+    Route::get('faculty/{faculty_id}/{semester_id}/members', 'FacultyController@facultyDetailMember')
         ->name('coordinator.faculty.students');
-    Route::get('faculty/{faculty_id}/{semester_id}/articles','FacultyController@facultyDetailListArticle')
+    Route::group(['middleware' => ['coordinator.master']], function ($route) {
+        Route::get('faculty/{faculty_id}/{semester_id}/members/manage', 'FacultyController@facultyDetailMember_manage')
+            ->name('coordinator.faculty.students.manage');
+    });
+    Route::get('faculty/{faculty_id}/{semester_id}/articles', 'FacultyController@facultyDetailListArticle')
         ->name('coordinator.faculty.listArticle');
-    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_file_id}/download','ArticleController@articleFileDownload')
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_file_id}/download', 'ArticleController@articleFileDownload')
         ->name('coordinator.faculty.listArticle.download');
-    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}/discussion','ArticleController@facultyArticleDiscussion')
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}/discussion', 'ArticleController@facultyArticleDiscussion')
         ->name('coordinator.faculty.article');
     Route::post('faculty/{faculty_id}/{semester_id}/article/{article_id}/discussion', 'ArticleController@commentPost')
         ->name('coordinator.faculty.comment_post');
-    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}/publish','FacultyController@facultyDetailArticlePublish')
+    Route::get('faculty/{faculty_id}/{semester_id}/articles/{article_id}/publish', 'FacultyController@facultyDetailArticlePublish')
         ->name('coordinator.faculty.article.publish');
-    Route::post('faculty/{faculty_id}/{semester_id}/articles/{article_id}/publish','FacultyController@facultyDetailArticlePublish_Post')
+    Route::post('faculty/{faculty_id}/{semester_id}/articles/{article_id}/publish', 'FacultyController@facultyDetailArticlePublish_Post')
         ->name('coordinator.faculty.article.publishPost');
-    Route::get('faculty/{faculty_id}/{semester_id}/settings','FacultyController@facultyDetailSettings')
+    Route::get('faculty/{faculty_id}/{semester_id}/settings', 'FacultyController@facultyDetailSettings')
         ->name('coordinator.faculty.settings');
     Route::post('faculty/{faculty_id}/{semester_id}/settings', 'FacultyController@facultyDetailSettingPost')
         ->name('coordinator.faculty.settingPost');
