@@ -28,6 +28,9 @@
         </div>
     </form>
     <hr>
+    <div class="col-12">
+        @include('layout.response.errors')
+    </div>
     <div class="row m-0">
         <div class="col-12 col-md-6">
             <h2>
@@ -55,7 +58,8 @@
                                 </div>
                             </th>
                             <td class="col-auto">
-                                <a href="" class="btn btn-icon btn-danger">
+                                <a href="{{route("coordinator.faculty.students.manage.remove", [$facultySemester->faculty_id, $facultySemester->semester_id, $student->id])}}"
+                                   class="btn btn-icon btn-danger">
                                     <i class="fas fa-trash"></i>
                                     Remove
                                 </a>
@@ -93,7 +97,8 @@
                                 </div>
                             </th>
                             <td class="col-auto">
-                                <a href="" class="btn btn-icon btn-success">
+                                <a href="{{route("coordinator.faculty.students.manage.add", [$facultySemester->faculty_id, $facultySemester->semester_id, $student->id])}}"
+                                   class="btn btn-icon btn-success">
                                     <i class="fas fa-plus"></i>
                                     Add
                                 </a>

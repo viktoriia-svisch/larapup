@@ -111,17 +111,10 @@
                         <label class="custom-control-label" for="statusDeactivate">Deactivate</label>
                     </div>
                 </div>
-                @if($errors->has('email'))
-                    <div class="card bg-danger text-white rounded-0">
-                        <div class="card-body p-1 rounded-0">
-                            {{$errors->first('email')}}
-                        </div>
-                    </div>
-                @endif
                 <div style="margin-top: 2vw">
                     <label style="color: #0b1011">Email</label>
-                    <input class="form-control" type="text" id="email" name="email" placeholder="{{$coordinator->email}}"
-                           value="{{$coordinator->email}}">
+                    <input class="form-control" type="text" placeholder="{{$coordinator->email}}"
+                           value="{{$coordinator->email}}" readonly>
                 </div>
                 <div style="margin-top: 2vw; margin-bottom: 3vw">
                     <label style="color: #0b1011">Password</label>
