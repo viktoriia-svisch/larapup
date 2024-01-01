@@ -212,7 +212,7 @@ class FacultyController extends FacultySemesterBaseController
             "members", $arrData,
             COORDINATOR_GUARD);
     }
-    public function facultyDetailMember_manage_add(Request $request, $faculty_id, $semester_id, $student_id)
+    public function facultyDetailMember_manage_add($faculty_id, $semester_id, $student_id)
     {
         $facultySemester = FacultySemester::with("faculty")
             ->where("faculty_id", $faculty_id)
@@ -234,7 +234,7 @@ class FacultyController extends FacultySemesterBaseController
         return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
             ->with($this->responseBladeMessage("Unable to add this student, please re-check", false));
     }
-    public function facultyDetailMember_manage_remove(Request $request, $faculty_id, $semester_id, $student_id)
+    public function facultyDetailMember_manage_remove($faculty_id, $semester_id, $student_id)
     {
         $facultySemester = FacultySemester::with("faculty")
             ->where("faculty_id", $faculty_id)
