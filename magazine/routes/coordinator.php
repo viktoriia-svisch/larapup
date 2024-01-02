@@ -25,10 +25,6 @@ Route::group([
     Route::group(['middleware' => ['coordinator.master']], function ($route) {
         Route::get('faculty/{faculty_id}/{semester_id}/members/manage', 'FacultyController@facultyDetailMember_manage')
             ->name('coordinator.faculty.students.manage');
-        Route::get('faculty/{faculty_id}/{semester_id}/members/manage/{student_id}/add', 'FacultyController@facultyDetailMember_manage_add')
-            ->name('coordinator.faculty.students.manage.add');
-        Route::get('faculty/{faculty_id}/{semester_id}/members/manage/{student_id}/remove', 'FacultyController@facultyDetailMember_manage_remove')
-            ->name('coordinator.faculty.students.manage.remove');
     });
     Route::get('faculty/{faculty_id}/{semester_id}/articles', 'FacultyController@facultyDetailListArticle')
         ->name('coordinator.faculty.listArticle');

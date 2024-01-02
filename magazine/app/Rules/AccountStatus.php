@@ -27,13 +27,10 @@ class AccountStatus implements Rule
                 ->where('email', $value)->first();
         else
             return false;
-        if ($user){
-            if ($user->status == ACCOUNT_DEACTIVATED) {
-                return false;
-            }
-            return true;
+        if ($user->status == ACCOUNT_DEACTIVATED) {
+            return false;
         }
-        return false;
+        return true;
     }
     public function message()
     {

@@ -30,10 +30,17 @@
                         <label class="custom-control-label" for="statusOngoing">Deactivate</label>
                     </div>
                 </div>
+                @if($errors->has('email'))
+                    <div class="card bg-danger text-white rounded-0">
+                        <div class="card-body p-1 rounded-0">
+                            {{$errors->first('email')}}
+                        </div>
+                    </div>
+                @endif
                 <div style="margin-top: 2vw">
                     <label style="color: #0b1011">Email</label>
-                    <input class="form-control" type="text" placeholder="{{$guest->email}}"
-                           value="{{$guest->email}}" readonly>
+                    <input class="form-control" type="text" name="email" id="email" placeholder="{{$guest->email}}"
+                           value="{{$guest->email}}">
                 </div>
                 <hr>
                 <button class="btn btn-danger col-sm-12" type="submit">Activate Account</button>

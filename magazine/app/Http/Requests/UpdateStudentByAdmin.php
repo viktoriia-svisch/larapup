@@ -12,6 +12,7 @@ class UpdateStudentByAdmin extends FormRequest
     public function rules()
     {
         return [
+            'email' => ['required', 'email', 'unique:students,email', 'bail'],
             'first_name' => 'required|min:2|max:40|bail',
             'last_name' => 'required|min:2|max:80|bail',
             'gender' => 'required|integer',
