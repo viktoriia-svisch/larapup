@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Guest\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\FacultySemester;
 use App\Rules\AccountStatus;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -11,13 +12,16 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     use AuthenticatesUsers;
-    protected $redirectTo = '/guest/dashboard';
+    protected $redirectTo = '/';
     public function showLoginForm()
     {
         return view('guest.auth.login');
     }
     public function redirectTo()
     {
+        $semesterFaculty = FacultySemester::with('faculty')
+            ->where("faculty_id", Auth::guard(GUEST_GUARD)->user()->faculty_id)->first();
+        $this->redirectTo = route("shared.listPublishes", [$semesterFaculty->faculty_id, $semesterFaculty->semester_id]);
         return $this->redirectTo;
     }
     protected function loggedOut(Request $request)
