@@ -21,35 +21,58 @@ class SemesterController extends FacultySemesterBaseController
     public function semester(Request $request)
     {
         $searchTerms = $request->get('search_semester_input');
-        $semestersActive = Semester::with(['faculty_semester'])
-            ->where('start_date', '<=', Carbon::now())
-            ->where('end_date', '>=', Carbon::now())
-            ->first();
-        $semestersFuture = Semester::with(['faculty_semester'])
-            ->where('start_date', '>=', Carbon::now());
-        $semestersPast = Semester::with(['faculty_semester'])
-            ->where('end_date', '<=', Carbon::now());
+        $searching = false;
         if ($searchTerms) {
-            $semestersFuture = $semestersFuture
+            $searching = $searchTerms;
+            $semestersActive = Semester::with(['faculty_semester'])
+                ->where('start_date', '<=', Carbon::now())
+                ->where('end_date', '>=', Carbon::now())
                 ->where(function (Builder $query) use ($searchTerms) {
                     $query->where('name', 'like', '%' . $searchTerms . '%')
                         ->orWhere('start_date', 'like', '%' . $searchTerms . '%')
                         ->orWhere('end_date', 'like', '%' . $searchTerms . '%')
                         ->orWhere('description', 'like', '%' . $searchTerms . '%');
-                });
-            $semestersPast = $semestersPast
+                })
+                ->first();
+            $semestersFuture = Semester::with(['faculty_semester'])
+                ->where('start_date', '>=', Carbon::now())
                 ->where(function (Builder $query) use ($searchTerms) {
                     $query->where('name', 'like', '%' . $searchTerms . '%')
                         ->orWhere('start_date', 'like', '%' . $searchTerms . '%')
                         ->orWhere('end_date', 'like', '%' . $searchTerms . '%')
                         ->orWhere('description', 'like', '%' . $searchTerms . '%');
-                });
+                })
+                ->orderBy('start_date', 'desc')
+                ->get();
+            $semestersPast = Semester::with(['faculty_semester'])
+                ->where('end_date', '<=', Carbon::now())
+                ->where(function (Builder $query) use ($searchTerms) {
+                    $query->where('name', 'like', '%' . $searchTerms . '%')
+                        ->orWhere('start_date', 'like', '%' . $searchTerms . '%')
+                        ->orWhere('end_date', 'like', '%' . $searchTerms . '%')
+                        ->orWhere('description', 'like', '%' . $searchTerms . '%');
+                })
+                ->orderBy('start_date', 'desc')
+                ->get();
+        } else {
+            $semestersActive = Semester::with(['faculty_semester'])
+                ->where('start_date', '<=', Carbon::now())
+                ->where('end_date', '>=', Carbon::now())
+                ->first();
+            $semestersFuture = Semester::with(['faculty_semester'])
+                ->where('start_date', '>=', Carbon::now())
+                ->orderBy('start_date', 'desc')
+                ->get();
+            $semestersPast = Semester::with(['faculty_semester'])
+                ->where('end_date', '<=', Carbon::now())
+                ->orderBy('start_date', 'desc')
+                ->get();
         }
         return view('admin.Semester.semester', [
             'activeSemester' => $semestersActive,
-            'futureSemester' => $semestersFuture->orderBy('start_date', 'desc')->get(),
-            'pastSemester' => $semestersPast->orderBy('start_date', 'desc')->get(),
-            'searching' => $searchTerms
+            'futureSemester' => $semestersFuture,
+            'pastSemester' => $semestersPast,
+            'searching' => $searching
         ]);
     }
     public function semester_faculties(Request $request, $semester_id)

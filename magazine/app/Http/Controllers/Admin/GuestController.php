@@ -2,7 +2,6 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGuest;
-use App\Http\Requests\UpdateGuestByAdmin;
 use App\Models\Coordinator;
 use App\Models\Faculty;
 use App\Models\FacultySemesterCoordinator;
@@ -52,13 +51,12 @@ class GuestController extends Controller
             ]);
         return redirect()->back()->with($this->responseBladeMessage("Unable to find the Guest", false));
     }
-    public function updateGuestPost(UpdateGuestByAdmin $request, $id)
+    public function updateGuestPost(Request $request, $id)
     {
         $guest= Guest::with("faculty")->find($id);
         if (!$guest)
             return redirect()->back()->with($this->responseBladeMessage("Unable to find the guest", false));
         $guest->status = $request->get('status') ?? $guest->status;
-        $guest->email = $request->get('email') ?? $guest->email;
         if ($request->get('old_password')) {
             if (Hash::check($request->get('old_password'), $guest->password)) {
                 $guest->password = $request->get('new_password');

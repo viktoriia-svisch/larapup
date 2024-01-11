@@ -25,8 +25,6 @@ define('STUDENT_STATUS', [
     'LEFT' => 3,
     'STANDBY' => 0
 ]);
-define("ACCOUNT_DEACTIVATED", 0);
-define("ACCOUNT_ACTIVATED", 1);
 define('COORDINATOR_STATUS', [
     'ACTIVE' => 1,
     'DEACTIVATE' => 0,

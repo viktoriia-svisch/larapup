@@ -6,15 +6,12 @@ use App\Http\Requests\PublishRequest;
 use App\Http\Requests\UpdateFacultySemester;
 use App\Models\Article;
 use App\Models\FacultySemester;
-use App\Models\FacultySemesterStudent;
 use App\Models\Publish;
 use App\Models\PublishImage;
-use App\Models\Student;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -160,100 +157,8 @@ class FacultyController extends FacultySemesterBaseController
             $faculty_id,
             $semester_id,
             'coordinator.Faculty.faculty-detail-member',
-            "members", $arrData,
+            "member", $arrData,
             COORDINATOR_GUARD);
-    }
-    public function facultyDetailMember_manage(Request $request, $faculty_id, $semester_id)
-    {
-        $facultySemester = FacultySemester::with("faculty")
-            ->where("faculty_id", $faculty_id)
-            ->where("semester_id", $semester_id)
-            ->first();
-        if (!$facultySemester) {
-            return redirect()->back()
-                ->with($this->responseBladeMessage("Unable to access this faculty. The information does not exist"));
-        }
-        $search = $request->get("search") ?? null;
-        $studentAvailable = Student::with("article")
-            ->where("status", STUDENT_STATUS['ONGOING'])
-            ->whereDoesntHave("faculty_semester_student", function (Builder $builder) use ($facultySemester) {
-                $builder->where("faculty_semester_id", $facultySemester->id);
-            });
-        $studentUnAvailable = Student::with("article")
-            ->whereHas("faculty_semester_student", function (Builder $builder) use ($facultySemester) {
-                $builder->where("faculty_semester_id", $facultySemester->id);
-            });
-        if ($search) {
-            $studentAvailable = $studentAvailable
-                ->where(function (Builder $builder) use ($search) {
-                    $builder
-                        ->where("first_name", "like", "%$search%")
-                        ->orWhere("last_name", "like", "%$search%")
-                        ->orWhere("email", "like", "%$search%");
-                });
-            $studentUnAvailable = $studentUnAvailable
-                ->where(function (Builder $builder) use ($search) {
-                    $builder
-                        ->where("first_name", "like", "%$search%")
-                        ->orWhere("last_name", "like", "%$search%")
-                        ->orWhere("email", "like", "%$search%");
-                });
-        }
-        $arrData = [
-            'facultySemester' => $facultySemester,
-            'studentAvailable' => $studentAvailable->paginate(PER_PAGE, ["*"], "available"),
-            'studentUnAvailable' => $studentUnAvailable->paginate(PER_PAGE, ["*"], "unavailable"),
-            "search" => $search
-        ];
-        return $this->facultyDetail(
-            $faculty_id,
-            $semester_id,
-            'coordinator.Faculty.faculty-detail-member-manage',
-            "members", $arrData,
-            COORDINATOR_GUARD);
-    }
-    public function facultyDetailMember_manage_add($faculty_id, $semester_id, $student_id)
-    {
-        $facultySemester = FacultySemester::with("faculty")
-            ->where("faculty_id", $faculty_id)
-            ->where("semester_id", $semester_id)
-            ->first();
-        if (!$facultySemester) {
-            return redirect()->back()
-                ->with($this->responseBladeMessage("Unable to access this faculty. The information does not exist"));
-        }
-        $semesterStudent = FacultySemesterStudent::with("faculty_semester")
-            ->firstOrNew([
-                "faculty_semester_id" => $facultySemester->id,
-                "student_id" => $student_id
-            ]);
-        if ($semesterStudent->save()) {
-            return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
-                ->with($this->responseBladeMessage("Added student successfully", true));
-        }
-        return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
-            ->with($this->responseBladeMessage("Unable to add this student, please re-check", false));
-    }
-    public function facultyDetailMember_manage_remove($faculty_id, $semester_id, $student_id)
-    {
-        $facultySemester = FacultySemester::with("faculty")
-            ->where("faculty_id", $faculty_id)
-            ->where("semester_id", $semester_id)
-            ->first();
-        if (!$facultySemester) {
-            return redirect(route('coordinator.dashboard', [$facultySemester->faculty_id, $facultySemester->semester_id]))
-                ->with($this->responseBladeMessage("Unable to access this faculty. The information does not exist"));
-        }
-        $semesterStudent = FacultySemesterStudent::with("faculty_semester")
-            ->where("faculty_semester_id", $facultySemester->id)
-            ->where("student_id", $student_id)
-            ->first();
-        if ($semesterStudent && $semesterStudent->delete()) {
-            return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
-                ->with($this->responseBladeMessage("Remove the student successfully", true));
-        }
-        return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
-            ->with($this->responseBladeMessage("Unable to remove the student, please try again", false));
     }
     public function facultyDetailSettings($faculty_id, $semester_id)
     {

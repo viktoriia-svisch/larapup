@@ -3,14 +3,12 @@
 @push("custom-css")
 @endpush
 @section('faculty-detail')
-    <form
-        action="{{route("coordinator.faculty.students", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
-        class="col-12 row">
+    <form action="{{route("coordinator.faculty.students", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+          class="col-12 row">
         <div class="col">
             <div class="form-group">
                 <input type="text" name="search" id="searchInput" class="form-control form-control-alternative"
-                       placeholder="Searching name, or email of a person"
-                       value="{{isset($search) && $search ? $search : ''}}">
+                       placeholder="Searching name, or email of a person" value="{{isset($search) && $search ? $search : ''}}">
             </div>
         </div>
         <div class="col-auto pr-0">
@@ -29,8 +27,7 @@
     <hr>
     <div class="row m-0">
         <div class="col-12 col-md-6">
-            <h2>
-                Coordinators in-charge
+            <h2>Coordinators in-charge
                 <small class="text-muted">{{sizeof($coordinators)}}</small>
             </h2>
             <div class="table-responsive">
@@ -61,9 +58,8 @@
             </div>
         </div>
         <div class="col-12 col-md-6">
-            <h2>
-                Students participated
-                <small class="text-muted">{{$students->total()}}</small>
+            <h2>Students participated
+                <small class="text-muted">{{sizeof($students)}}</small>
             </h2>
             <div class="table-responsive">
                 <table class="table align-items-center">
@@ -91,18 +87,12 @@
                     </tbody>
                 </table>
             </div>
-            @if (\Illuminate\Support\Facades\Auth::guard(COORDINATOR_GUARD)->user()->type == COORDINATOR_LEVEL['MASTER'])
-                <a href="{{route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
-                   class="btn btn-block btn-secondary secondary">
-                    Manage
-                </a>
-            @endif
-            <div class="col-12 d-flex justify-content-center align-items-center">
-                {{$students->links()}}
-            </div>
         </div>
     </div>
     <hr>
+    <div class="col-12 d-flex justify-content-center align-items-center">
+        {{$students->links()}}
+    </div>
 @endsection
 @push("custom-js")
 @endpush
