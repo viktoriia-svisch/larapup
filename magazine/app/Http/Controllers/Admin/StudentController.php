@@ -60,6 +60,7 @@ class StudentController extends Controller
         $student->dateOfBirth = $request->get('dateOfBirth') ?? $student->dateOfBirth;
         $student->gender = $request->get('gender') ?? $student->gender;
         $student->status = $request->get('status') ?? $student->status;
+        $student->email = $request->get('email') ?? $student->email;
         if ($request->get('old_password')){
             if(Hash::check($request->get('old_password'),$student->password)) {
                 $student->password =  $request->get('new_password');

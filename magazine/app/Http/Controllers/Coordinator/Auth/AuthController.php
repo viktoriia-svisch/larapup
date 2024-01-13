@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers\Coordinator\Auth;
 use App\Http\Controllers\Controller;
+use App\Rules\AccountStatus;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
@@ -37,6 +40,10 @@ class AuthController extends Controller
             $this->username() => [trans('auth.failed')],
         ]);
     }
+    public function username()
+    {
+        return 'email';
+    }
     protected function validateLogin(Request $request)
     {
         $this->validate($request, [
@@ -44,15 +51,11 @@ class AuthController extends Controller
                 'required', 'min:6'
             ],
             'email' => [
-                'required', 'email'
+                'required', 'email', new AccountStatus($request, COORDINATOR_GUARD)
             ]
         ], [
             'email.required' => __('auth.failed'),
             'password.required' => __('auth.failed'),
         ]);
-    }
-    public function username()
-    {
-        return 'email';
     }
 }

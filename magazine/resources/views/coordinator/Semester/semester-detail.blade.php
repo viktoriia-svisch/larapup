@@ -7,6 +7,17 @@
         }
     </style>
 @endpush
+@section('breadcrumb')
+    <div class="container">
+        {{ Breadcrumbs::render(
+        'dashboard.semester.info',
+        route('coordinator.dashboard'),
+        route('coordinator.manageSemester'),
+        $semester,
+        route("coordinator.semester.detail", [$semester->id])
+        ) }}
+    </div>
+@endsection
 @section('coordinator-content')
     <div class="container">
         <br>
@@ -42,9 +53,9 @@
                         </div>
                     </div>
                     <div class="col-auto d-flex align-items-center m-3">
-                        <a class="btn btn-success text-white m-3"
-                           href="{{route('coordinator.addStudentFaculty', [$facultySemester->id])}}">
-                            Add Student
+                        <a href="{{route('coordinator.faculty.dashboard', [$facultySemester->faculty->id, $facultySemester->semester->id])}}"
+                           class="btn btn-primary">
+                            Detail
                         </a>
                     </div>
                 </div>

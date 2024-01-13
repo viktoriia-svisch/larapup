@@ -41,14 +41,18 @@
                 if (Auth::guard(ADMIN_GUARD)->check())
                 {
                 $user = Auth::guard(ADMIN_GUARD)->user();
+                $name = $user->first_name . ' ' . $user->last_name;
                 }elseif(Auth::guard(COORDINATOR_GUARD)->check())
                 {
                 $user = Auth::guard(COORDINATOR_GUARD)->user();
+                $name = $user->first_name . ' ' . $user->last_name;
                 }elseif (Auth::guard(STUDENT_GUARD)->check())
                 {
                 $user = Auth::guard(STUDENT_GUARD)->user();
+                $name = $user->first_name . ' ' . $user->last_name;
                 }else{
                 $user = Auth::guard(GUEST_GUARD)->user();
+                $name = "Guest";
                 }
             @endphp
             <section class="return-dashboard">
@@ -60,7 +64,7 @@
                          style="object-fit: cover; object-position: center; width: 60px; height: 60px; overflow: hidden;">
                 </div>
                 <div class="user-name text-white d-flex align-items-center">
-                    {{$user->first_name . ' ' . $user->last_name}}
+                    {{$name}}
                 </div>
                 @if (Illuminate\Support\Facades\Auth::guard(GUEST_GUARD)->check())
                     <a href="{{route("guest.logout")}}"
