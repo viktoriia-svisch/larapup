@@ -64,6 +64,23 @@
                                     End:{{\App\Helpers\DateTimeHelper::formatDate($activeSemester->end_date)}} </h3>
                             </div>
                         </div>
+                        @if (\Illuminate\Support\Facades\Auth::guard(COORDINATOR_GUARD)->user()->type == COORDINATOR_LEVEL['MASTER'])
+                            <div class="col-12">
+                                <p class="text-muted p-0">
+                                    Faculties:
+                                    @if (sizeof($activeSemester->faculty_semester) == 0)
+                                        <span class="text-danger">
+                                            None
+                                        </span>
+                                    @endif
+                                    @foreach($activeSemester->faculty_semester as $faculty)
+                                        <span class="text-info mr-4">
+                                            {{$faculty->faculty->name}}
+                                        </span>
+                                    @endforeach
+                                </p>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-auto d-flex align-items-center">
                         <a class="btn btn-icon-only btn-info"
@@ -96,6 +113,23 @@
                                     End: {{\App\Helpers\DateTimeHelper::formatDate($semester->end_date)}}</h3>
                             </div>
                         </div>
+                        @if (\Illuminate\Support\Facades\Auth::guard(COORDINATOR_GUARD)->user()->type == COORDINATOR_LEVEL['MASTER'])
+                            <div class="col-12">
+                                <p class="text-muted p-0">
+                                    Faculties:
+                                    @if (sizeof($semester->faculty_semester) == 0)
+                                        <span class="text-danger">
+                                            None
+                                        </span>
+                                    @endif
+                                    @foreach($semester->faculty_semester as $faculty)
+                                        <span class="text-info mr-4">
+                                            {{$faculty->faculty->name}}
+                                        </span>
+                                    @endforeach
+                                </p>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-auto d-flex align-items-center">
                         <a class="btn btn-icon-only btn-info"
@@ -131,6 +165,23 @@
                                     End: {{\App\Helpers\DateTimeHelper::formatDate($semester->end_date)}}</h3>
                             </div>
                         </div>
+                        @if (\Illuminate\Support\Facades\Auth::guard(COORDINATOR_GUARD)->user()->type == COORDINATOR_LEVEL['MASTER'])
+                            <div class="col-12">
+                                <p class="text-muted p-0">
+                                    Faculties:
+                                    @if (sizeof($semester->faculty_semester) == 0)
+                                        <span class="text-danger">
+                                            None
+                                        </span>
+                                    @endif
+                                    @foreach($semester->faculty_semester as $faculty)
+                                        <span class="text-info mr-4">
+                                            {{$faculty->faculty->name}}
+                                        </span>
+                                    @endforeach
+                                </p>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-auto d-flex align-items-center">
                         <a class="btn btn-icon-only btn-info"
