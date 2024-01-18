@@ -112,6 +112,13 @@
         </div>
     </div>
     <hr>
+    <div class="col-12 d-flex">
+        <a href="{{route("coordinator.faculty.students", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+           class="btn btn-icon btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </a>
+    </div>
 @endsection
 @push("custom-js")
 @endpush
