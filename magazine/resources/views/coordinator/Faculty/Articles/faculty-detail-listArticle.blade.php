@@ -65,11 +65,11 @@
             </h1>
         @endif
         @foreach($articles as $article)
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-body">
                     <div class="row m-0 p-0">
                         <div class="col-auto d-flex justify-content-center align-items-center">
-                            <img src="{{$article->student->avatar_path}}" class="img-center img-fluid rounded-circle"
+                            <img src="{{$article->student->avatar_path ?? 'http://getdrawings.com/images/anime-girls-drawing-34.jpg'}}" class="img-center img-fluid rounded-circle"
                                  style="width: 70px; height: 70px; overflow: hidden;"
                                  alt="{{$article->student->first_name. " " . $article->student->last_name}}">
                         </div>

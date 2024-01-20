@@ -25,7 +25,7 @@
             <a href="{{route('coordinator.faculty.listArticle',[$facultySemester->faculty->id, $facultySemester->semester_id, ])}}"
                class="btn m-2 text-white @if($site == "articles") btn-primary @else bg-gradient-gray @endif">Articles</a>
             <a href="{{route('coordinator.faculty.students',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
-               class="btn m-2 text-white @if($site == "members") btn-primary @else bg-gradient-gray @endif">Students</a>
+               class="btn m-2 text-white @if($site == "members") btn-primary @else bg-gradient-gray @endif">Members</a>
             <a href="{{route('coordinator.faculty.settings',[$facultySemester->faculty->id, $facultySemester->semester_id])}}"
                class="btn m-2 text-white @if($site == "settings") btn-primary @else bg-gradient-gray @endif">Settings</a>
         </div>
