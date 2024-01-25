@@ -148,7 +148,9 @@ class FacultyController extends Controller
         if (!empty($duplicate)) {
             return back()->with($this->responseBladeMessage(__('message.create_faculty_duplicate'), false));
         } else if ($FacuSeme->save()) {
-            return back()->with($this->responseBladeMessage(__('message.create_faculty_success')));
+            return back()->with(
+                $this->responseBladeMessage('Add faculty successfully.')
+            );
         }
         return back()->with($this->responseBladeMessage(__('message.create_faculty_failed'), false));
     }

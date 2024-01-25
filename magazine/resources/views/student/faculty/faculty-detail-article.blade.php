@@ -221,15 +221,14 @@
         function uploadFilePopup() {
             console.log(articleModal);
             @if($article && sizeof($article->publish) > 0)
-                flashMessage("This article is already published, any modification is not allowed!", true, 8000);
+            flashMessage("This article is already published, any modification is not allowed!", true, 8000);
             @else
-                @if($article && count($article->article_file) > 2)
-                    flashMessage("This article is at max allowed file upload. Please delete existed file before upload again", true, 8000);
-                @elseif($article && \App\Helpers\DateTimeHelper::isNowPassedDate($facultySemester->second_deadline))
-                    flashMessage("This article was already passed the due date for submission", true, 8000);
-                @else
-                    articleModal.modal('show');
-                @endif
+            @if(!(($article && count($article->article_file) > 2) || !$article))
+            articleModal.modal('show');
+            @endif
+            @endif
+            @if($article && count($article->article_file) > 2)
+            flashMessage("This article is at max allowed file upload. Please delete existed file before upload again", true, 8000);
             @endif
         }
         function listenCheckboxTerms(event) {

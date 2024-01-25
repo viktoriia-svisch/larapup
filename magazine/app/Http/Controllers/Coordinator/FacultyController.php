@@ -5,9 +5,7 @@ use App\Http\Controllers\FacultySemesterBaseController;
 use App\Http\Requests\PublishRequest;
 use App\Http\Requests\UpdateFacultySemester;
 use App\Models\Article;
-use App\Models\Coordinator;
 use App\Models\FacultySemester;
-use App\Models\FacultySemesterCoordinator;
 use App\Models\FacultySemesterStudent;
 use App\Models\Publish;
 use App\Models\PublishImage;
@@ -81,9 +79,7 @@ class FacultyController extends FacultySemesterBaseController
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
         $facultySemester = FacultySemester::with("semester")
-            ->where("semester_id", $semester_id)
-            ->where("faculty_id", $faculty_id)
-            ->first();
+            ->where("semester_id", $semester_id)->where("faculty_id", $faculty_id)->first();
         if (!$facultySemester) {
             return redirect()->route("coordinator.dashboard");
         }
@@ -226,18 +222,15 @@ class FacultyController extends FacultySemesterBaseController
             return redirect()->back()
                 ->with($this->responseBladeMessage("Unable to access this faculty. The information does not exist"));
         }
-        DB::beginTransaction();
         $semesterStudent = FacultySemesterStudent::with("faculty_semester")
             ->firstOrNew([
                 "faculty_semester_id" => $facultySemester->id,
                 "student_id" => $student_id
             ]);
         if ($semesterStudent->save()) {
-            DB::commit();
             return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
                 ->with($this->responseBladeMessage("Added student successfully", true));
         }
-        DB::rollback();
         return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
             ->with($this->responseBladeMessage("Unable to add this student, please re-check", false));
     }
@@ -255,113 +248,12 @@ class FacultyController extends FacultySemesterBaseController
             ->where("faculty_semester_id", $facultySemester->id)
             ->where("student_id", $student_id)
             ->first();
-        DB::beginTransaction();
         if ($semesterStudent && $semesterStudent->delete()) {
-            DB::commit();
             return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
                 ->with($this->responseBladeMessage("Remove the student successfully", true));
         }
-        DB::rollback();
         return redirect(route("coordinator.faculty.students.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
             ->with($this->responseBladeMessage("Unable to remove the student, please try again", false));
-    }
-    public function facultyDetailMemberCoordinator_manage(Request $request, $faculty_id, $semester_id)
-    {
-        $facultySemester = FacultySemester::with("faculty")
-            ->where("faculty_id", $faculty_id)
-            ->where("semester_id", $semester_id)
-            ->first();
-        if (!$facultySemester) {
-            return redirect()->back()
-                ->with($this->responseBladeMessage("Unable to access this faculty. The information does not exist"));
-        }
-        $search = $request->get("search") ?? null;
-        $coordinatorAvailable = Coordinator::with("faculty_semester_coordinator")
-            ->where("status", COORDINATOR_STATUS['ACTIVE'])
-            ->whereDoesntHave("faculty_semester_coordinator", function (Builder $builder) use ($facultySemester) {
-                $builder->where("faculty_semester_id", $facultySemester->id);
-            });
-        $coordinatorUnAvailable = Coordinator::with("faculty_semester_coordinator")
-            ->whereHas("faculty_semester_coordinator", function (Builder $builder) use ($facultySemester) {
-                $builder->where("faculty_semester_id", $facultySemester->id);
-            });
-        if ($search) {
-            $coordinatorAvailable = $coordinatorAvailable
-                ->where(function (Builder $builder) use ($search) {
-                    $builder
-                        ->where("first_name", "like", "%$search%")
-                        ->orWhere("last_name", "like", "%$search%")
-                        ->orWhere("email", "like", "%$search%");
-                });
-            $coordinatorUnAvailable = $coordinatorUnAvailable
-                ->where(function (Builder $builder) use ($search) {
-                    $builder
-                        ->where("first_name", "like", "%$search%")
-                        ->orWhere("last_name", "like", "%$search%")
-                        ->orWhere("email", "like", "%$search%");
-                });
-        }
-        $arrData = [
-            'facultySemester' => $facultySemester,
-            'coordinatorAvailable' => $coordinatorAvailable->paginate(PER_PAGE, ["*"], "available"),
-            'coordinatorUnAvailable' => $coordinatorUnAvailable->paginate(PER_PAGE, ["*"], "unavailable"),
-            "search" => $search
-        ];
-        return $this->facultyDetail(
-            $faculty_id,
-            $semester_id,
-            'coordinator.Faculty.faculty-detail-coordinator-manage',
-            "members", $arrData,
-            COORDINATOR_GUARD);
-    }
-    public function facultyDetailMemberCoordinator_manage_add($faculty_id, $semester_id, $coordinator_id)
-    {
-        $facultySemester = FacultySemester::with("faculty")
-            ->where("faculty_id", $faculty_id)
-            ->where("semester_id", $semester_id)
-            ->first();
-        if (!$facultySemester) {
-            return redirect()->back()
-                ->with($this->responseBladeMessage("Unable to access this faculty. The information does not exist"));
-        }
-        DB::beginTransaction();
-        $semesterCoordinator = FacultySemesterCoordinator::with("faculty_semester")
-            ->firstOrNew([
-                "faculty_semester_id" => $facultySemester->id,
-                "coordinator_id" => $coordinator_id
-            ]);
-        if ($semesterCoordinator->save()) {
-            DB::commit();
-            return redirect(route("coordinator.faculty.coordinators.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
-                ->with($this->responseBladeMessage("Added coordinator successfully", true));
-        }
-        DB::rollback();
-        return redirect(route("coordinator.faculty.coordinators.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
-            ->with($this->responseBladeMessage("Unable to add this coordinator, please re-check", false));
-    }
-    public function facultyDetailMemberCoordinator_manage_remove($faculty_id, $semester_id, $coordinator_id)
-    {
-        $facultySemester = FacultySemester::with("faculty")
-            ->where("faculty_id", $faculty_id)
-            ->where("semester_id", $semester_id)
-            ->first();
-        if (!$facultySemester) {
-            return redirect(route('coordinator.dashboard', [$facultySemester->faculty_id, $facultySemester->semester_id]))
-                ->with($this->responseBladeMessage("Unable to access this faculty. The information does not exist"));
-        }
-        $semesterCoordinator = FacultySemesterCoordinator::with("faculty_semester")
-            ->where("faculty_semester_id", $facultySemester->id)
-            ->where("coordinator_id", $coordinator_id)
-            ->first();
-        DB::beginTransaction();
-        if ($semesterCoordinator && $semesterCoordinator->delete()) {
-            DB::commit();
-            return redirect(route("coordinator.faculty.coordinators.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
-                ->with($this->responseBladeMessage("Remove the coordinator successfully", true));
-        }
-        DB::rollback();
-        return redirect(route("coordinator.faculty.coordinators.manage", [$facultySemester->faculty_id, $facultySemester->semester_id]))
-            ->with($this->responseBladeMessage("Unable to remove the coordinator, please try again", false));
     }
     public function facultyDetailSettings($faculty_id, $semester_id)
     {

@@ -79,10 +79,4 @@ class DateTimeHelper
         $dateDiffSecond = strtotime($yearsFromNow.' year') - strtotime($yearsToCheck);
         return $dateDiffSecond > 0;
     }
-    public static function time1BeforeTime2($time1, $time2){
-        $firstTime = strtotime($time1);
-        $secondTime = strtotime($time2);
-        $dateDiffSecond = $secondTime - $firstTime;
-        return $dateDiffSecond > 0;
-    }
 }

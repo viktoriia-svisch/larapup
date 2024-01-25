@@ -6,6 +6,7 @@ use App\Http\Requests\CreateSemester;
 use App\Http\Requests\UpdateSemester;
 use App\Models\FacultySemester;
 use App\Models\Semester;
+use App\Models\Faculty;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Builder;
@@ -61,6 +62,7 @@ class SemesterController extends FacultySemesterBaseController
         }
         $faculties = FacultySemester::with("semester")
             ->where("semester_id", $semester_id);
+         $facultyList = Faculty::all();
         if ($search) {
             $faculties = $faculties->where(function (Builder $builder) use ($search) {
                 $builder->where("name", "like", "%$search%")
@@ -70,6 +72,7 @@ class SemesterController extends FacultySemesterBaseController
         return view('admin.Semester.semester-faculties')
             ->with([
                 'currentSemester' => $viewingSemester,
+                'facultyList' => $facultyList,
                 "faculties" => $faculties->paginate(PER_PAGE),
                 'search' => $search
             ]);

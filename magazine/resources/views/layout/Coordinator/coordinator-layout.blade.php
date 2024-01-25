@@ -31,14 +31,14 @@
                 <ul class="navbar-nav ml-lg-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('coordinator.faculty')}}">
-                            <i class="fas fa-archive"></i>
+                            <i class="fas fa-search"></i>
                             Faculty
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
                            href="{{route('coordinator.manageSemester')}}">
-                            <i class="fas fa-calendar-alt"></i>
+                            <i class="fas fa-graduation-cap"></i>
                             Semesters
                         </a>
                     </li>
@@ -74,9 +74,8 @@
             <div class="row align-items-center justify-content-xl-between">
                 <div class="col-xl-6">
                     <div class="copyright text-center text-xl-left text-muted">
-                        © 2019
-                        <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">
-                            Creative Tim</a> &amp;
+                        © 2019 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative
+                            Tim</a> &amp;
                         <a href="https://www.updivision.com" class="font-weight-bold ml-1"
                            target="_blank">Updivision</a>
                     </div>
@@ -84,7 +83,21 @@
                 <div class="col-xl-6">
                     <ul class="nav nav-footer justify-content-center justify-content-xl-end">
                         <li class="nav-item">
-                            <a href="#" class="nav-link" target="_blank">Mixed by Larang Team</a>
+                            <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.updivision.com" class="nav-link" target="_blank">Updivision</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About
+                                Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md"
+                               class="nav-link" target="_blank">MIT License</a>
                         </li>
                     </ul>
                 </div>

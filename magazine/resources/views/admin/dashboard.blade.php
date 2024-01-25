@@ -8,13 +8,7 @@
     </div>
 @endsection
 @section("admin-content")
-    <div class="container">
-        <h1 class="text-center">
-            Welcome to Greenwich Magazine
-            <br>
-            <strong>Admin portal</strong>
-        </h1>
-    </div>
+    123 admin
 @endsection
 @push("custom-js")
 @endpush

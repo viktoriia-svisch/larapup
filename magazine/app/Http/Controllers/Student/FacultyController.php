@@ -1,13 +1,11 @@
 <?php
 namespace App\Http\Controllers\Student;
 use App\Http\Controllers\FacultySemesterBaseController;
-use App\Models\Article;
 use App\Models\FacultySemester;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 class FacultyController extends FacultySemesterBaseController
 {
     public function faculty(Request $request)
@@ -71,23 +69,8 @@ class FacultyController extends FacultySemesterBaseController
     }
     public function facultyDetailDashboard($faculty_id, $semester_id)
     {
-        $facultySemester = $this->retrieveFacultySemester($faculty_id, $semester_id, STUDENT_GUARD);
-        if (!$facultySemester) {
-            return redirect()->route("student.dashboard");
-        }
-        DB::beginTransaction();
-        $article = Article::with("faculty_semester")
-            ->firstOrCreate([
-                "faculty_semester_id" => $facultySemester->id,
-                "student_id" => Auth::guard(STUDENT_GUARD)->user()->id
-            ]);
-        if (!$article->save()) {
-            DB::commit();
-            return redirect()->route("student.dashboard");
-        }
-        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, STUDENT_GUARD, null, $article->id);
-        DB::commit();
-        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-dashboard', "student.dashboard", [
+        $listComment = $this->retrieveCommentAll($faculty_id, $semester_id, STUDENT_GUARD, null);
+        return $this->facultyDetail($faculty_id, $semester_id, 'student.faculty.faculty-detail-dashboard', "dashboard", [
             "comments" => $listComment
         ], STUDENT_GUARD);
     }

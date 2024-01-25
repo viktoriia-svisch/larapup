@@ -63,6 +63,7 @@
                                     <a href="{{route('student.faculty.dashboard', [$activeData->faculty->id, $activeData->semester->id])}}"
                                        class="btn btn-info text-white">
                                         <span>Detail</span>
+                                        <span class="badge badge-dark text-white">4</span>
                                     </a>
                                 </div>
                             @else
@@ -77,11 +78,6 @@
             <hr>
         </div>
         <div class="container">
-            <h1 class="text-center">
-                Welcome to Greenwich Magazine
-                <br>
-                <strong>Student portal</strong>
-            </h1>
         </div>
     </div>
 @endsection
