@@ -22,6 +22,12 @@ class FacultySemesterBaseController extends Controller
 {
     public function facultyDetail($faculty_id, $semester_id, $view, $site = 'dashboard', $extData = [], $guard = COORDINATOR_GUARD, $redirectRoute = 'coordinator.faculty')
     {
+        if (Auth::guard(COORDINATOR_GUARD)->check()){
+            $user = Auth::guard(COORDINATOR_GUARD)->user();
+            $guard = $user->type == COORDINATOR_LEVEL['MASTER'] ? null : $guard;
+        }elseif (Auth::guard(ADMIN_GUARD)->check()){
+            $guard = null;
+        }
         $facultySemester = $this->retrieveFacultySemester($faculty_id, $semester_id, $guard);
         switch ($site) {
             case "dashboard":
@@ -112,8 +118,8 @@ class FacultySemesterBaseController extends Controller
             });
         }
         $arrData = [
-            "students" => $students->paginate(PER_PAGE),
-            "coordinators" => $coordinators->get(),
+            "students" => $students->paginate(PER_PAGE,"*", 'students'),
+            "coordinators" => $coordinators->paginate(PER_PAGE,"*", 'coordinators'),
             "search" => $search,
         ];
         return $arrData;

@@ -59,6 +59,16 @@
                     </tbody>
                 </table>
             </div>
+            @if (\Illuminate\Support\Facades\Auth::guard(COORDINATOR_GUARD)->user()->type == COORDINATOR_LEVEL['MASTER'])
+                <a href="{{route("coordinator.faculty.coordinators.manage", [$facultySemester->faculty_id, $facultySemester->semester_id])}}"
+                   class="btn btn-block btn-secondary secondary">
+                    Manage
+                </a>
+            @endif
+            <hr>
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                {{$coordinators->appends(['students' => $students->currentPage()])->links()}}
+            </div>
         </div>
         <div class="col-12 col-md-6">
             <h2>
@@ -97,12 +107,12 @@
                     Manage
                 </a>
             @endif
+            <hr>
             <div class="col-12 d-flex justify-content-center align-items-center">
-                {{$students->links()}}
+                {{$students->appends(['coordinators' => $coordinators->currentPage()])->links()}}
             </div>
         </div>
     </div>
-    <hr>
 @endsection
 @push("custom-js")
 @endpush
