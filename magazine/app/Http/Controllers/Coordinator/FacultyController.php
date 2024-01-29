@@ -103,6 +103,7 @@ class FacultyController extends FacultySemesterBaseController
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')
             ->whereColumn('articles.created_at', '<=', 'faculty_semesters.first_deadline')
             ->where('faculty_semesters.id', '=', $facultySemester->id)
+            ->where("articles.status", '=', ARTICLE_STATUS["PUBLISHED"])
             ->count();
         $highestGrade = DB::table('articles')
             ->join('faculty_semesters', 'articles.faculty_semester_id', '=', 'faculty_semesters.id')

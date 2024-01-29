@@ -14,10 +14,10 @@
         </div>
         <div class="col-auto p-0">
             @if ($search)
-            <button type="button" class="btn btn-icon btn-danger" onclick="resetSearch()">
-                <i class="fas fa-times"></i>
-            </button>
-        @endif
+                <button type="button" class="btn btn-icon btn-danger" onclick="resetSearch()">
+                    <i class="fas fa-times"></i>
+                </button>
+            @endif
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-info">
@@ -25,10 +25,12 @@
             </button>
         </div>
     </form>
-    <h1 class="text-primary">Current Faculties</h1>
+    <div class="col-12">
+        @include('layout.response.errors')
+    </div>
     @if (count($faculties) == 0)
         <h2 class="text-center text-muted">No record found</h2>
-    @endif    
+    @endif
     @foreach($faculties as $faculty)
         <div class="card mb-2">
             <div class="card-body row">
@@ -50,32 +52,6 @@
             </div>
         </div>
     @endforeach
-    @if($currentSemester->start_date > Carbon::now())
-        <h1 class="text-primary">Available Faculties</h1>
-            <p class="text-muted">Display all the faculty within the system.</p>
-                @if (count($facultyList) == 0)
-                    <h2 class="text-center text-muted">No available faculty</h2>
-                @endif
-                @foreach($facultyList as $Faculty)
-                <form action="{{route('admin.addSemesterFaculty', [$currentSemester->id, $Faculty->id])}}" method="post" >
-                    @csrf
-                    <div class="card mb-2">
-                        <div class="card-body row">
-                            <div class="col">
-                                <div class="col-auto d-flex align-items-center">
-                                    <h1 class="heading-title">{{$Faculty->name}}</h1>
-                                </div>
-                            </div>
-                            <div class="col-auto d-flex align-items-center">
-                                <button class="btn btn-block m-0 btn-success" id="submit" type="submit">
-                                    Add faculty
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                @endforeach
-    @endif
     <hr>
     <div class="col-12 d-flex justify-content-center">
         {{ $faculties->links() }}

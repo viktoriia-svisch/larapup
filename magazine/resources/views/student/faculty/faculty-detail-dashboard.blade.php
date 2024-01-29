@@ -66,6 +66,7 @@
                 {{csrf_field()}}
                 <div class="col-auto">
                     <img alt=""
+                         src="{{\Illuminate\Support\Facades\Auth::user()->avatar_path ?? "http://getdrawings.com/images/anime-girls-drawing-34.jpg"}}"
                          style="width: 50px; height: 50px; object-fit: cover; object-position: center; overflow: hidden;"
                          class="img-fluid rounded-circle">
                 </div>
@@ -83,6 +84,10 @@
                     <button class="btn btn-primary float-right" type="submit">Comment</button>
                 </div>
             </form>
+        </div>
+        <br>
+        <div class="col-12">
+            @include('layout.response.errors')
         </div>
         <br>
         <section class="col-12">
