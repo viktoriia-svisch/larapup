@@ -26,7 +26,8 @@ class CommentController extends Controller
                 $query->where("student_id", $student->id);
             })
             ->whereHas("semester", function (Builder $query) {
-                $query->whereDate("start_date", ">=", Carbon::now()->toDateTimeString());
+                $query->whereDate("start_date", "<=", Carbon::now()->toDateTimeString())
+                    ->whereDate("end_date", ">=", Carbon::now()->toDateTimeString());
             })->first();
         if ($facSemester) {
             $article = Article::with("student")

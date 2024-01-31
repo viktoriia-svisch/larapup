@@ -72,30 +72,6 @@
             </div>
         @endforeach
         <br>
-        <h1 class="text-primary">Faculties</h1>
-        <p class="text-muted">Display all the faculty within the system.</p>
-            @if (count($faculty) == 0)
-                <h2 class="text-center text-muted">No available faculty</h2>
-            @endif
-            @foreach($faculty as $Faculty)
-            <form action="{{route('admin.addSemesterFaculty', [$semester->id, $Faculty->id])}}" method="post" >
-                @csrf
-                <div class="card mb-2">
-                    <div class="card-body row">
-                        <div class="col">
-                            <div class="col-auto d-flex align-items-center">
-                                <h1 class="heading-title">{{$Faculty->name}}</h1>
-                            </div>
-                        </div>
-                        <div class="col-auto d-flex align-items-center">
-                            <button class="btn btn-block m-0 btn-success" id="submit" type="submit">
-                                Add faculty
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            @endforeach
 </div>
 @endsection
 @section('modal')
