@@ -179,6 +179,7 @@ class FacultyController extends Controller
     public function addStudentFaculty_post($FacultySemester, $student)
     {
         $student = Student::with("faculty_semester_student")->find($student);
+        $FacultySemester = Faculty::find($FacultySemester);
         $FacuSemeStudent = new FacultySemesterStudent;
         $FacuSemeStudent->faculty_semester_id = $FacultySemester;
         $FacuSemeStudent->student_id = $student->id;
