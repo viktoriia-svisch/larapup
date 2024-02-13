@@ -26,7 +26,7 @@ Route::group([
     Route::post('faculty/edit', 'FacultyController@updateFaculty')->name('admin.updateFaculty');
     Route::post('search-faculty/{semester}/{request}','Admin\FacultyController@searchFaculty');
     Route::post('faculty-semester-delete', 'FacultyController@deleteSemesterFaculty')->name('admin.deleteSemesterFaculty');
-    Route::post('faculty-student-delete/{FacuSemeId}/{studentId}', 'FacultyController@deleteStudentFaculty')->name('admin.deleteStudentFaculty');
+    Route::post('faculty-student-delete/{studentId}', 'FacultyController@deleteStudentFaculty')->name('admin.deleteStudentFaculty');
     Route::post('faculty-semester-delete/{facultySemesterId}', 'FacultyController@deleteSemesterFaculty')->name('admin.deleteAllStudentFaculty');
     Route::post('search-faculty/{semester}/{request}', 'Admin\FacultyController@searchFaculty');
     Route::get('faculty/choose-semester', 'FacultyController@chooseSemester')->name('admin.chooseSemester');

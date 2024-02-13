@@ -24,7 +24,7 @@
                 </div>
             @endif
             <div  >
-                <input class="form-control" type="text" placeholder="FirstName" name="first_name" id="first_name" required>
+                <input class="form-control" type="text" placeholder="FirstName" name="first_name" id="first_name">
             </div>
             @if($errors->has('last_name'))
                 <div class="card bg-danger text-white rounded-0">
@@ -35,7 +35,7 @@
             @endif
             <div style="margin-top: 2vw">
                 <label style="color: #0b1011">Last Name</label>
-                <input class="form-control" type="text" placeholder="LastName" name="last_name" id="last_name" required>
+                <input class="form-control" type="text" placeholder="LastName" name="last_name" id="last_name">
             </div>
             @if($errors->has('dateOfBirth'))
                 <div class="card bg-danger text-white rounded-0">
@@ -74,7 +74,7 @@
             @endif
             <div style="margin-top: 2vw">
                 <label style="color: #0b1011">Email</label>
-                <input class="form-control" type="text" placeholder="Email" name="email" id="email" required>
+                <input class="form-control" type="text" placeholder="Email" name="email" id="email">
             </div>
             @if($errors->has('password'))
                 <p class="col-12 text-danger">
@@ -83,7 +83,7 @@
             @endif
             <div style="margin-top: 2vw; margin-bottom: 3vw">
                 <label style="color: #0b1011">Password</label>
-                <input class="form-control" name="password" id="password" value="123456" type="password" placeholder="Password" required>
+                <input class="form-control" name="password" id="password" value="123456" type="password" placeholder="Password">
             </div>
             <hr>
             <button class="btn btn-danger col-sm-12">Create</button>
