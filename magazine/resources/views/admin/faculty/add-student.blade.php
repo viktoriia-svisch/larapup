@@ -49,7 +49,7 @@
             @endif
             @foreach($AvailableStudent as $currentstudent)
             @csrf
-            <form action="{{route('admin.deleteStudentFaculty', [$currentstudent->id])}}" method="post" >
+            <form action="{{route('admin.deleteStudentFaculty',[$FacultySemester->id, $currentstudent->id])}}" method="post" >
                 {{ csrf_field() }}
                 <div class="card mb-2">
                     <div class="card-body row">

@@ -148,7 +148,9 @@ class FacultyController extends Controller
         if (!empty($duplicate)) {
             return back()->with($this->responseBladeMessage(__('message.create_faculty_duplicate'), false));
         } else if ($FacuSeme->save()) {
-            return back()->with($this->responseBladeMessage(__('message.create_faculty_success')));
+            return back()->with(
+                $this->responseBladeMessage('Add faculty successfully.')
+            );
         }
         return back()->with($this->responseBladeMessage(__('message.create_faculty_failed'), false));
     }
@@ -177,6 +179,7 @@ class FacultyController extends Controller
     public function addStudentFaculty_post($FacultySemester, $student)
     {
         $student = Student::with("faculty_semester_student")->find($student);
+        $FacultySemester = Faculty::find($FacultySemester);
         $FacuSemeStudent = new FacultySemesterStudent;
         $FacuSemeStudent->faculty_semester_id = $FacultySemester;
         $FacuSemeStudent->student_id = $student->id;
@@ -189,9 +192,10 @@ class FacultyController extends Controller
         return view('admin.faculty.add-student')
         ->with('FacuSemeStudent',$FacuSemeStudent);
     }
-    public function deleteStudentFaculty($studentId)
+    public function deleteStudentFaculty($FacuSemeId,$studentId)
     {
-        $FacuSemeStudent = FacultySemesterStudent::where('student_id','=',$studentId);
+        $FacuSemeStudent = FacultySemesterStudent::where('student_id','=',$studentId)
+        ->where('faculty_semester_id','=',$FacuSemeId);
         $FacuSemeStudent->delete();
         return back()->with(
             $this->responseBladeMessage('Delete successful')
