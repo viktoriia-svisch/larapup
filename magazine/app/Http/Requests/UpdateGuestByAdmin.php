@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Requests;
+use App\Rules\CheckGuestEmailSelf;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 class UpdateGuestByAdmin extends FormRequest
@@ -10,9 +11,11 @@ class UpdateGuestByAdmin extends FormRequest
     }
     public function rules()
     {
-        return [
-            'email' => ['required', 'email', 'unique:guests,email', 'bail'],
-            'status' => 'required|integer',
+        $rule = [
+            'status' => 'required|integer|between:0,1',
+            "guest_id" => 'required|exists:guests,id',
+            "email" => ['required', 'email', new CheckGuestEmailSelf($this)]
         ];
+        return $rule;
     }
 }

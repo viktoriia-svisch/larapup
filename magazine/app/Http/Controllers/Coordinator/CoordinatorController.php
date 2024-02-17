@@ -59,7 +59,10 @@ class CoordinatorController extends Controller
     public function updateCoordinatorPost(UpdateCoordinatorAccount $request, $id)
     {
         $coordinator = Coordinator::with("faculty_semester_coordinator")->find($id);
-        if (!$coordinator) return redirect()->back()->withInput();
+        if (!$coordinator) return redirect()->back()
+            ->withInput()->with(
+                $this->responseBladeMessage("Invalid profile of Coordinator", false)
+            );
         $coordinator->first_name = $request->get('first_name') ?? $coordinator->first_name;
         $coordinator->last_name = $request->get('last_name') ?? $coordinator->last_name;
         $coordinator->dateOfBirth = $request->get('dateOfBirth') ?? $coordinator->dateOfBirth;
@@ -68,19 +71,19 @@ class CoordinatorController extends Controller
             if (Hash::check($request->get('old_password'), $coordinator->password)) {
                 $coordinator->password = $request->get('new_password');
             } else {
-                return back()->with([
-                    'updateStatus' => false
-                ]);
+                return back()->withInput()->with(
+                    $this->responseBladeMessage("The old password is incorrect", false)
+                );
             }
         }
         if ($coordinator->save()) {
-            return back()->with([
-                'updateStatus' => true
-            ]);
+            return back()->withInput()->with(
+                $this->responseBladeMessage("Update successfully")
+            );
         }
-        return back()->with([
-            'updateStatus' => false
-        ]);
+        return back()->withInput()->with(
+            $this->responseBladeMessage("Unable to save new information", false)
+        );
     }
     public function dashboard(){
         return view('coordinator.dashboard');

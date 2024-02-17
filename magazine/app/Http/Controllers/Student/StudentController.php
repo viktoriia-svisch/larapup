@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 class StudentController extends Controller
 {
@@ -23,7 +24,10 @@ class StudentController extends Controller
     public function updateStudentPost(UpdateStudentAccount $request, $id)
     {
         $student = Student::with("faculty_semester_student")->find($id);
-        if (!$student) return redirect()->back()->withInput();
+        if (!$student) return redirect()->back()->withInput()->with(
+            $this->responseBladeMessage("The student information is invalid", false)
+        );
+        DB::beginTransaction();
         $student->first_name = $request->get('first_name') ?? $student->first_name;
         $student->last_name = $request->get('last_name') ?? $student->last_name;
         $student->dateOfBirth = $request->get('dateOfBirth') ?? $student->dateOfBirth;
@@ -32,19 +36,22 @@ class StudentController extends Controller
             if (Hash::check($request->get('old_password'), $student->password)) {
                 $student->password = $request->get('new_password');
             } else {
-                return back()->with([
-                    'updateStatus' => false
-                ]);
+                DB::rollBack();
+                return back()->with(
+                    $this->responseBladeMessage("The old password entered is incorrect!", false)
+                );
             }
         }
         if ($student->save()) {
-            return back()->with([
-                'updateStatus' => true
-            ]);
+            DB::commit();
+            return back()->with(
+                $this->responseBladeMessage("Update successfully!")
+            );
         }
-        return back()->with([
-            'updateStatus' => false
-        ]);
+        DB::rollBack();
+        return back()->with(
+            $this->responseBladeMessage("Update failed. Cannot save the new data!", false)
+        );
     }
     public function article()
     {
