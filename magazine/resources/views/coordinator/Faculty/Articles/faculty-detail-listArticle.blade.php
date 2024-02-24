@@ -1,4 +1,4 @@
-@extends("coordinator.faculty.faculty-detail")
+@extends("coordinator.Faculty.faculty-detail")
 @section('title', 'Faculty '.$facultySemester->faculty->name.' - Articles')
 @push("custom-css")
     <style>
