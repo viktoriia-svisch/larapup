@@ -7,16 +7,19 @@
         <div class="col-sm-5 m-auto" style=" border-top: 1px solid; padding: 2%;">
             <h3>Information of Coordinator</h3>
             <hr>
-            @include("layout.response.errors")
+            <div class="col-12">
+                @include("layout.response.errors")
+            </div>
             <form method="post" action="{{route('admin.updateGuest_post', [$guest->id])}}">
                 {{csrf_field()}}
-                <div>
-                    <label style="color: #0b1011">Faculty</label>
+                <div class="form-group mb-4">
+                    <label for="faculty" style="color: #0b1011">Faculty</label>
                     <input class="form-control" id="faculty" name="faculty"
                            value="{{$guest->faculty->name}}" type="text" readonly>
                 </div>
-                <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
-                    <h4 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw; margin-left: -1vw">Account Status</h4>
+                <div class="row form-group mb-4">
+                    <h4 class="col-xl-12" style="color: #0b1011">Account
+                        Status</h4>
                     <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
                         <input name="status" value="{{GUEST_STATUS['ACTIVE']}}" class="custom-control-input"
                                id="statusStandby"
@@ -30,20 +33,20 @@
                         <label class="custom-control-label" for="statusOngoing">Deactivate</label>
                     </div>
                 </div>
-                @if($errors->has('email'))
-                    <div class="card bg-danger text-white rounded-0">
-                        <div class="card-body p-1 rounded-0">
-                            {{$errors->first('email')}}
-                        </div>
-                    </div>
-                @endif
-                <div style="margin-top: 2vw">
-                    <label style="color: #0b1011">Email</label>
-                    <input class="form-control" type="text" name="email" id="email" placeholder="{{$guest->email}}"
+                <div class="form-group mb-4">
+                    <label for="email" style="color: #0b1011">Email</label>
+                    <input class="form-control form-control-alternative" type="text" name="email" id="email"
+                           placeholder="{{$guest->email}}"
                            value="{{$guest->email}}">
                 </div>
+                <div class="form-group mb-4">
+                    <label for="new_password" style="color: #0b1011">New password</label>
+                    <input class="form-control form-control-alternative" type="text" name="new_password"
+                           id="new_password">
+                    <small class="text-muted">You can leave this field empty if you don't want to update it</small>
+                </div>
                 <hr>
-                <button class="btn btn-danger col-sm-12" type="submit">Activate Account</button>
+                <button class="btn btn-danger col-sm-12" type="submit">Update Account</button>
             </form>
         </div>
     </div>

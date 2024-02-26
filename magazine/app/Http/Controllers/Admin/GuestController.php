@@ -3,13 +3,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGuest;
 use App\Http\Requests\UpdateGuestByAdmin;
-use App\Models\Coordinator;
 use App\Models\Faculty;
-use App\Models\FacultySemesterCoordinator;
 use App\Models\Guest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 class GuestController extends Controller
 {
     public function guest(Request $request)
@@ -54,17 +51,13 @@ class GuestController extends Controller
     }
     public function updateGuestPost(UpdateGuestByAdmin $request, $id)
     {
-        $guest= Guest::with("faculty")->find($id);
+        $guest = Guest::with("faculty")->find($id);
         if (!$guest)
             return redirect()->back()->with($this->responseBladeMessage("Unable to find the guest", false));
         $guest->status = $request->get('status') ?? $guest->status;
         $guest->email = $request->get('email') ?? $guest->email;
-        if ($request->get('old_password')) {
-            if (Hash::check($request->get('old_password'), $guest->password)) {
-                $guest->password = $request->get('new_password');
-            } else {
-                return redirect()->back()->with($this->responseBladeMessage("Update Guest failed", false));;
-            }
+        if ($request->get('new_password')) {
+            $guest->password = $request->get('new_password');
         }
         if ($guest->save()) {
             return redirect()->back()->with($this->responseBladeMessage("Update Guest success"));;

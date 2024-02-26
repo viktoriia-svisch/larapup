@@ -14,6 +14,7 @@ class UpdateGuestByAdmin extends FormRequest
         $rule = [
             'status' => 'required|integer|between:0,1',
             "guest_id" => 'required|exists:guests,id',
+            'password' => 'nullable|min:6',
             "email" => ['required', 'email', new CheckGuestEmailSelf($this)]
         ];
         return $rule;

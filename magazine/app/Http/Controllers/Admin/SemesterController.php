@@ -4,9 +4,9 @@ use App\Helpers\DateTimeHelper;
 use App\Http\Controllers\FacultySemesterBaseController;
 use App\Http\Requests\CreateSemester;
 use App\Http\Requests\UpdateSemester;
+use App\Models\Faculty;
 use App\Models\FacultySemester;
 use App\Models\Semester;
-use App\Models\Faculty;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Builder;
@@ -62,21 +62,22 @@ class SemesterController extends FacultySemesterBaseController
         }
         $faculties = FacultySemester::with("semester")
             ->where("semester_id", $semester_id);
-         $facultyList = Faculty::with('faculty_semester')
-         ->WhereDoesntHave('faculty_semester',function (Builder $builder) use ($semester_id){
-             $builder->where("semester_id",$semester_id);
-         })->get();
-        if ($search) {
-            $faculties = $faculties->where(function (Builder $builder) use ($search) {
-                $builder->where("name", "like", "%$search%")
-                    ->where("description", "like", "%$search%");
+        $facultyList = Faculty::with('faculty_semester')
+            ->WhereDoesntHave('faculty_semester', function (Builder $builder) use ($semester_id) {
+                $builder->where("semester_id", $semester_id);
             });
+        if ($search) {
+            $faculties = $faculties
+                ->whereHas('faculty', function (Builder $builder) use ($search) {
+                    $builder->where("name", "like", "%$search%");
+                });
+            $facultyList = $facultyList->where("name", "like", "%$search%");
         }
         return view('admin.Semester.semester-faculties')
             ->with([
                 'currentSemester' => $viewingSemester,
-                'facultyList' => $facultyList,
-                "faculties" => $faculties->paginate(PER_PAGE),
+                'facultyList' => $facultyList->paginate(PER_PAGE),
+                "faculties" => $faculties->get(),
                 'search' => $search
             ]);
     }
