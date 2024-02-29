@@ -12,6 +12,7 @@
             </div>
             <form method="post" action="{{route('admin.updateGuest_post', [$guest->id])}}">
                 {{csrf_field()}}
+                <input type="hidden" name="guest_id" value="{{$guest->id}}">
                 <div class="form-group mb-4">
                     <label for="faculty" style="color: #0b1011">Faculty</label>
                     <input class="form-control" id="faculty" name="faculty"

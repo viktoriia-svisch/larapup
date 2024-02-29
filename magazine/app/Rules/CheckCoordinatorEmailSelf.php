@@ -1,7 +1,6 @@
 <?php
 namespace App\Rules;
 use App\Models\Coordinator;
-use App\Models\Student;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 class CheckCoordinatorEmailSelf implements Rule
@@ -17,7 +16,7 @@ class CheckCoordinatorEmailSelf implements Rule
             ->where("email", $value)
             ->whereKeyNot($this->request->get("coordinator_id")
             )->first();
-        return $existedRecord == true;
+        return !($existedRecord == true);
     }
     public function message()
     {

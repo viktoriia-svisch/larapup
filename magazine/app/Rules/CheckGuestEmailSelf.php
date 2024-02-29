@@ -1,7 +1,6 @@
 <?php
 namespace App\Rules;
 use App\Models\Guest;
-use App\Models\Student;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 class CheckGuestEmailSelf implements Rule
@@ -15,9 +14,9 @@ class CheckGuestEmailSelf implements Rule
     {
         $existedRecord = Guest::with("faculty")
             ->where("email", $value)
-            ->whereKeyNot($this->request->get("guest_id")
-            )->first();
-        return $existedRecord == true;
+            ->whereKeyNot($this->request->get("guest_id"))
+            ->first();
+        return !($existedRecord == true);
     }
     public function message()
     {

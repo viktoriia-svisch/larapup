@@ -16,7 +16,7 @@ class CheckStudentEmailSelf implements Rule
             ->where("email", $value)
             ->whereKeyNot($this->request->get("student_id")
             )->first();
-        return $existedRecord == true;
+        return !($existedRecord == true);
     }
     public function message()
     {
