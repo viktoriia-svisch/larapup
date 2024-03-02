@@ -16,7 +16,7 @@ class UpdateStudentAccount extends FormRequest
             'new_password' => ['bail', 'same:confirm_password'],
             'first_name' => 'required|min:2|max:40|bail',
             'last_name' => 'required|min:2|max:80|bail',
-            'gender' => 'required|integer|between:0,1',
+            'gender' => 'required|integer|between:1,2',
             'dateOfBirth' => ['required', 'date_format:d/m/Y', new CheckAgeAccount]
         ];
         if ($this->get("old_password")) {

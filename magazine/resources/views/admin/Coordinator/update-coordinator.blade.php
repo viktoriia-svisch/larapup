@@ -20,6 +20,7 @@
             @include("layout.response.errors")
             <form method="post" action="{{route('admin.updateCoordinator_post', [$coordinator->id])}}">
                 {{csrf_field()}}
+                <input type="hidden" name="coordinator_id" value="{{$coordinator->id}}">
                 @if($errors->has('first_name'))
                     <div class="card bg-danger text-white rounded-0">
                         <div class="card-body p-1 rounded-0">
@@ -120,11 +121,13 @@
                 @endif
                 <div style="margin-top: 2vw">
                     <label style="color: #0b1011">Email</label>
-                    <input class="form-control" type="text" id="email" name="email" placeholder="{{$coordinator->email}}"
+                    <input class="form-control" type="text" id="email" name="email"
+                           placeholder="{{$coordinator->email}}"
                            value="{{$coordinator->email}}">
                 </div>
                 <div style="margin-top: 2vw; margin-bottom: 3vw">
-                    <label style="color: #0b1011">Password</label>
+                    <label for="new_password" style="color: #0b1011">Password</label>
+                    <input name="new_password" id="new_password" class="form-control" type="text">
                 </div>
                 <hr>
                 <button class="btn btn-danger col-sm-12" type="submit">Update Information</button>

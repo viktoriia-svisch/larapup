@@ -11,7 +11,6 @@ use App\Models\Semester;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Hash;
 class CoordinatorController extends Controller
 {
     public function coordinator(Request $request)
@@ -127,36 +126,36 @@ class CoordinatorController extends Controller
         $ad = new FacultySemesterCoordinator();
         $ad->faculty_semester_id = $faculty_semester->id;
         $ad->coordinator_id = $coordinator;
-        if(!$faculty_semester || !$coor){
-            return redirect()->back()->with($this->responseBladeMessage("add coordinator fail! - coordinator does not exist!",false));
+        if (!$faculty_semester || !$coor) {
+            return redirect()->back()->with($this->responseBladeMessage("add coordinator fail! - coordinator does not exist!", false));
         }
         if ($ad->save()) {
-            return redirect()->back()->with($this->responseBladeMessage("add coordinator success!",true));
+            return redirect()->back()->with($this->responseBladeMessage("add coordinator success!", true));
         }
-        return redirect()->back()->with($this->responseBladeMessage("add coordinator fail!",false));
+        return redirect()->back()->with($this->responseBladeMessage("add coordinator fail!", false));
     }
     public function removeToFaculty($coordinator, $faculty, $semester)
     {
         $faculty_semester_coordinator = FacultySemesterCoordinator::where('coordinator_id', '=', $coordinator)
-            ->whereHas("faculty_semester", function (Builder $builder) use($faculty, $semester){
+            ->whereHas("faculty_semester", function (Builder $builder) use ($faculty, $semester) {
                 $builder->where('faculty_id', '=', $faculty)->where('semester_id', '=', $semester);
             })
             ->first();
-        if(!$faculty_semester_coordinator){
-            return redirect()->back()->with($this->responseBladeMessage("remove coordinator fail! - coordinator does not exist!",false));
+        if (!$faculty_semester_coordinator) {
+            return redirect()->back()->with($this->responseBladeMessage("remove coordinator fail! - coordinator does not exist!", false));
         }
         if ($faculty_semester_coordinator->delete()) {
-            return redirect()->back()->with($this->responseBladeMessage("remove coordinator success!",true));
+            return redirect()->back()->with($this->responseBladeMessage("remove coordinator success!", true));
         }
-        return redirect()->back()->with($this->responseBladeMessage("remove coordinator fail!",false));
+        return redirect()->back()->with($this->responseBladeMessage("remove coordinator fail!", false));
     }
     public function updateCoordinator($id)
     {
         $coordinator = Coordinator::with("faculty_semester_coordinator")->find($id);
         if ($coordinator)
-        return view('admin.Coordinator.update-coordinator', [
-            'coordinator' => $coordinator
-        ]);
+            return view('admin.Coordinator.update-coordinator', [
+                'coordinator' => $coordinator
+            ]);
         return redirect()->back()->with($this->responseBladeMessage("Unable to find the coordinator", false));
     }
     public function updateCoordinatorPost(UpdateCoordinatorByAdmin $request, $id)
@@ -171,12 +170,8 @@ class CoordinatorController extends Controller
         $coordinator->gender = $request->get('gender') ?? $coordinator->gender;
         $coordinator->status = $request->get('status') ?? $coordinator->status;
         $coordinator->type = $request->get('type') ?? $coordinator->type;
-        if ($request->get('old_password')) {
-            if (Hash::check($request->get('old_password'), $coordinator->password)) {
-                $coordinator->password = $request->get('new_password');
-            } else {
-                return back()->with($this->responseBladeMessage("Password was incorrect!", false));
-            }
+        if ($request->get('new_password')) {
+            $coordinator->password = $request->get('new_password');
         }
         if ($coordinator->save()) {
             return back()->with($this->responseBladeMessage("Updated successfully"));

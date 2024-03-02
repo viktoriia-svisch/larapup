@@ -5,7 +5,6 @@ use App\Http\Requests\CreateStudent;
 use App\Http\Requests\UpdateStudentByAdmin;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 class StudentController extends Controller
 {
     public function student(Request $request)
@@ -16,11 +15,11 @@ class StudentController extends Controller
         if ($searchType != -1 && $searchType != null) {
             $studentList->where('status', $request->get('type'));
         }
-        if ($searchTerms != null){
+        if ($searchTerms != null) {
             $studentList->where(function ($query) use ($searchTerms) {
-                    $query->where('first_name', 'like', '%' . $searchTerms . '%')
-                        ->orwhere('last_name', 'like', '%' . $searchTerms . '%');
-                });
+                $query->where('first_name', 'like', '%' . $searchTerms . '%')
+                    ->orwhere('last_name', 'like', '%' . $searchTerms . '%');
+            });
         }
         return view('admin.student.student', [
             'availableStudent' => $studentList->paginate(PER_PAGE),
@@ -61,12 +60,8 @@ class StudentController extends Controller
         $student->gender = $request->get('gender') ?? $student->gender;
         $student->status = $request->get('status') ?? $student->status;
         $student->email = $request->get('email') ?? $student->email;
-        if ($request->get('old_password')){
-            if(Hash::check($request->get('old_password'),$student->password)) {
-                $student->password =  $request->get('new_password');
-            } else {
-                return back()->with($this->responseBladeMessage("Password was incorrect!", false));
-            }
+        if ($request->get('new_password')) {
+            $student->password = $request->get('new_password');
         }
         if ($student->save()) {
             return back()->with($this->responseBladeMessage("Update successfully"));

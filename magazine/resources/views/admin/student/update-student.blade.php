@@ -20,6 +20,7 @@
             @include("layout.response.errors")
             <form method="post" action="{{route('admin.updateStudent_post', [$student->id])}}">
                 {{csrf_field()}}
+                <input type="hidden" name="student_id" value="{{$student->id}}">
                 @if($errors->has('first_name'))
                     <div class="card bg-danger text-white rounded-0">
                         <div class="card-body p-1 rounded-0">
@@ -75,7 +76,8 @@
                             <label class="custom-control-label" for="genderMale">Male</label>
                         </div>
                         <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                            <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input" id="genderFemale"
+                            <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input"
+                                   id="genderFemale"
                                    checked="" type="radio">
                             <label class="custom-control-label" for="genderFemale">Female</label>
                         </div>
@@ -86,7 +88,8 @@
                             <label class="custom-control-label" for="genderMale">Male</label>
                         </div>
                         <div class="custom-control custom-radio col-6 d-flex justify-content-center align-items-center">
-                            <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input" id="genderFemale"
+                            <input name="gender" value="{{GENDER['FEMALE']}}" class="custom-control-input"
+                                   id="genderFemale"
                                    checked="" type="radio">
                             <label class="custom-control-label" for="genderFemale">Female</label>
                         </div>
@@ -102,22 +105,26 @@
                 <div class="row col-xl-12" style="margin-top: 2vw; margin-right: -1vw">
                     <h6 class="col-xl-12" style="color: #0b1011; margin-bottom: 2vw;">Account Status</h6>
                     <div class="custom-control custom-radio col-3 d-flex justify-content-center align-items-center">
-                        <input name="status" value="{{STUDENT_STATUS['STANDBY']}}" class="custom-control-input" id="statusStandby"
+                        <input name="status" value="{{STUDENT_STATUS['STANDBY']}}" class="custom-control-input"
+                               id="statusStandby"
                                checked="" type="radio">
                         <label class="custom-control-label" for="statusStandby">Standby</label>
                     </div>
                     <div class="custom-control custom-radio col-3 d-flex justify-content-center align-items-center">
-                        <input name="status" value="{{STUDENT_STATUS['ONGOING']}}" class="custom-control-input" id="statusOngoing"
+                        <input name="status" value="{{STUDENT_STATUS['ONGOING']}}" class="custom-control-input"
+                               id="statusOngoing"
                                type="radio">
                         <label class="custom-control-label" for="statusOngoing">Ongoing</label>
                     </div>
                     <div class="custom-control custom-radio col-3 d-flex justify-content-center align-items-center">
-                        <input name="status" value="{{STUDENT_STATUS['FINISHED']}}" class="custom-control-input" id="statusFinished"
+                        <input name="status" value="{{STUDENT_STATUS['FINISHED']}}" class="custom-control-input"
+                               id="statusFinished"
                                checked="" type="radio">
                         <label class="custom-control-label" for="statusFinished">Finish</label>
                     </div>
                     <div class="custom-control custom-radio col-3 d-flex justify-content-center align-items-center">
-                        <input name="status" value="{{STUDENT_STATUS['LEFT']}}" class="custom-control-input" id="statusLeft"
+                        <input name="status" value="{{STUDENT_STATUS['LEFT']}}" class="custom-control-input"
+                               id="statusLeft"
                                type="radio">
                         <label class="custom-control-label" for="statusLeft">Left</label>
                     </div>
@@ -134,8 +141,9 @@
                     <input class="form-control" type="text" id="email" name="email" placeholder="{{$student->email}}"
                            value="{{$student->email}}">
                 </div>
-                <div style="margin-top: 2vw; margin-bottom: 3vw">
-                    <label style="color: #0b1011">Password</label>
+                <div class="form-group mb-4">
+                    <label for="new_password">New password</label>
+                    <input name="new_password" id="new_password" class="form-control" type="text">
                 </div>
                 <hr>
                 <button class="btn btn-danger col-sm-12" type="submit">Update Information</button>
