@@ -102,8 +102,14 @@ class SemesterController extends FacultySemesterBaseController
                     "This semester was started, therefore cannot delete the existed information", false));
         }
         DB::beginTransaction();
-        $deletingCoordinator = $facultySemester->faculty_semester_coordinator()->delete();
-        $deletingStudent = $facultySemester->faculty_semester_student()->delete();
+        $deletingCoordinator = true;
+        $deletingStudent = true;
+        if (sizeof($facultySemester->faculty_semester_coordinator()->get()) > 0){
+            $deletingCoordinator = $facultySemester->faculty_semester_coordinator()->delete();
+        }
+        if (sizeof($facultySemester->faculty_semester_student()->get()) > 0){
+            $deletingStudent = $facultySemester->faculty_semester_student()->delete();
+        }
         if ($deletingCoordinator && $deletingStudent) {
             if ($facultySemester->delete()) {
                 DB::commit();
