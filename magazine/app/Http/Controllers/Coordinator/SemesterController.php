@@ -19,8 +19,7 @@ class SemesterController extends FacultySemesterBaseController
         $master = Auth::guard(COORDINATOR_GUARD)->user()->type == COORDINATOR_LEVEL['MASTER'];
         $currentSemester = Semester::with('faculty_semester')
             ->where('start_date', '<=', Carbon::now()->toDateTimeString())
-            ->where('end_date', '>', Carbon::now()->toDateTimeString())
-            ->first();
+            ->where('end_date', '>', Carbon::now()->toDateTimeString());
         $semestersFuture = Semester::with(['faculty_semester'])
             ->where('start_date', '>=', Carbon::now());
         $semestersPast = Semester::with(['faculty_semester'])
@@ -56,7 +55,7 @@ class SemesterController extends FacultySemesterBaseController
                 });
         }
         return view('coordinator.Semester.semester', [
-                "activeSemester" => $currentSemester,
+                "activeSemester" => $currentSemester->first(),
                 'futureSemester' => $semestersFuture->orderBy('start_date', 'desc')->get(),
                 'pastSemester' => $semestersPast->orderBy('start_date', 'desc')->get(),
                 'search' => $searchTerms
